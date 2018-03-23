@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+		<title>豆芽铺微信分享</title>
+		<link rel="SHORTCUT ICON" href="/public/static/img/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="/public/static/css/QR_code.css"/>		
+		<script src="/public/static/js/jquery-1.10.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/public/static/js/qrcode.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/public/static/js/clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="content-box">
+			<div class="top-box">
+				<a href="//www.douyapu.com"  target="_blank">
+					<img src="/public/static/img/codelogo.png" alt="图片加载中......" />
+				</a>
+			</div>
+			<div class="container">
+				<p class="text-msg">分享到微信</p>
+				<p class="text-msg1">用微信"扫一扫"二维码,即可把链接分享给您的微信好友</p>
+				<div class="img-box">
+					<img class="img1" src="<{$result.pic}>" alt="图片加载中......" />
+					<span class="arrow"></span>
+					<div class="img2" id="qrcode"/></div>
+				</div>
+				<div class="input_content fl">
+					<div class="input_box">
+						<input class="product_href" type="" name="" id="" value="" />
+						<a class="btn_href" data-clipboard-text="">复制链接</a>
+					</div>
+					<span class="copy_msg">
+						
+					</span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var urls="http://www.douyapu.com/wechat/share?";
+			var pic="<{$result.pic}>";
+		    var title="<{$result.title}>";
+		    var urll="<{$result.urls}>";
+		    var Price="<{$result.Price}>";
+		    var amount="<{$result.amount}>";
+		    var shop="<{$result.shop}>";
+		    var type="<{$result.type}>";
+		   	var sales="<{$result.sales}>";
+		    var coupon="<{$result.coupon}>";
+		    var couponL="<{$result.couponL}>";
+			var btn_href=$(".product_href").val();
+			$.ajax({
+				type:"get",
+				url:"http://storage.douyapu.com/taobao/sign.php?title=<{$result.title}>&url=https:<{$result.urls}>",
+				async:true,
+				success:function(e){
+					var e=JSON.parse(e);
+					if(e.status==1){
+						var shoturl=e.sign;
+						var urlls=urls+"pic="+pic+"&title="+title+"&urls="+shoturl+"&Price="+Price+"&amount="+amount+"&shop="+shop+"&type="+type+"&sales="+sales+"&coupon="+coupon+"&couponL="+couponL;
+						$(".product_href").val(urlls);
+						$(".btn_href").attr("data-clipboard-text",urlls);
+//						var qrcode = new QRCode(document.getElementById("qrcode"), {
+//							width : 140,
+//							height : 140
+//							
+//						});
+//						qrcode.makeCode(urlls);
+						$.ajax({
+							type:"get",
+							url:"http://www.douyapu.com/api/baseqrcode",
+							data:{qrcode:urlls},
+							async:true,
+							success:function(e){
+								console.log(e);
+								var e =JSON.parse(e);
+								var path=e.path;
+								$(".img2").css({"background":"url(data:image/png;base64,"+path+") center center no-repeat","background-size": "cover"});
+							}
+						});
+					}
+				}
+			})
+			
+			$(document).ready(function(){    
+			   var clipboard = new Clipboard('.btn_href');   
+			   clipboard.on('success', function(e) {
+			   			$(".copy_msg").css({"background":"url(/public/static/img/copy_success.png) center center no-repeat","background-size": "cover"});
+		        		$(".copy_msg").show();
+			        });  
+			   clipboard.on('error', function(e) { 
+	   				   $(".copy_msg").css({"background":"url(/public/static/img/copy_error.png) center center no-repeat","background-size": "cover"});
+		               $(".copy_msg").show(); 
+			        });  
+			}) 
+		</script>
+	</body>
+</html>

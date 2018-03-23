@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Title</title>
+		<style type="text/css">
+			div {
+				width: 849px;
+				height:344px;
+				margin: 88px auto;
+				background: url(/public/static/img/transfer/Bg1.png);
+				padding-top: 1px;
+			}
+			
+			p {
+				text-align: center;
+				font-family: "Microsoft YaHei";
+				margin: 0;
+				line-height: 28px;
+			}
+			
+			a {
+				display: inline-block;
+				height: 38px;
+				width: 108px;
+				background: url(/public/static/img/transfer/img1.png) -109px 0;
+				cursor: pointer;
+			}
+			
+			a:hover {
+				background: url(/public/static/img/transfer/img1.png) 0 0;
+			}
+			
+			input {
+				vertical-align: -2px;
+			}
+			label{
+				font-size:12px ;
+				font-family: "微软雅黑";
+				color: #797979;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div style="display: none;">
+			<p style="margin-top: 160px;font-size: 18px;color: #3c3b3b;font-family: '微软雅黑';padding: 0 40px;">您当前点击领取后 , 将跳转豆芽铺(douyapu.com)网站处理</p>
+			<p style="font-size: 18px;color: #3c3b3b;font-family: '微软雅黑';padding: 0 40px;" id="changeValue">再跳转至淘宝优惠券领取页面 , 您是否同意 ?</p>
+			<p style="margin-top: 25px;">
+				<a id="transferBut"></a>
+			</p>
+			<p><label for="input111"><input name="" type="checkbox" value="" id="input111" checked="checked"/>下次不再提醒</label></p>
+		</div>
+	</body>
+	<script type="text/javascript" src="/public/static/js/jquery-1.10.2.js"></script>
+	<script>
+		if(localStorage.transferSign == "3") {
+			if("<{$link}>"){
+				window.location.href = "<{$link}>";
+			} else {
+				window.location.href = "https://www.douyapu.com";
+			}
+		} else {
+			if(location.href.match("type")) {
+				$("#changeValue").html("再跳转至豆芽铺官网优惠券详情页面 , 您是否同意 ?");
+			}
+			$("div").show();
+		};
+		$("#transferBut").click(function() {
+			if($("#input111").prop("checked")) {
+				localStorage.transferSign = 3;
+			} else {
+				localStorage.transferSign = 0;
+			}
+			if("<{$link}>"){
+				window.location.href = "<{$link}>";
+			} else {
+				window.location.href = "https://www.douyapu.com";
+			}
+		})
+	</script>
+
+</html>

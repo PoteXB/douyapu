@@ -1,0 +1,95 @@
+<div id="banner" class="clear">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <a>
+                    <div class="ac-bg-4">
+                    </div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a href="http://file.douyapu.com/upload/DouYaPu_setup_20180123v3105.exe" target="_blank">
+                    <div class="ac-bg-1">
+                    </div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a href="http://file.douyapu.com/upload/DouYaPu_setup_20180123v3105.exe" target="_blank">
+                    <div class="ac-bg-2">
+                    </div>
+                </a>
+            </div>
+            <div class="swiper-slide">
+                <a href="http://file.douyapu.com/upload/DouYaPu_setup_20180123v3105.exe" target="_blank">
+                    <div class="ac-bg-3">
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!-- Add Pagination -->
+        <div class="pagination"></div>
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev swiper-button-hover"></div>
+        <div class="swiper-button-next swiper-button-hover"></div>
+    </div>
+</div>
+<script type="text/javascript" charset="utf-8" src="/public/static/js/idangerous.swiper2.7.6.min.js"></script>
+<script type="text/javascript">
+    //轮播图插件配置
+    var mySwiper = new Swiper('.swiper-container', {
+        direction: 'horizontal',
+        //如果需要分页器
+        pagination: '.pagination',
+        //自动轮播
+        autoplay: 3000,
+        loop: true,
+        // grabCursor: true,
+        paginationClickable: true,
+        //用户操作后是否停止自动轮播
+        autoplayDisableOnInteraction: false
+    });
+    //如果需要前进后退按钮
+    $('.swiper-button-prev').on('click', function (e) {
+        e.preventDefault();
+        mySwiper.swipePrev()
+    });
+    $('.swiper-button-next').on('click', function (e) {
+        e.preventDefault();
+        mySwiper.swipeNext()
+    });
+    //    var time = new Date(),
+    //        startTime = coutDownFormat(time);
+    //    newCoutDown($('.count-down'), startTime, '2017/06/18 00:00:00');
+    //    //当前时间减去开始时间为开始计时时间
+    //    //结束时间为最终结束时间
+    //    //倒计时器插件配置
+    //    function newCoutDown(ele, start, end) {
+    //        $(ele).countDown({
+    //            startTimeStr: start, //开始时间
+    //            endTimeStr: end, //结束时间
+    //            daySelector: ".day-num",
+    //            hourSelector: ".hour-num",
+    //            minSelector: ".min-num",
+    //            secSelector: ".sec-num"
+    //        });
+    //    }
+    //
+    //    //转换日期格式（2017/01/11 00:00:00）兼容ie8+
+    //    function coutDownFormat(time) {
+    //        //获取年月日
+    //        var yearMonthDay = time.toLocaleDateString() + " ";
+    //        yearMonthDay = yearMonthDay.replace(/["年"]/, '/');
+    //        yearMonthDay = yearMonthDay.replace(/["月"]/, '/');
+    //        yearMonthDay = yearMonthDay.replace(/["日"]/, '');
+    //        //抓取时分秒
+    //        var hourMinuteSecond = time.toString().split(" ");
+    //        for (var i = 0; i < hourMinuteSecond.length; i++) {
+    //            if (hourMinuteSecond[i].indexOf(':') != -1) {
+    //                hourMinuteSecond = hourMinuteSecond[i];
+    //                break;
+    //            }
+    //        }
+    //        formatTime = yearMonthDay.concat(hourMinuteSecond);
+    //        return formatTime;
+    //    }
+</script>

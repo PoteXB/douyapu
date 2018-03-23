@@ -1,0 +1,75 @@
+{include file="../common/header" /}
+{include file="../common/nav" /}
+<div id="coupon-detail" ng-app="detail" ng-controller="detailList" ng-cloak>
+    <div class="coupon-detail-border"></div>
+    <div class="coupon-detail-box clear">
+        <div class="fl">
+            <a href="<{$item.item.shareUrl}>" target="_blank" title="" class="coupon-detail-img">
+                <img src="<{$item.item.picUrl}>" alt="">
+            </a>
+        </div>
+        <div class="fl coupon-detail-text">
+            <p class="coupon-detail-title">
+                <a href="<{$item.item.shareUrl}>" target="_blank"><{$item.item.title}></a>
+            </p>
+            <p class="coupon-detail-price">
+                （独享）券后价
+                <b>￥{{amount | fixedTo}}</b> 在售价
+                <span>￥{{<{$item.item.discountPrice}> | fixedTo}}</span>
+            </p>
+            <p class="coupon-detail-sales">
+                已领取 <span class=""><{$coupon.biz30Day}></span> 张
+            </p>
+            <div class="coupon-detail-amount clear">
+                <p class="fl">
+                    <span class="coupon-detail-amountfont1">优惠券 ￥</span><span class="coupon-detail-amountfont2"><{$coupon.amount}></span>
+                    <b></b>
+                </p>
+                <a href="<{$item.item.shareUrl}>" class="toGetYhq fl" target="_blank">领券购买</a>
+            </div>
+            <div class="coupon-detail-time">
+                过期时间 :
+                <span><{$coupon.effectiveEndTime | demo}></span>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="../common/footer" /}
+<script>
+    var app = angular.module('detail', []);
+    app.filter('fixedTo', function () {
+        return function (val) {
+            return (val - 0).toFixed(1);
+        }
+    });
+    app.filter('demo', function () {
+        return function (val) {
+            return 123;
+        }
+    });
+    app.controller('detailList', function ($scope, $http) {
+        $scope.amount = '<{$coupon.amount}>' ? '<{$item.item.discountPrice}>' - '<{$coupon.amount}>' : '<{$item.item.discountPrice}>';
+    });
+</script>
+
+<script type='text/javascript'>
+    var _jjl = new Date().toDateString().replace(/\s/g, '') + new Date().toTimeString().replace(/:\d{2}:\d{2}\sUTC[+]\d{4}$/g, '');
+    document.write(unescape("%3Cscript src='https://p.yiqifa.com/js/juejinlian.js' type='text/javascript'%3E%3C/script%3E"));
+    document.write(unescape("%3Cscript src='https://p.yiqifa.com/jj?_jjl.js' type='text/javascript'%3E%3C/script%3E"));
+    document.write(unescape("%3Cscript src='https://p.yiqifa.com/js/md.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type='text/javascript'>
+    try {
+        var siteId = 845048;
+        document.write(unescape("%3Cscript src='https://p.yiqifa.com/jj?sid=" + siteId + "&_jjl.js' type='text/javascript'%3E%3C/script%3E"));
+        var jjl = JueJinLian._init();
+        jjl._addWid(siteId);
+        jjl._addE("");
+        jjl._addR("https://p.gouwubang.com");
+        jjl._addScope(0);
+        jjl._run();
+    } catch (e) {
+    }
+</script>
+</body>
+</html>
