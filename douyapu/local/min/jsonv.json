@@ -1,0 +1,19 @@
+{
+  "website": "https://www.douyapu.com/",
+  "myMmId": [
+    "mm_131637393_43194439_287162798",
+    "mm_131635429_43190580_287140976",
+    "mm_130784428_43218054_287156881",
+    "mm_131335621_43188623_287176432",
+    "mm_128221271_43174818_287144989"
+  ],
+  "versionNum": "1.0.0.9",
+  "popUrlNew": "http://min.douyapu.com/plug/refreshsss.php",
+  "popUrlZhe": "http://min.douyapu.com/plug/discountsss.php",
+  "popUrlHot": "http://min.douyapu.com/plug/hotssss.php",
+  "mainUrlMin": "http://storage.douyapu.com/api/vip/plug-vip-",
+  "mainUrlQQ": "//shang.qq.com/wpa/qunwpa?idkey=8eb0246c0e67ac58c15708a6a15f5081bf46880b706f3662a19f706b6c9954e0",
+  "mainUrlCoupon": "https://uland.taobao.com/cp/coupon",
+  "mainUrlJdCoupon": "https://cd.jd.com/promotion/v2",
+  "mainUrlStorage": "http://storage.douyapu.com/storage.php"
+}
