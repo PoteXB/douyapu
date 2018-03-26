@@ -1073,6 +1073,24 @@
         myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent", "${n}", "${e}"]);`));
         document.head.appendChild(myScript);
     }               //CNZZ统计
+    function douyaTongji(id, name, uniq) {
+        chrome.extension.sendMessage({
+            name: "universal",
+            url: "http://event.douyapu.com/event",
+            type: "get",
+            dataType: "json",
+            data: {
+                id: id, name: name, uniq: uniq
+            },
+        }, function () {
+        });
+    }                //豆芽铺统计
+    function douyaTongjiSet(e) {
+        chrome.storage.local.set({dypSign20180323: e});
+    }               //豆芽铺统计
+    function douyaTongjiCoupon(e) {
+        chrome.storage.local.set({dypCoupon20180323: e});
+    }               //豆芽铺统计
     function getUrlParam(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
@@ -1185,6 +1203,7 @@
         return (mul(a, e) - mul(b, e)) / e;
     }                  //去掉浮点数的相减方法
     var locHost = location.host;
+    var refer = document.referrer;
     //详情页
     !function () {
         var adaptationArr = {
@@ -1216,7 +1235,7 @@
             // var cssStyle1212 = '';
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
-            var mainUrl, setting, dypSwitch, settingNew, dypNav, dypmyswi, dypVer, qqOnline;
+            var mainUrl, setting, dypSwitch, settingNew, dypNav, dypmyswi, dypVer, qqOnline, dypRandom;
             infoGroup = {
                 id: '', plat: nowPlat, title: "", price: "", sameNew: {}, pid: "", seller: "", rCat: "", shop: "",
                 pic: "", sale: "", amount: "", amountReq: "", amountT: 0, amountL: 0, tkCom: 0, startT: "", endT: ""
@@ -1239,6 +1258,7 @@
                         id = id[Math.floor((Math.random() * id.length))];
                     }
                 }
+                dypRandom = e.dypRandom;
                 dypVer = `backv : ${e.dypbackv} mainv : ${e.dypmainv} jsonv : ${e.dypjsonv} popv : ${e.dyppopv} setv : ${e.dypsetv}`;
                 mainUrl = {
                     min: e.dypjsonvdata.mainUrlMin,
@@ -1604,9 +1624,6 @@
                         }
                         return {url: url, title: title};
                     }   //价格排序方法
-                    function open_new_window(full_link) {
-                        window.open('javascript:window.name;', '<script>location.replace("' + full_link + '")<\/script>');
-                    }//
                     function tmAjax(errorUrl, title, id) {
                         chrome.extension.sendMessage({
                             name: "getCook", url: "https://www.taobao.com/", key: "_m_h5_tk"
@@ -1627,7 +1644,7 @@
                                                 var hasSwi = 1;
                                                 $.each(data, function (v, k) {
                                                     if (k.nid == id && k.nid != infoGroup.id) {
-                                                        window.open(`${mainUrl.chain}//s.click.taobao.com/t?e=${getParam("https:" + k.clickUrl, "e")}`);
+                                                        window.open(`${mainUrl.parity}//s.click.taobao.com/t?e=${getParam("https:" + k.clickUrl, "e")}`);
                                                         hasSwi = 0;
                                                         return false;
                                                     }
@@ -1644,7 +1661,7 @@
                                     }
                                 });
                             } else {
-                                $("body").append(`<iframe src="https://m.taobao.com/" id="douya-yangxue9527" style="display:none"></iframe>`);
+                                $("body").append(`<iframe src="//h5.m.taobao.com/" id="douya-yangxue9527" style="display:none"></iframe>`);
                                 setTimeout(function () {
                                     $("#douya-yangxue9527").remove();
                                 }, 3000);
@@ -2145,7 +2162,7 @@
                                                                 k.discountPrice && (infoGroup.price = infoGroup.price ? infoGroup.price : k.discountPrice);
                                                                 hasDan(k);
                                                             } else {
-                                                                noDan();
+                                                                noDan(k);   //有对应数据但无优惠券的
                                                             }
                                                             hasSwi = 0;
                                                             return false;
@@ -2153,7 +2170,7 @@
                                                     });
                                                     if (hasSwi) {
                                                         if (page == 3) {
-                                                            noDan();
+                                                            noDan(0);    //数据没对应ID
                                                             return false
                                                         } else {
                                                             page++;
@@ -2161,12 +2178,12 @@
                                                         }
                                                     }
                                                 } else {
-                                                    noDan();
+                                                    noDan(0);    //搜索无任何数据
                                                 }
                                             } else {
                                                 getH5CouNum++;
                                                 if (getH5CouNum == 3) {
-                                                    noDan();
+                                                    noDan(0);    //请求不成功的
                                                     return false
                                                 } else {
                                                     getDan();
@@ -2175,7 +2192,7 @@
                                         }
                                     });
                                 } else {
-                                    $("body").append(`<iframe src="https://m.taobao.com/" id="douya-yangxue9527" style="display:none"></iframe>`);
+                                    $("body").append(`<iframe src="//h5.m.taobao.com/" id="douya-yangxue9527" style="display:none"></iframe>`);
                                     setTimeout(function () {
                                         $("#douya-yangxue9527").remove();
                                         getDan()
@@ -2190,7 +2207,8 @@
                             var data = e;
                             var amount = infoGroup.amount;
                             var amountReq = infoGroup.amountReq;
-                            var urls = mainUrl.chain + "//uland.taobao.com/coupon/edetail?e=" + getParam(data.clickUrl, "e");
+                            // var urls = mainUrl.chain + "//uland.taobao.com/coupon/edetail?e=" + getParam(data.clickUrl, "e");
+                            var urls = `https://www.douyapu.com/coupon/chain/?urls=//uland.taobao.com/coupon/edetail?e=${getParam(data.clickUrl, "e")}`;
                             var oli = `<p class="dypClear">
                                     <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
                                         <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
@@ -2222,16 +2240,17 @@
                             $("#dypMid9527 .dypMid9527-box-coupon").html(oli);
                             $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-erweima-mask"></div>`);//
                             $("#douyapu-coupon-ling").click(function () {
+                                douyaTongji("coupon_step2", "MID栏点击", dypRandom);
+                                douyaTongjiSet("coupon_step2");
                                 window.open(urls);
                                 chrome.extension.sendMessage({
-                                        name: "universal",
-                                        url: "http://storage.douyapu.com/coupon.php",
-                                        type: "post",
-                                        dataType: "json",
-                                        data: {itemId: infoGroup.id}
-                                    }, function (e) {
-                                    }
-                                );
+                                    name: "universal",
+                                    url: "http://storage.douyapu.com/coupon.php",
+                                    type: "post",
+                                    dataType: "json",
+                                    data: {itemId: infoGroup.id}
+                                }, function (e) {
+                                });
                             });
                             $("#dypMid9527 .dypMid9527-coupon .dypMid9527-title span").fadeOut(function () {
                                 $(this).html(`领${amount}元劵`).css({
@@ -2242,11 +2261,11 @@
                             try {
                                 $("#dypMid9527-fnTimeCountDown").fnTimeCountDown(infoGroup.endT);
                             } catch (e) {
-
                             }
                             appendPriceCut(1);
+                            saveCoupon(e);
                         }//
-                        function noDan() {
+                        function noDan(e) {
                             var oli1 = `<p class="dypClear">
                                     <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
                                         <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
@@ -2260,10 +2279,45 @@
                             $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-erweima-mask"></div>`);//
                             appendPriceCut(2);
                             getRec();
+                            saveCoupon(e);
                         }//
-                        function saveCoupon(postData) {
-                            // console.log(infoGroup);
+                        function saveCoupon(e) {
+                            var type = (infoGroup.plat == "tm") ? 1 : 0;
+                            var postData = {
+                                clickUrl: "", shareUrl: "", amount: "", discountPrice: infoGroup.price, itemId: infoGroup.id,
+                                picUrl: infoGroup.pic, reservePrice: "", title: infoGroup.title, userId: infoGroup.seller, cat: infoGroup.rCat,
+                                type: type, biz30Day: infoGroup.sale, effectiveEndTime: "", effectiveStartTime: "", startFee: ""
+                            };
+                            if (e) {
+                                postData.reservePrice = e.reservePrice;
+                                if (e.couponAmount) {
+                                    postData.shareUrl = "//uland.taobao.com/coupon/edetail?e=" + getParam(e.clickUrl, "e");
+                                    postData.amount = e.couponAmount;
+                                    postData.effectiveEndTime = infoGroup.endT;
+                                    postData.effectiveStartTime = infoGroup.startT;
+                                    postData.startFee = infoGroup.amountReq;
+                                } else {
+                                    postData.clickUrl = "//s.click.taobao.com/t?e=" + getParam(e.clickUrl, "e");
+                                }
+                            }
+                            console.log(postData);
+                            return;
                             if ((!sessionStorage.douyapuControl || sessionStorage.douyapuControl != infoGroup.id) && dypmyswi) {
+                                // chrome.extension.sendMessage({
+                                //     name: "universal",
+                                //     url: mainUrl.storage,
+                                //     type: "post",
+                                //     dataType: "json",
+                                //     data: {
+                                //         itemId: infoGroup.id,
+                                //         item: JSON.stringify(postData.item),
+                                //         catId: postData.catId,
+                                //         tkComm: postData.tkComm,
+                                //         weight: postData.weight,
+                                //         version: "1.1"
+                                //     }
+                                // }, function () {
+                                // });
                                 chrome.extension.sendMessage({
                                     name: "universal",
                                     url: mainUrl.storage,
@@ -2271,11 +2325,7 @@
                                     dataType: "json",
                                     data: {
                                         itemId: infoGroup.id,
-                                        item: JSON.stringify(postData.item),
-                                        catId: postData.catId,
-                                        tkComm: postData.tkComm,
-                                        weight: postData.weight,
-                                        version: "1.1"
+                                        item: JSON.stringify(postData),
                                     }
                                 }, function () {
                                 });
@@ -3217,6 +3267,9 @@
                             window.open(mainUrl.website + "index/feedback/");
                         }
                     }); // 本次关闭,意见反馈
+                    $(".dypMid9527-coupon").on("mouseenter", function () {
+                        douyaTongji("coupon_step1", "悬浮移入", dypRandom);
+                    })
                 }();    //中间事件绑定
                 $.extend($.fn, {
                     fnTimeCountDown: function (d) {
@@ -4422,5 +4475,54 @@
                 }
             }
         } //右下角弹窗
+    }();
+    //优惠券页面
+    !function () {
+        if (locHost == 'uland.taobao.com' && refer.match("www.douyapu.com/coupon/chain/?") && refer.charAt(36) == "/") {
+            chrome.storage.local.get(null, function (e) {
+                if (e.dypSign20180323 == "coupon_step2") {
+                    $(document).ready(function () {
+                        var hasSame = 0;
+                        var couponArr = e.dypCoupon20180323;
+                        var id = md5($(".item-content .title span").html() + $(".shop-title").html());
+                        $.each(couponArr, function (v, k) {
+                            if (k == id) {
+                                hasSame = 1;
+                                return false
+                            }
+                        });
+                        $(".coupons-container").on("click", function () {
+                            douyaTongji("coupon_step3", "优惠券点击", e.dypRandom);
+                            if (!hasSame) {
+                                couponArr.push(id);
+                                douyaTongjiCoupon(couponArr);
+                            }
+                        })
+                    });
+                }
+            });
+        }
+        if ((locHost == 'buy.tmall.com' || locHost == "buy.taobao.com")) {
+            chrome.storage.local.get(null, function (e) {
+                $(document).ready(function () {
+                    var hasSame = 0;
+                    var couponArr = e.dypCoupon20180323;
+                    var id = md5($(".info-title").html() + $(".shop-url").html());
+                    $.each(couponArr, function (v, k) {
+                        if (k == id) {
+                            hasSame = 1;
+                            couponArr.splice(v, 1);
+                            return false
+                        }
+                    });
+                    $(".go-btn").on("click", function () {
+                        if (hasSame) {
+                            douyaTongjiCoupon(couponArr);
+                            douyaTongji("coupon_step4", "点击下单", e.dypRandom);
+                        }
+                    })
+                });
+            });
+        }
     }();
 }();

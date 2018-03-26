@@ -142,4 +142,16 @@ chrome.storage.local.get(null, function (e) {
             }
         });
     }
+    if (!e.dypRandom) {
+        for (var r = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", n = "", o = 0; o < 32; o++) {
+            n += r.charAt(Math.round(61 * Math.random()))
+        }
+        chrome.storage.local.set({dypRandom: n});
+    }
+    if (!e.dypSign20180323) {
+        chrome.storage.local.set({dypSign20180323: ""});
+    }
+    if (!e.dypCoupon20180323) {
+        chrome.storage.local.set({dypCoupon20180323: []});
+    }
 });
