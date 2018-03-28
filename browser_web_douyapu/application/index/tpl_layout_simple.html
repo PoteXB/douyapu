@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZUES DATA</title>
+
+    <!-- BOOTSTRAP STYLES-->
+    <!-- <link href="/public/static/css/bootstrap.css" rel="stylesheet" /> -->
+    <link href="/public/static/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <!-- FONTAWESOME STYLES-->
+    <link href="/public/static/css/font-awesome.css" rel="stylesheet" />
+       <!--CUSTOM BASIC STYLES-->
+    <link href="/public/static/css/basic.css" rel="stylesheet" />
+    <!--CUSTOM MAIN STYLES-->
+    <link href="/public/static/css/custom.css" rel="stylesheet" />
+    <link href="/public/static/css/styles.css" rel="stylesheet" />
+    <!-- GOOGLE FONTS-->
+    <link href='/public/static/css/family.css' rel='stylesheet' type='text/css' />
+    <script src="/public/static/js/jquery-1.10.2.js"></script>
+    <script src="/public/static/js/moment.js"></script>
+    <script src="/public/static/js/bootstrap-datetimepicker.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="/public/static/js/bootstrap.js"></script>
+    <!-- METISMENU SCRIPTS -->
+    <script src="/public/static/js/jquery.metisMenu.js"></script>
+       <!-- CUSTOM SCRIPTS -->
+    <script src="/public/static/js/Angular.js"></script>
+
+    <script src="/public/static/js/custom.js"></script>
+
+    <script src="/public/static/js/encrypt.js"></script>
+    <script src="/public/static/js/search.js"></script>
+
+    <script type="text/javascript" charset="utf-8" src="/public/static/js/base.js"></script>
+
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0" id="mainTop" ng-controller="mainTopControl">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- <a class="navbar-brand" href="index.html">ZUES DATA</a> -->
+                <img src="/public/static/img/logo_w.fw.png" alt="" />
+            </div>
+
+            <div class="header-right">
+                <a ng-click="mainUser.edit()" class="btn btn-info">
+                    <i class="glyphicon glyphicon-user"></i>
+                </a>
+                <a href="/index/login/logout" class="btn btn-danger" title="Logout">
+                    <i class="glyphicon glyphicon-log-out"></i>
+                </a>
+            </div>
+            <!-- 添加密码 -->
+            <div>   
+                <div id="mainUserForm" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                         <h4 class="modal-title" ng-model="title">修改密码</h4>
+                      </div>
+                       <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="message-text" class="control-label">密码</label>
+                                <input class="form-control" type="password" ng-model="mainUser.password" />
+                            </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" ng-click="mainUser.editSubmit()">Save changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+            </div>
+        </nav>
+        <script type="text/javascript">
+            var mainTop = angular.module('mainTop',['Encrypt']);
+            mainTop.service('mainTopService',function($http,$q)
+            {
+                this.http = function(params,url)
+                {
+                    var d = $q.defer();
+                    var self = this;
+                    $http(
+                    {
+                        method:'GET',
+                        url:url,
+                        params:params
+                    })
+                    .then(function(response)
+                    {
+                        if (response.data.state == 0)
+                        {
+                            if (response.data.data)
+                            {
+                                d.resolve(response.data.data);        
+                            }
+                            else
+                            {
+                                self.message(response.data.msg);
+                                d.resolve('success'); 
+                            }
+                        }
+                        else
+                        {
+                            self.message(response.data.msg);
+                            d.reject('error');
+                        }
+                    },function()
+                    {
+                        self.message('连接失败');
+                        d.reject('error');
+                    })
+                    return d.promise;
+                }
+                this.message = function(msg)
+                {
+                    $('#dan_topstrong').html(msg);
+                    $("#dan_prompt").show(800).delay(800).hide(800);
+                }
+            })
+            mainTop.controller('mainTopControl',function($scope,mainTopService,Md5)
+            {
+                $scope.mainUser = new Object();
+                $scope.mainUser.edit = function()
+                {
+                    $scope.mainUser.password = '';
+                    $('#mainUserForm').modal('show');
+                }
+                $scope.mainUser.editSubmit = function()
+                {
+                    var pwd = $scope.mainUser.password.replace(/(^\s*)|(\s*$)/g, "");
+                    if(pwd != '')
+                    {
+                        mainTopService.http({pwd:Md5.hex_md5(pwd)},'/analoglogin/user/editPwd')
+                        .then(function(response)
+                        {
+                            $('#mainUserForm').modal('hide');
+                        })
+                    }
+                    else
+                    {
+                        mainTopService.message('密码不能为空');
+                    }
+                }
+            })
+            angular.bootstrap(document.getElementById("mainTop"), ['mainTop']);
+        </script>
+        <!-- /. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                    <li>
+                        <div class="user-img-div">
+                            <!-- <div class="pull-right">
+                                <a href="" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                </a>
+                                <a href="/index/login/logout" class="btn btn-danger" title="Logout">
+                                   
+                                    <i class="glyphicon glyphicon-log-out"></i>
+                                </a>
+                            </div> -->
+                            <!-- <img src="/public/static/img/user.png" class="img-thumbnail" /> -->
+
+                            <div class="inner-text">
+                                欢迎您，<{$username}>。
+                            <br />
+                                <small>最后登录时间 : <{$loginOutTime}> </small>
+                            </div>
+                        </div>
+
+                    </li>
+
+
+                    <li>
+                        <a class="active-menu" href="/"><i class="fa fa-dashboard "></i>首页</a>
+                    </li>
+                   <!--  <li>
+                        <a href="#"><i class="glyphicon glyphicon-th "></i>产品数据<span class="fa arrow"></span></a>
+                         <ul class="nav nav-second-level">
+                            <li>
+                                <a href="panel-tabs.html"><i class="fa fa-toggle-on"></i>360导航</a>
+                            </li>
+                            <li>
+                                <a href="notification.html"><i class="fa fa-bell "></i>应用宝（PC）</a>
+                            </li>
+                             <li>
+                                <a href="progress.html"><i class="fa fa-circle-o "></i>QQ音乐（PC）</a>
+                            </li>                        
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-home "></i>产品管理<span class="fa arrow"></span></a>
+                         <ul class="nav nav-second-level">
+                            <li>
+                                <a href="panel-tabs.html"><i class="glyphicon glyphicon-book"></i>产品管理</a>
+                            </li>
+                            <li>
+                                <a href="/index/datasource"><i class="glyphicon glyphicon-tasks "></i>数据源管理</a>
+                            </li>                         
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="glyphicon glyphicon-user "></i>用户管理<span class="fa arrow"></span></a>
+                         <ul class="nav nav-second-level">
+                            <li>
+                                <a href="panel-tabs.html"><i class="glyphicon glyphicon-star"></i>用户管理</a>
+                            </li>
+                            <li>
+                                <a href="notification.html"><i class="glyphicon glyphicon-lock "></i>用户权限管理</a>
+                            </li>                         
+                        </ul>
+                    </li> -->
+                    {foreach $menuList as $vo}
+                    <li>
+                        <a href="#"><i class="glyphicon <{$vo['icon']}>"></i><{$vo['title']}><span class="fa arrow"></span></a>
+                         <ul class="nav nav-second-level">
+                            {if condition="!empty($vo['level'])"}{foreach $vo['level'] as $v}
+                            <li>
+                                <a href="<{$v['url']}>"><i class="glyphicon <{$v['icon']}>"></i><{$v['title']}></a>
+                            </li>  
+                            {/foreach}{/if}
+                        </ul>
+                    </li>
+                    {/foreach}
+                </ul>
+
+            </div>
+
+        </nav>
+        <div id="dan_prompt">
+            <div id="dan_topAlert" class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong id="dan_topstrong">失败</strong>
+            </div>
+        </div>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+            <div id="page-inner" class="padding_25">
+                <!--内容-->
+                {__CONTENT__}
+            </div>
+            <!-- /. PAGE INNER  -->
+        </div>
+        <!-- /. PAGE WRAPPER  -->
+    </div>
+    <!-- /. WRAPPER  -->
+    <div id="footer-sec">
+        &copy; 2014 YourCompany | More Templates <a href="/" target="_blank" title="zues">zues</a> - Collect from 
+    </div>
+    <script type="text/javascript">
+        var mainHttp = function(params,url,$http,$q)
+        {
+            var d = $q.defer();
+            $http(
+            {
+                method:'GET',
+                url:url,
+                params:params
+            })
+            .then(function(response)
+            {
+                if (response.data.state == 0)
+                {
+                    d.resolve(response.data.data);
+                }
+                else
+                {
+                    message(response.data.msg);
+                    d.reject();
+                }
+            },function()
+            {
+                message('连接失败');
+                d.reject();
+            })
+            return d.promise;
+        }
+        var message = function(msg)
+        {
+            $('#dan_topstrong').html(msg);
+            $("#dan_prompt").show(800).delay(800).hide(800);
+        }
+    </script>
+</body>
+</html>
