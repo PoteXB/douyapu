@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://E:/github/chajian" />
+    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$/../../jingtaiyemian/test" />
+    <content url="file://$MODULE_DIR$/../../jingtaiyemian/官网/胖达看图" />
+    <content url="file://$MODULE_DIR$/../../jingtaiyemian/豆芽下载页H5" />
+    <content url="file://$MODULE_DIR$/../../jingtaiyemian/豆芽分享页H5" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

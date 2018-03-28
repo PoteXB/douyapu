@@ -2142,7 +2142,7 @@
                                 if (d && d[0] && d[0].value) {
                                     var time = Date.now();
                                     var title = infoGroup.title;
-                                    var s = `{"q":"${title}","pid":"${mainUrl.myMmId}","page":${page},"useItemCouponPage":"1"}`;
+                                    var s = `{"q":"${title}","pid":"${mainUrl.myMmId}","page":${page},"useItemCouponPage":"1","lunaUrlParam": "{'algo_sort':'mixcoupon','rank':'rank_profile:FirstRankScorer_atbh5','PS':'tk_item_score_atbh5','appBucket':'h'}"}`;
                                     $.ajax({
                                         url: "https://acs.m.taobao.com/h5/mtop.aitaobao.item.search/7.0/", type: "get", dataType: "json",
                                         data: {
@@ -2207,7 +2207,6 @@
                             var data = e;
                             var amount = infoGroup.amount;
                             var amountReq = infoGroup.amountReq;
-                            // var urls = mainUrl.chain + "//uland.taobao.com/coupon/edetail?e=" + getParam(data.clickUrl, "e");
                             var urls = `https://www.douyapu.com/coupon/chain/?urls=//uland.taobao.com/coupon/edetail?e=${getParam(data.clickUrl, "e")}`;
                             var oli = `<p class="dypClear">
                                     <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
@@ -2282,54 +2281,95 @@
                             saveCoupon(e);
                         }//
                         function saveCoupon(e) {
-                            var type = (infoGroup.plat == "tm") ? 1 : 0;
-                            var postData = {
-                                clickUrl: "", shareUrl: "", amount: "", discountPrice: infoGroup.price, itemId: infoGroup.id,
-                                picUrl: infoGroup.pic, reservePrice: "", title: infoGroup.title, userId: infoGroup.seller, cat: infoGroup.rCat,
-                                type: type, biz30Day: infoGroup.sale, effectiveEndTime: "", effectiveStartTime: "", startFee: ""
-                            };
-                            if (e) {
-                                postData.reservePrice = e.reservePrice;
-                                if (e.couponAmount) {
-                                    postData.shareUrl = "//uland.taobao.com/coupon/edetail?e=" + getParam(e.clickUrl, "e");
-                                    postData.amount = e.couponAmount;
-                                    postData.effectiveEndTime = infoGroup.endT;
-                                    postData.effectiveStartTime = infoGroup.startT;
-                                    postData.startFee = infoGroup.amountReq;
-                                } else {
-                                    postData.clickUrl = "//s.click.taobao.com/t?e=" + getParam(e.clickUrl, "e");
+                            var favCount = "";
+                            var picNum = $("#J_UlThumb") ? $("#J_UlThumb li").length : 0;//
+                            var goodRate = "";
+                            var rateNum = 0;        //
+                            function rateCount() {
+                                rateNum++;
+                                if (rateNum == 2) {
+                                    postTo()
                                 }
-                            }
-                            console.log(postData);
-                            return;
-                            if ((!sessionStorage.douyapuControl || sessionStorage.douyapuControl != infoGroup.id) && dypmyswi) {
-                                // chrome.extension.sendMessage({
-                                //     name: "universal",
-                                //     url: mainUrl.storage,
-                                //     type: "post",
-                                //     dataType: "json",
-                                //     data: {
-                                //         itemId: infoGroup.id,
-                                //         item: JSON.stringify(postData.item),
-                                //         catId: postData.catId,
-                                //         tkComm: postData.tkComm,
-                                //         weight: postData.weight,
-                                //         version: "1.1"
-                                //     }
-                                // }, function () {
-                                // });
-                                chrome.extension.sendMessage({
-                                    name: "universal",
-                                    url: mainUrl.storage,
-                                    type: "post",
-                                    dataType: "json",
-                                    data: {
-                                        itemId: infoGroup.id,
-                                        item: JSON.stringify(postData),
+                            }//
+                            $.ajax({
+                                url: "https://rate.taobao.com/detailCommon.htm?auctionNumId=" + itemId,
+                                type: "get",
+                                dataType: "html",
+                                success: function (d) {
+                                    d = trim(d);
+                                    d = d.substr(1, d.length - 2);
+                                    try {
+                                        d = JSON.parse(d);
+                                        goodRate = d.data.count.total ? (d.data.count.good / d.data.count.total * 100).toFixed(2) : 0;
+                                    } catch (err) {
                                     }
-                                }, function () {
-                                });
-                                sessionStorage.douyapuControl = infoGroup.id;
+                                },
+                                complete: function () {
+                                    rateCount();
+                                }
+                            });
+                            $.ajax({
+                                url: "https://acs.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/",
+                                data: {data: `{"itemNumId":"${itemId}"}`},
+                                success: function (d) {
+                                    if (d && d.data && d.data.item) {
+                                        var data = d.data.item;
+                                        favCount = data.favcount;
+                                    }
+                                    if (d && d.data && d.data.apiStack && d.data.apiStack[0] && d.data.apiStack[0].value) {
+                                        try {
+                                            var p = JSON.parse(d.data.apiStack[0].value);
+                                            if (p && p.item && p.item.sellCount) {
+                                                p = p.item.sellCount;
+                                                infoGroup.sale = p ? p : infoGroup.sale;
+                                            }
+                                        } catch (err) {
+                                        }
+                                    }
+                                },
+                                complete: function () {
+                                    rateCount();
+                                }
+                            }); //拿商品数据
+                            function postTo() {
+                                var type = (infoGroup.plat == "tm") ? 1 : 0;
+                                var postData = {
+                                    clickUrl: "", shareUrl: "", amount: "", discountPrice: infoGroup.price, itemId: infoGroup.id,
+                                    picUrl: infoGroup.pic, reservePrice: "", title: infoGroup.title, userId: infoGroup.seller, cat: infoGroup.rCat,
+                                    type: type, biz30Day: infoGroup.sale, effectiveEndTime: "", effectiveStartTime: "", startFee: "", rate: ""
+                                };
+                                if (e) {
+                                    postData.reservePrice = e.reservePrice;
+                                    if (e.couponAmount) {
+                                        postData.shareUrl = "//uland.taobao.com/coupon/edetail?e=" + getParam(e.clickUrl, "e");
+                                        postData.amount = e.couponAmount;
+                                        postData.effectiveEndTime = infoGroup.endT;
+                                        postData.effectiveStartTime = infoGroup.startT;
+                                        postData.startFee = infoGroup.amountReq;
+                                    } else {
+                                        postData.clickUrl = "//s.click.taobao.com/t?e=" + getParam(e.clickUrl, "e");
+                                    }
+                                }
+                                postData.rate = {
+                                    sale: infoGroup.sale,
+                                    favCount: favCount,
+                                    picNum: picNum,
+                                    goodRate: goodRate
+                                };
+                                // console.log(postData);
+                                if ((!sessionStorage.douyapuControl || sessionStorage.douyapuControl != infoGroup.id) && dypmyswi) {
+                                    chrome.extension.sendMessage({
+                                        name: "universal",
+                                        url: mainUrl.storage,
+                                        type: "post",
+                                        dataType: "json",
+                                        data: {
+                                            coupon: JSON.stringify(postData),
+                                        }
+                                    }, function () {
+                                    });
+                                    sessionStorage.douyapuControl = infoGroup.id;
+                                }
                             }
                         }   //优惠券入库
                         function getRec() {
@@ -3244,7 +3284,7 @@
                     $("#dypMid9527").on("mouseenter", ".dypMid9527-phone", function () {
                         if (!$("#dypMid9527-phone-qr").children().length) {
                             new QRCode(document.getElementById("dypMid9527-phone-qr"), {
-                                text: `http://m.douyapu.com/?type=1&douyapu_id=${infoGroup.id}`,
+                                text: `http://m.douyapu.com/?type=2&refer=mid&douyapu_id=${infoGroup.id}`,
                                 width: 100,
                                 height: 100,
                                 colorDark: "#000000",
