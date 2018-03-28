@@ -1211,7 +1211,7 @@
             'detail.tmall.hk': {'name': "tm", 'dom': ['#J_TabBarBox', '#side-shop-info .hd', '.tm-floatcart-link', '#mainwrap .tabbar-bg']},
             'item.taobao.com': {'name': "tb", 'dom': ['#J_TabBarWrap']},
             'item.taobao.hk': {'name': "tb", 'dom': ['#J_TabBarWrap']},
-            'detail.ju.taobao.com': {'name': "tb", 'dom': ['.dd-header']},
+            'detail.ju.taobao.com': {'name': "ju", 'dom': ['.dd-header']},
             'chaoshi.detail.tmall.com': {'name': "tm", 'dom': ['#page .tm-chaoshi-nav']},
             'item.jd.com': {'name': "jd", 'dom': ['#detail .tab-main']},
             'item.jd.hk': {'name': "jd", 'dom': ['#detail .tab-main']},
@@ -1317,7 +1317,7 @@
                     ".proinfo-focus": 1,
                     ".prd-price-1": 1,
                     ".price_info": 1,
-                    ".J_statusBanner": 1
+                    ".J_statusBanner": 0
                 };
                 $.each(middleTemplateDom, function (v, k) {
                     if ($(v).length) {
@@ -1560,7 +1560,7 @@
                             $(".dypMid9527-priceBox-back").show();
                         }
                     });
-                }   //请求惠惠助手接口拿取商品历史价格数据
+                }           //价格趋势
                 function startSame(url) {
                     var getSameNum = 0;//
                     var plat = infoGroup.plat;//
@@ -1884,7 +1884,7 @@
                     if (plat == 'tm' || plat == 'tb') {
                         getSame();
                     }
-                }   //拿商品同款数据
+                }            //全网比价
                 function appendPriceCut(e) {
                     $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-coupon-priceCut dypClear">
                         <div id="dypMid9527-coupon-priceCutButt" data-douyamovepaopao="工具+降价+二维码">
@@ -1903,9 +1903,6 @@
                     } else if (e == 2) {
                         $(".dypMid9527-coupon-priceCut").css({"padding-left": "132px", "padding-bottom": "6px", "margin-top": "15px"});
                     }
-                    creatErWeiMa();
-                }   //添加降价提醒部分
-                function creatErWeiMa() {
                     var t, first = 0;
                     var nowPlat = infoGroup.plat;
                     switch (nowPlat) {
@@ -2028,8 +2025,424 @@
                         $(".dypMid9527-erweima-mask").hide();
                         $(".dypMid9527-coupon-erweima").hide();
                         $(".dypMid9527-coupon-priceCutIcon").addClass("douyapuyaohuang");
+                    });//创建二维码
+                }         //降价提醒部分
+                function startVip() {
+                    var page = 0;   // 当前第几页
+                    var sign = 1;
+                    var first = 0;
+                    var rowHeight = 151;
+                    var reqUrl = mainUrl.min + infoGroup.rCat + "-";
+                    if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm') {
+                        reqUrl = mainUrl.min;
+                    }
+                    $(".dypTop9527-vipCoupon").hover(function () {
+                        if (first == 0) {
+                            get();
+                            first = 1;
+                        }
+                        $(".dypTop9527-vipCouponDrop").show();
+                    }, function () {
+                        $(".dypTop9527-vipCouponDrop").hide();
                     });
-                }   //创建二维码
+                    $(".dypTop9527-vipCouponDrop ul").on("scroll", function () {
+                        if (sign == 1) {
+                            var allHeight = rowHeight * $(this).children().length;
+                            if (($(this).scrollTop() + $(this).height()) == allHeight) {
+                                get();
+                            }
+                        }
+                    });
+                    function get() {
+                        sign = 0;
+                        chrome.extension.sendMessage({
+                            name: "universal", url: reqUrl + page + ".json", type: "get", dataType: "json"
+                        }, function (e) {
+                            if (e && e.results && e.results.length > 0) {
+                                append(e.results);
+                                page += 1;
+                                sign = 1;
+                            }
+                        });
+                    }   //
+                    function append(d) {
+                        var list = "";
+                        $.each(d, function (v, k) {
+                            var item = JSON.parse(k.item);
+                            if (item.amount) {
+                                var couponNum = item.amount ? item.amount : 0;
+                                var a = "tb";
+                                if (item.item.tmall == 1) {
+                                    a = "tm";
+                                }
+                                list += `<li data-douyababapaopao="顶部+值得买">
+                                    <a data-url="${mainUrl.chain}${item.item.shareUrl}" class="dypClear">
+                                        <div class="fl"><img src="${item.item.picUrl}_140x140.jpg" alt=""></div>
+                                        <div class="fl dypTop9527-vipCouponDrop-itemR">
+                                            <div class="${a} dypTop9527-vipCouponDrop-icon"></div>
+                                            <div class="dypTop9527-vipCouponDrop-title">${item.item.title}</div>
+                                            <div class="dypTop9527-vipCouponDrop-sale">月销量${item.item.biz30Day}</div>
+                                            <div class="dypTop9527-vipCouponDrop-price">券后价 ：
+                                                <span class="dypTop9527-vipCouponDrop-nprice">¥${numSub(item.item.discountPrice, couponNum)}</span>
+                                                &nbsp;<span class="dypTop9527-vipCouponDrop-oprice">¥${item.item.discountPrice}</span>
+                                            </div>
+                                            <div class="dypClear">
+                                                <div class="fl dypTop9527-vipCouponDrop-buttl">${couponNum}元券</div>
+                                                <div class="fl dypTop9527-vipCouponDrop-buttr">立即领取</div>
+                                            </div>
+                                            <div class="dypTop9527-vipCouponDrop-icon1212"></div>
+                                        </div>
+                                    </a>
+                                </li>`;
+                            }
+                        });
+                        $('.dypTop9527-vipCouponDrop ul').append(list);
+                    }   //
+                    $('.dypTop9527-vipCouponDrop ul').on("click", "a", function () {
+                        window.open($(this).data("url"));
+                    });
+                }                //顶部(值得买)
+                function startBuyShow() {
+                    if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm' && infoGroup.plat != 'ju') {
+                        return;
+                    }
+                    var requestUrl = 'https://rate.tmall.com/list_detail_rate.htm?itemId=' + infoGroup.id + '&sellerId=' + infoGroup.seller + '&order=1&append=0&content=1&tagId=&posi=&picture=1&currentPage=';
+                    var totalNum;
+                    var showKaiguan = 1;
+                    $.ajax({
+                        type: "get",
+                        dataType: "html",
+                        url: requestUrl + 0,
+                        success: function (data) {
+                            totalNum = JSON.parse(data.replace('"rateDetail":', "")).paginator ? JSON.parse(data.replace('"rateDetail":', "")).paginator.items : "error";
+                            if (totalNum == "error") {
+                                $(".dypMid9527-buyers-show").remove();
+                                return;
+                            }
+                            if (totalNum > 999) {
+                                totalNum = "999+";
+                            }
+                            $("#dypMid9527 .dypMid9527-buyers-show .dypMid9527-title span").fadeOut(function () {
+                                $(this).html('买家秀<span style="color:#ff0033;font-size: 12px;font-weight: bold;margin-left:2px; ">' + totalNum + '</span>').fadeIn(1000);
+                            });
+                            var html = `<div id="dyp779946-fix-full" class="dyp779946-fix-full">
+                                <div id="dyp779946-container-box">
+                                    <div class="dyp779946-header clearfix">
+                                        <div class="dyp779946-header-title"></div>
+                                        <div class="dyp779946-header-num">为您找到所有买家秀共<span class="color-red">${totalNum}</span>张</div>
+                                    </div>
+                                    <div id="dyp779946-waterfall-box">
+                                    </div>
+                                </div>
+                                <div id="dyp779946-detail-box">
+                                </div>
+                                <div class="dyp779946-close-button"></div>
+                                <div class="dyp779946-scroll-top">
+                                    <p class="scroll"></p>
+                                    <p class="qq"></p>
+                                </div>
+                            </div>`;
+                            if (totalNum) {
+                                //买家秀按钮点击
+                                $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
+                                    $("body").addClass("dyp779946-body-unScroll");
+                                    $("#dyp779946-fix-full").css("visibility", "visible");
+                                    $("#dyp779946-fix-full").fadeIn();
+                                });
+                                $("body").prepend(html);
+                            } else {
+                                //买家秀按钮点击
+                                var htmlTpl = `<div class="dypMid9527-no-buyers-show">暂未发现买家秀</div>`;
+                                var clickSign = 0;
+                                $("#dypMid9527 .dypMid9527-buyers-show .dypMid9527-title").append(htmlTpl);
+                                $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
+                                    if (!clickSign) {
+                                        clickSign = 1;
+                                        $("#dypMid9527 .dypMid9527-no-buyers-show").fadeIn(function () {
+                                            setTimeout(function () {
+                                                $("#dypMid9527 .dypMid9527-no-buyers-show").fadeOut(function () {
+                                                    clickSign = 0;
+                                                });
+                                            }, 2000);
+                                        });
+                                    }
+                                });
+                            }
+                            //查看评价 点击图片增加查看所有买家秀入口
+                            $("#J_TabBar").on("click", "li", function () {
+                                var _mall = window.location.host.split(".")[1];
+                                var html = `<div class="dypBot9527-SeeAll-buyerShow" data-douyababapaopao="查看评价-买家秀入口"><span class="dypBot9527-SeeAllBuyerShow-icon"></span><span class="dypBot9527-SeeAllBuyerShow-title">全部买家秀(${totalNum})</span></div>`;
+                                if (_mall == "tmall") {//天猫
+                                    $(document).on({
+                                            'mouseenter': function () {
+                                                if ($(this).find(".dypBot9527-SeeAll-buyerShow").length == 0) {
+                                                    $(this).append(html);
+                                                    $(".dypBot9527-SeeAll-buyerShow").on("click", function () {
+                                                        $("#dypMid9527 .dypMid9527-buyers-show").click();
+                                                    })
+                                                }
+                                                $(".dypBot9527-SeeAll-buyerShow").show();
+                                            },
+                                            'mouseleave': function () {
+                                                $(".dypBot9527-SeeAll-buyerShow").hide();
+                                            }
+                                        },
+                                        ".tm-m-photo-viewer")
+                                } else if (_mall == "taobao") {//淘宝
+                                    $(document).on({
+                                        'mouseenter': function () {
+                                            if ($(this).find(".dypBot9527-SeeAll-buyerShow").length == 0) {
+                                                $(this).append(html);
+                                                $(".dypBot9527-SeeAll-buyerShow").on("click", function () {
+                                                    $("#dypMid9527 .dypMid9527-buyers-show").click();
+                                                })
+                                            }
+                                            $(".dypBot9527-SeeAll-buyerShow").show();
+                                        },
+                                        'mouseleave': function () {
+                                            $(".dypBot9527-SeeAll-buyerShow").hide();
+                                        }
+                                    }, ".J_ImgWrapper")
+                                }
+                            });
+                            var sortNum = 0;
+                            $('#dyp779946-waterfall-box').waterfall({
+                                itemCls: 'item',
+                                colWidth: 250,
+                                gutterWidth: 10,
+                                gutterHeight: 10,
+                                isAutoPrefill: true,
+                                checkImagesLoaded: true,
+                                path: function (page) {
+                                    return requestUrl + page;
+                                },
+                                dataType: 'html',
+                                loadingMsg: '<div style="text-align:center;padding:10px 0; color:#999;"><img src="data:image/gif;base64,R0lGODlhEAALAPQAAP///zMzM+Li4tra2u7u7jk5OTMzM1hYWJubm4CAgMjIyE9PT29vb6KiooODg8vLy1JSUjc3N3Jycuvr6+Dg4Pb29mBgYOPj4/X19cXFxbOzs9XV1fHx8TMzMzMzMzMzMyH5BAkLAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7" alt=""><br />加载中...</div>',
+                                callbacks: {
+                                    loadingStart: function ($loading) {
+                                        $loading.show();
+                                    },
+                                    loadingFinished: function ($loading, isBeyondMaxPage) {
+                                        if (!isBeyondMaxPage) {
+                                            $loading.fadeOut();
+                                        } else {
+                                            $loading.remove();
+                                        }
+                                    },
+                                    loadingError: function ($message) {
+                                        $message.html('请稍后重试');
+                                    },
+                                    renderData: function (data) {
+                                        var res = data.replace('"rateDetail":', "");
+                                        res = JSON.parse(res).rateList ? JSON.parse(res).rateList : "error";
+                                        var oli = "";
+                                        if (res == "error") {
+                                            return oli;
+                                        }
+                                        if (res && res.length == 0) {
+                                            $('#dyp779946-waterfall-box').waterfall('pause', function () {
+                                            });
+                                            return oli;
+                                        }
+                                        $.each(res, function (key, value) {
+                                            if (value.pics && value.pics.length > 0) {
+                                                sortNum += 1;
+                                                var thumbnailPics = '';
+                                                var addComment = '';
+                                                var addPics = '';
+                                                thumbnailPics += '<div class="thumbnail">';
+                                                $.each(value.pics, function (key, value) {
+                                                    if (key == 5) {
+                                                        return false;
+                                                    }
+                                                    thumbnailPics += `<img class="thumbnail-item" src=${value}_40x40.jpg data-num="${sortNum}" data-newnum="${key}">`;
+                                                });
+                                                thumbnailPics += '</div>';
+                                                if (value.appendComment && value.appendComment.content) {
+                                                    if (value.appendComment.pics.length > 0) {
+                                                        addPics += '<div class="add-comment-thumbnail">';
+                                                        $.each(value.appendComment.pics, function (key, value) {
+                                                            if (key == 5) {
+                                                                return false;
+                                                            }
+                                                            addPics += `<img class="thumbnail-item" src=${value}_40x40.jpg data-num="${sortNum}">`;
+                                                        });
+                                                        addPics += '</div>';
+                                                    }
+                                                    addComment = `<div class="add-comment">
+                                                        <div class="add-comment-title">追加 评论</div>
+                                                        <div class="add-comment-content">${value.appendComment.content}</div>
+                                                        ${addPics}
+                                                    </div>`;
+                                                }
+                                                oli += `<div class="item">
+                                                    <div class="top">
+                                                        <img src="${value.pics[0]}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
+                                                    </div>
+                                                    <div class="middle">
+                                                        ${thumbnailPics}
+                                                        <div class="comment">
+                                                            <span title="${value.rateContent}">${value.rateContent}</span>
+                                                        </div>
+                                                        ${addComment}
+                                                    </div>
+                                                    <div class="bottom">
+                                                        <div class="use-logo"><b class="t${value.tamllSweetLevel}"></b></div>
+                                                        <div class="bottom-right">
+                                                            <div class="use-name">${value.displayUserNick}</div>
+                                                            <div class="model-param" title="${value.auctionSku}">${value.auctionSku}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
+                                            }
+                                        });
+                                        return oli;
+                                    }
+                                }
+                            });
+                            $("#dyp779946-fix-full").on("click", ".thumbnail-item", function () {
+                                var height = $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height();
+                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height(height);
+                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').attr("src", $(this).attr("src").split("_40x40.jpg")[0]);
+                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').data("newnum", $(this).data("newnum"));
+                                $(this).addClass("active").siblings().removeClass("active");
+                            });
+                            $("#dyp779946-fix-full").on("click", ".top img", function () {
+                                var index = $(this).data("newnum");
+                                var num = $(this).data("num");
+                                var total = $('#dyp779946-fix-full .thumbnail img[data-num=' + $(this).data("num") + ']').length;
+                                var titleSwitch = "block";
+                                showKaiguan = 0;
+                                var detailComment = $(this).parent().parent().children(".middle").children(".comment").text();
+                                var detailAddComment = $(this).parent().parent().children(".middle").children(".add-comment").children(".add-comment-content").text();
+                                var mainPic = $(this).attr("src");
+                                if (!detailAddComment) {
+                                    titleSwitch = "none";
+                                }
+                                var thumbHtml = $(this).parent().parent().children(".middle").children(".thumbnail").children("img");
+                                var newThumbHtml = "";
+                                $.each(thumbHtml, function (v, k) {
+                                    var item = k.attributes.src.value.replace("_40x40.jpg", "_130x130.jpg");
+                                    if (k.attributes["data-newnum"].value == index) {
+                                        newThumbHtml += `<div class="active"><img src=${item} data-newnum="${v}" data-num="${num}"></div>`
+                                    } else {
+                                        newThumbHtml += `<div class=""><img src=${item} data-newnum="${v}" data-num="${num}"></div>`
+                                    }
+                                });
+                                var detailHtml = `<div class="dyp779946-header clearfix">
+                                    <div class="dyp779946-header-title"></div>
+                                </div>
+                                    <div id="dyp779946-waterfallDetail-box">
+                                    <div class="dyp779946-waterfallDetail-back">
+                                        <div class="dyp779946-waterfallDetail-img">
+                                            <img src="${mainPic}" alt="" data-newnum="${index}" data-num="${num}">
+                                            <div class="dyp779946-waterfallDetail-title dypTrans">
+                                                <p class="dypBold">初次评论</p>
+                                                <p class="dypAnimate" id="dypMjxAnimate">${detailComment}</p>
+                                                <p class="dypBold dyp-topMargin" style="display: ${titleSwitch}">追评</p>
+                                                <p style="display: ${titleSwitch}">${detailAddComment}</p>
+                                            </div>
+                                        </div>
+                                        <button class="l" data-douyababapaopao="工具+买家秀+详情左翻页"></button>
+                                        <button class="r" data-douyababapaopao="工具+买家秀+详情右翻页"></button>
+                                        <div class="dyp779946-waterfallDetail-page"><span id="dyp779946-waterfallDetail-now">${index + 1}</span>/${total}</div>
+                                    </div>
+                                    <div class="clearfix dyp-detail-thumb">
+                                        ${newThumbHtml}
+                                    </div>
+                                </div>`;
+                                $("#dyp779946-detail-box").html(detailHtml);
+                                $("#dyp779946-container-box").hide();
+                                $("#dyp779946-detail-box").show();
+                                $(".dyp-detail-thumb").on("click", "div", function () {
+                                    $(".dyp779946-waterfallDetail-img img").attr("src", $(this).children().attr("src").split("_130x130.jpg")[0]);
+                                    $(".dyp-detail-thumb").children().removeClass("active");
+                                    $(this).addClass("active");
+                                });
+                            });
+                            $("#dyp779946-detail-box").on("click", "button.r", function () {
+                                $(".dyp779946-waterfallDetail-back button").show();
+                                if ($(".dyp-detail-thumb>div.active").next().length) {
+                                    $(".dyp-detail-thumb>div.active").next().click();
+                                } else {
+                                    var index = $(this).parent().children(".dyp779946-waterfallDetail-img").children("img").data("num");
+                                    if ($('#dyp779946-waterfall-box .top img[data-num=' + index + ']').parent().parent().next().length) {
+                                        index += 1;
+                                        $('#dyp779946-waterfall-box .top img[data-num=' + index + ']').click();
+                                        $(".dyp-detail-thumb>div:first").click();
+                                    } else {
+                                        $(".dyp779946-waterfallDetail-back button.r").hide();
+                                    }
+                                }
+                                $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
+                            });
+                            $("#dyp779946-detail-box").on("click", "button.l", function () {
+                                $(".dyp779946-waterfallDetail-back button").show();
+                                if ($(".dyp-detail-thumb>div.active").prev().length) {
+                                    $(".dyp-detail-thumb>div.active").prev().click();
+                                } else {
+                                    var index = $(this).parent().children(".dyp779946-waterfallDetail-img").children("img").data("num");
+                                    if ($('#dyp779946-waterfall-box .top img[data-num=' + index + ']').parent().parent().prev().length) {
+                                        index -= 1;
+                                        $('#dyp779946-waterfall-box .top img[data-num=' + index + ']').click();
+                                        $(".dyp-detail-thumb>div:last").click();
+                                    } else {
+                                        $(".dyp779946-waterfallDetail-back button.l").hide();
+                                    }
+                                }
+                                $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
+                            });
+                            $("#dyp779946-detail-box").on("mouseenter", ".dyp779946-waterfallDetail-title", function () {
+                                $("#dypMjxAnimate").removeClass("dypAnimate");
+                                $(this).css({"height": "auto"});
+                                var height = $(this).css("height");
+                                $(this).css({"height": "89px"}).stop().animate({
+                                    height: height
+                                }, 500);
+                            });
+                            $("#dyp779946-detail-box").on("mouseleave", ".dyp779946-waterfallDetail-title", function () {
+                                $("#dypMjxAnimate").addClass("dypAnimate");
+                                $(this).stop().animate({
+                                    height: "89px"
+                                }, 500);
+                            });
+                            $("#dyp779946-fix-full").on("click", ".dyp779946-close-button", function () {
+                                if ($("#dyp779946-detail-box")[0].style.display == "block") {
+                                    showKaiguan = 1;
+                                    $("#dyp779946-container-box").show();
+                                    $("#dyp779946-detail-box").hide();
+                                } else {
+                                    $("#dyp779946-fix-full").fadeOut();
+                                    $("body").removeClass("dyp779946-body-unScroll");
+                                }
+                            });
+                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.scroll", function () {
+                                $("#dyp779946-fix-full").animate({
+                                    'scrollTop': '0px'
+                                }, 300)
+                            });
+                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.qq", function () {
+                                window.open("//shang.qq.com/wpa/qunwpa?idkey=07df4060e4b8ca7215881d58e29bdaad66177f17a11a82484c3dfa9168ebc2d2");
+                            });
+                            $("#dyp779946-fix-full").click(function (event) {
+                                var hos = $(event.target).closest($("#dyp779946-container-box")).length;
+                                var hos2 = $(event.target).closest($("#dyp779946-fix-full .dyp779946-scroll-top")).length;
+                                var hos3 = $(event.target).closest($("#dyp779946-fix-full .dyp779946-close-button")).length;
+                                var hos4 = $(event.target).closest($("#dyp779946-detail-box")).length;
+                                if (!hos && !hos2 && !hos3 && showKaiguan == 1) {
+                                    $("#dyp779946-fix-full").fadeOut();
+                                    $("body").removeClass("dyp779946-body-unScroll");
+                                } else if (!hos && !hos2 && !hos3 && !hos4 && showKaiguan == 0) {
+                                    if ($(event.target)[0].tagName != "BUTTON") {
+                                        showKaiguan = 1;
+                                        $("#dyp779946-container-box").show();
+                                        $("#dyp779946-detail-box").hide();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }   //中间(买家秀)
                 function qtCoupon() {
                     if (infoGroup.plat != 'sn' && infoGroup.plat != 'gm' && infoGroup.plat != 'dd') {
                         return;
@@ -2048,23 +2461,24 @@
                     appendPriceCut(2); //其他平台
                 }   //中间苏宁以及其他平台优惠券
                 !function () {
-                    if (infoGroup.plat != 'tm' && infoGroup.plat != 'tb') {
+                    if (infoGroup.plat != 'tm' && infoGroup.plat != 'tb' && infoGroup.plat != 'ju') {
                         return
                     }
                     infoGroup.id = getUrlParam("id");
                     var itemId = infoGroup.id;
                     var htmlT = $('html').html();
-                    if (locHost.indexOf("detail.ju.taobao") != -1) {
-                        infoGroup.id = getUrlParam("item_id");
-                        itemId = infoGroup.id;
-                    }
                     var nowPlat = '';
-                    if (infoGroup.plat == 'tm') {
+                    if (infoGroup.plat == 'ju' || infoGroup.plat == 'tm') {
                         nowPlat = "天猫";
                         changeColor("#F40137", "天　猫", "tm");
-                        infoGroup.rCat = htmlT.match(/"rootCatId":"(\d+)",/) ? htmlT.match(/"rootCatId":"(\d+)",/)[1] : "";
-                        infoGroup.seller = htmlT.match(/"userId":"(\d+)"/) ? htmlT.match(/"userId":"(\d+)",/)[1] : "";
-                        infoGroup.title = htmlT.match(/"title":"(.+?)"/) ? htmlT.match(/"title":"(.+?)"/)[1] : "";
+                        if (infoGroup.plat == 'ju') {
+                            infoGroup.id = getUrlParam("item_id");
+                            itemId = infoGroup.id;
+                        } else {
+                            infoGroup.title = htmlT.match(/"title":"(.+?)"/) ? htmlT.match(/"title":"(.+?)"/)[1] : "";
+                            infoGroup.rCat = htmlT.match(/"rootCatId":"(\d+)",/) ? htmlT.match(/"rootCatId":"(\d+)",/)[1] : "";
+                            infoGroup.seller = htmlT.match(/"userId":"(\d+)"/) ? htmlT.match(/"userId":"(\d+)",/)[1] : "";
+                        }
                     } else {
                         nowPlat = "淘宝";
                         $("#dypMid9527").css("z-index", "100000");
@@ -2074,9 +2488,10 @@
                         infoGroup.title = htmlT.match(/title(\s+):(\s+)'(.*?)'/) ? unicodeToUtf8(htmlT.match(/title(\s+):(\s+)'(.*?)'/)[3]) : "";
                     }   //
                     var num = 0;//
+                    var favCount = "";//
                     function couCount() {
                         num += 1;
-                        if (num == 2) {
+                        if (num == 3) {
                             startCou();
                             var url = "https://item.taobao.com/item.htm?id=" + itemId;
                             if (infoGroup.plat == "tm") {
@@ -2084,6 +2499,8 @@
                             }
                             startPrice(url);
                             startSame(url);
+                            startVip();
+                            startBuyShow();
                         }
                     }   //
                     $.ajax({
@@ -2094,13 +2511,15 @@
                                 var obj = JSON.parse(r[1].match(/({.*});/)[1]);
                                 if (obj && obj.mods && obj.mods.singleauction && obj.mods.singleauction.data) {
                                     obj = obj.mods.singleauction.data;
-                                    infoGroup.pid = obj.pid;
-                                    infoGroup.price = infoGroup.price ? infoGroup.price : obj.view_price;
-                                    infoGroup.rCat = infoGroup.rCat ? infoGroup.rCat : obj.category;
-                                    infoGroup.seller = infoGroup.seller ? infoGroup.seller : obj.user_id;
                                     infoGroup.title = infoGroup.title ? infoGroup.title : obj.title;
-                                    infoGroup.pic = infoGroup.pic ? infoGroup.pic : obj.pic_url;
+                                    infoGroup.price = infoGroup.price ? infoGroup.price : obj.view_price;
+                                    infoGroup.pid = obj.pid;
+                                    infoGroup.seller = infoGroup.seller ? infoGroup.seller : obj.user_id;
                                     infoGroup.shop = infoGroup.shop ? infoGroup.shop : obj.nick;
+                                    infoGroup.pic = infoGroup.pic ? infoGroup.pic : obj.pic_url;
+                                    if (infoGroup.plat == "ju") {
+                                        infoGroup.plat = obj.detail_url.match("item.taobao.com") ? "tb" : "tm"
+                                    }
                                 }
                             }
                         }, complete: function () {
@@ -2112,26 +2531,62 @@
                         success: function (e) {
                             if (e && e.data && e.data.pageList && e.data.pageList[0]) {
                                 var data = e.data.pageList[0];
+                                infoGroup.title = infoGroup.title ? infoGroup.title : data.title;
+                                infoGroup.price = infoGroup.price ? infoGroup.price : data.zkPrice;
+                                infoGroup.seller = infoGroup.seller ? infoGroup.seller : data.sellerId;
+                                infoGroup.rCat = infoGroup.rCat ? infoGroup.rCat : data.rootCatId;
+                                infoGroup.shop = infoGroup.shop ? infoGroup.shop : data.shopTitle;
+                                infoGroup.pic = infoGroup.pic ? infoGroup.pic : data.pictUrl;
+                                infoGroup.sale = data.biz30day;
                                 infoGroup.amount = data.couponAmount;
                                 infoGroup.amountReq = data.couponInfo;
                                 infoGroup.amountT = data.couponTotalCount;
                                 infoGroup.amountL = data.couponLeftCount;
-                                infoGroup.sale = data.biz30day;
                                 infoGroup.tkCom = data.tkCommFee;
                                 infoGroup.startT = data.couponEffectiveStartTime + ' 00:00:00';
                                 infoGroup.endT = data.couponEffectiveEndTime + ' 23:59:59';
-                                infoGroup.price = infoGroup.price ? infoGroup.price : data.zkPrice;
-                                infoGroup.rCat = infoGroup.rCat ? infoGroup.rCat : data.leafCatId;
-                                infoGroup.seller = infoGroup.seller ? infoGroup.seller : data.sellerId;
-                                infoGroup.title = infoGroup.title ? infoGroup.title : data.title;
-                                infoGroup.pic = infoGroup.pic ? infoGroup.pic : data.pictUrl;
-                                infoGroup.shop = infoGroup.shop ? infoGroup.shop : data.shopTitle;
+                                if (infoGroup.plat == "ju") {
+                                    infoGroup.plat = (data.userType == 1) ? "tm" : "tb"
+                                }
                             }
                         },
                         complete: function () {
                             couCount();
                         }
                     }); //阿里妈妈拿商品数据
+                    $.ajax({
+                        url: "https://acs.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/",
+                        data: {data: `{"itemNumId":"${itemId}"}`},
+                        success: function (e) {
+                            if (e && e.data && e.data.item) {
+                                var data = e.data.item;
+                                infoGroup.title = infoGroup.title ? infoGroup.title : data.title;
+                                infoGroup.rCat = infoGroup.rCat ? infoGroup.rCat : data.rootCategoryId;
+                                infoGroup.pic = infoGroup.pic ? infoGroup.pic : data.images[0];
+                                favCount = data.favcount;
+                            }
+                            if (e && e.data && e.data.apiStack && e.data.apiStack[0] && e.data.apiStack[0].value) {
+                                try {
+                                    var p = JSON.parse(e.data.apiStack[0].value);
+                                    if (p && p.skuCore && p.skuCore.sku2info && p.skuCore.sku2info[0] && p.skuCore.sku2info[0].price) {
+                                        var price = p.skuCore.sku2info[0].price;
+                                        var sale = p.item.sellCount;
+                                        infoGroup.price = infoGroup.price ? infoGroup.price : (price.priceMoney ? price.priceMoney / 100 : "");
+                                        infoGroup.sale = sale ? sale : infoGroup.sale;
+                                    }
+                                } catch (err) {
+                                }
+                            }
+                            if (e && e.data && e.data.seller) {
+                                var seller = e.data.seller;
+                                infoGroup.seller = infoGroup.seller ? infoGroup.seller : seller.userId;
+                                infoGroup.shop = infoGroup.shop ? infoGroup.shop : seller.shopName;
+                            }
+                        },
+                        complete: function () {
+                            couCount();
+                        }
+                    }); //淘宝H5商品数据
                     function startCou() {
                         var page = 1;
                         var getH5CouNum = 0;//
@@ -2202,40 +2657,39 @@
                         }//
                         getDan();
                         function hasDan(e) {
-                            // value += 2;
                             creatBottom({item: e}, 1);
                             var data = e;
                             var amount = infoGroup.amount;
                             var amountReq = infoGroup.amountReq;
                             var urls = `https://www.douyapu.com/coupon/chain/?urls=//uland.taobao.com/coupon/edetail?e=${getParam(data.clickUrl, "e")}`;
                             var oli = `<p class="dypClear">
-                                    <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
-                                        <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
-                                    </a>
-                                </p>
-                                <div class="dypClear">
-                                    <a id="douyapu-coupon-ling" data-douyababapaopao="工具+优惠券+领取">
-                                        <div class="fl dypMid9527-coupon-backImg">
-                                            <p class="p1"><i></i><span>${amount}</span>优惠券</p>
-                                            <p><span id="span-price">${amountReq}</span></p>
-                                        </div>
-                                    </a>
-                                    <div class="fl dypMid9527-coupon-right">
-                                        <p>
-                                            券后价 <span class="dypMid9527-coupon-price"> ${numSub(infoGroup.price, amount)}</span>
-                                            <span class="font-color-ff0033"> 元</span>
-                                        </p>
-                                        <div class="dypClear">
-                                            <p class="fl">还剩&nbsp;：</p>
-                                            <p id="dypMid9527-fnTimeCountDown" class="fl">
-                                                <span class="day">00</span><span class="dypMid9527-c-2c2c2c">日</span>
-                                                <span class="hour">00</span><span class="dypMid9527-c-2c2c2c">时</span>
-                                                <span class="mini">00</span><span class="dypMid9527-c-2c2c2c">分</span>
-                                                <span class="sec">00</span>.<span class="hm">0</span><span class="dypMid9527-c-2c2c2c">秒</span>
-                                            </p>
-                                        </div>
+                                <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
+                                    <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
+                                </a>
+                            </p>
+                            <div class="dypClear">
+                                <a id="douyapu-coupon-ling" data-douyababapaopao="工具+优惠券+领取">
+                                    <div class="fl dypMid9527-coupon-backImg">
+                                        <p class="p1"><i></i><span>${amount}</span>优惠券</p>
+                                        <p><span id="span-price">${amountReq}</span></p>
                                     </div>
-                                </div>`;
+                                </a>
+                                <div class="fl dypMid9527-coupon-right">
+                                    <p>
+                                        券后价 <span class="dypMid9527-coupon-price"> ${numSub(infoGroup.price, amount)}</span>
+                                        <span class="font-color-ff0033"> 元</span>
+                                    </p>
+                                    <div class="dypClear">
+                                        <p class="fl">还剩&nbsp;：</p>
+                                        <p id="dypMid9527-fnTimeCountDown" class="fl">
+                                            <span class="day">00</span><span class="dypMid9527-c-2c2c2c">日</span>
+                                            <span class="hour">00</span><span class="dypMid9527-c-2c2c2c">时</span>
+                                            <span class="mini">00</span><span class="dypMid9527-c-2c2c2c">分</span>
+                                            <span class="sec">00</span>.<span class="hm">0</span><span class="dypMid9527-c-2c2c2c">秒</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>`;
                             $("#dypMid9527 .dypMid9527-box-coupon").html(oli);
                             $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-erweima-mask"></div>`);//
                             $("#douyapu-coupon-ling").click(function () {
@@ -2266,14 +2720,14 @@
                         }//
                         function noDan(e) {
                             var oli1 = `<p class="dypClear">
-                                    <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
-                                        <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
-                                    </a>
-                                </p>
-                                <div class="dypMid9527-no-coupon">
-                                    <b class="dypMid9527-has-no"></b>
-                                    <span>不好意思 , 暂无可用的优惠券</span>
-                                </div>`;
+                                <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
+                                    <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
+                                </a>
+                            </p>
+                            <div class="dypMid9527-no-coupon">
+                                <b class="dypMid9527-has-no"></b>
+                                <span>不好意思 , 暂无可用的优惠券</span>
+                            </div>`;
                             $("#dypMid9527 .dypMid9527-box-coupon").html(oli1);
                             $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-erweima-mask"></div>`);//
                             appendPriceCut(2);
@@ -2281,13 +2735,15 @@
                             saveCoupon(e);
                         }//
                         function saveCoupon(e) {
-                            var favCount = "";
                             var picNum = $("#J_UlThumb") ? $("#J_UlThumb li").length : 0;//
+                            if (locHost == 'detail.ju.taobao.com') {
+                                picNum = $(".thumbnails") ? $(".thumbnails li").length : 0;
+                            }
                             var goodRate = "";
                             var rateNum = 0;        //
                             function rateCount() {
                                 rateNum++;
-                                if (rateNum == 2) {
+                                if (rateNum == 1) {
                                     postTo()
                                 }
                             }//
@@ -2308,29 +2764,6 @@
                                     rateCount();
                                 }
                             });
-                            $.ajax({
-                                url: "https://acs.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/",
-                                data: {data: `{"itemNumId":"${itemId}"}`},
-                                success: function (d) {
-                                    if (d && d.data && d.data.item) {
-                                        var data = d.data.item;
-                                        favCount = data.favcount;
-                                    }
-                                    if (d && d.data && d.data.apiStack && d.data.apiStack[0] && d.data.apiStack[0].value) {
-                                        try {
-                                            var p = JSON.parse(d.data.apiStack[0].value);
-                                            if (p && p.item && p.item.sellCount) {
-                                                p = p.item.sellCount;
-                                                infoGroup.sale = p ? p : infoGroup.sale;
-                                            }
-                                        } catch (err) {
-                                        }
-                                    }
-                                },
-                                complete: function () {
-                                    rateCount();
-                                }
-                            }); //拿商品数据
                             function postTo() {
                                 var type = (infoGroup.plat == "tm") ? 1 : 0;
                                 var postData = {
@@ -2357,6 +2790,7 @@
                                     goodRate: goodRate
                                 };
                                 // console.log(postData);
+                                // console.log(infoGroup);
                                 if ((!sessionStorage.douyapuControl || sessionStorage.douyapuControl != infoGroup.id) && dypmyswi) {
                                     chrome.extension.sendMessage({
                                         name: "universal",
@@ -2510,6 +2944,7 @@
                         }
                     }, false);
                     startSame(location.href);         //京东页面同款数据
+                    startVip();
                     function getJdBuyShow(e) {
                         var id = e.data.douyapuId;
                         var requestUrl = 'https://sclub.jd.com/comment/productPageComments.action?score=0&sortType=5&pageSize=10&isShadowSku=0&fold=1&productId=' + id + '&page=';
@@ -2528,22 +2963,22 @@
                                     $(this).html('买家秀<span style="color:#ff0033;font-size: 12px;font-weight: bold;margin-left:2px; ">' + totalNum + '</span>').fadeIn(1000);
                                 });
                                 var html = `<div id="dyp779946-fix-full" class="dyp779946-fix-full">
-                        <div id="dyp779946-container-box">
-                            <div class="dyp779946-header clearfix">
-                                <div class="dyp779946-header-title"></div>
-                                <div class="dyp779946-header-num">为您找到所有买家秀共<span class="color-red">${totalNum}</span>张</div>
-                            </div>
-                            <div id="dyp779946-waterfall-box">
-                            </div>
-                        </div>
-                        <div id="dyp779946-detail-box">
-                        </div>
-                        <div class="dyp779946-close-button"></div>
-                        <div class="dyp779946-scroll-top">
-                            <p class="scroll"></p>
-                            <p class="qq"></p>
-                        </div>
-                    </div>`;
+                                    <div id="dyp779946-container-box">
+                                        <div class="dyp779946-header clearfix">
+                                            <div class="dyp779946-header-title"></div>
+                                            <div class="dyp779946-header-num">为您找到所有买家秀共<span class="color-red">${totalNum}</span>张</div>
+                                        </div>
+                                        <div id="dyp779946-waterfall-box">
+                                        </div>
+                                    </div>
+                                    <div id="dyp779946-detail-box">
+                                    </div>
+                                    <div class="dyp779946-close-button"></div>
+                                    <div class="dyp779946-scroll-top">
+                                        <p class="scroll"></p>
+                                        <p class="qq"></p>
+                                    </div>
+                                </div>`;
                                 if (totalNum) {
                                     //买家秀按钮点击
                                     $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
@@ -2631,30 +3066,30 @@
                                                             addPics += '</div>';
                                                         }
                                                         addComment = `<div class="add-comment">
-                                                <div class="add-comment-title">追加 评论</div>
-                                                <div class="add-comment-content">${value.afterUserComment.hAfterUserComment.content}</div>
-                                                ${addPics}
-                                            </div>`;
+                                                            <div class="add-comment-title">追加 评论</div>
+                                                            <div class="add-comment-content">${value.afterUserComment.hAfterUserComment.content}</div>
+                                                            ${addPics}
+                                                        </div>`;
                                                     }
                                                     oli += `<div class="item">
-											<div class="top">
-												<img src="${value.images[0].imgUrl.replace(/((\d+)x(\d+))/, "640x480").replace(/n0/, "shaidan")}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
-											</div>
-											<div class="middle">
-												${thumbnailPics}
-												<div class="comment">
-													<span title="${value.content}">${value.content}</span>
-												</div>
-												${addComment}
-											</div>
-											<div class="bottom">
-												<div class="use-logo"><b style="background: url(https://${value.userImageUrl});background-size:100%"></b></div>
-												<div class="bottom-right">
-													<div class="use-name">${value.nickname}</div>
-													<div class="model-param" title="${value.productColor}">${value.productColor}</div>
-												</div>
-											</div>
-										</div>`;
+                                                        <div class="top">
+                                                            <img src="${value.images[0].imgUrl.replace(/((\d+)x(\d+))/, "640x480").replace(/n0/, "shaidan")}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
+                                                        </div>
+                                                        <div class="middle">
+                                                            ${thumbnailPics}
+                                                            <div class="comment">
+                                                                <span title="${value.content}">${value.content}</span>
+                                                            </div>
+                                                            ${addComment}
+                                                        </div>
+                                                        <div class="bottom">
+                                                            <div class="use-logo"><b style="background: url(https://${value.userImageUrl});background-size:100%"></b></div>
+                                                            <div class="bottom-right">
+                                                                <div class="use-name">${value.nickname}</div>
+                                                                <div class="model-param" title="${value.productColor}">${value.productColor}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`;
                                                 }
                                             });
                                             return oli;
@@ -2691,27 +3126,27 @@
                                         }
                                     });
                                     var detailHtml = `<div class="dyp779946-header clearfix">
-                            <div class="dyp779946-header-title"></div>
-                        </div>
-                        <div id="dyp779946-waterfallDetail-box">
-                            <div class="dyp779946-waterfallDetail-back">
-                                <div class="dyp779946-waterfallDetail-img">
-                                    <img src="${mainPic}" alt="" data-newnum="${index}" data-num="${num}">
-                                    <div class="dyp779946-waterfallDetail-title dypTrans">
-                                        <p class="dypBold">初次评论</p>
-                                        <p class="dypAnimate" id="dypMjxAnimate">${detailComment}</p>
-                                        <p class="dypBold dyp-topMargin" style="display: ${titleSwitch}">追评</p>
-                                        <p style="display: ${titleSwitch}">${detailAddComment}</p>
+                                        <div class="dyp779946-header-title"></div>
                                     </div>
-                                </div>
-                                <button class="l" data-douyababapaopao="工具+买家秀+详情左翻页"></button>
-                                <button class="r" data-douyababapaopao="工具+买家秀+详情右翻页"></button>
-                                <div class="dyp779946-waterfallDetail-page"><span id="dyp779946-waterfallDetail-now">${index + 1}</span>/${total}</div>
-                            </div>
-                            <div class="clearfix dyp-detail-thumb">
-                                ${newThumbHtml}
-                            </div>
-                        </div>`;
+                                    <div id="dyp779946-waterfallDetail-box">
+                                        <div class="dyp779946-waterfallDetail-back">
+                                            <div class="dyp779946-waterfallDetail-img">
+                                                <img src="${mainPic}" alt="" data-newnum="${index}" data-num="${num}">
+                                                <div class="dyp779946-waterfallDetail-title dypTrans">
+                                                    <p class="dypBold">初次评论</p>
+                                                    <p class="dypAnimate" id="dypMjxAnimate">${detailComment}</p>
+                                                    <p class="dypBold dyp-topMargin" style="display: ${titleSwitch}">追评</p>
+                                                    <p style="display: ${titleSwitch}">${detailAddComment}</p>
+                                                </div>
+                                            </div>
+                                            <button class="l" data-douyababapaopao="工具+买家秀+详情左翻页"></button>
+                                            <button class="r" data-douyababapaopao="工具+买家秀+详情右翻页"></button>
+                                            <div class="dyp779946-waterfallDetail-page"><span id="dyp779946-waterfallDetail-now">${index + 1}</span>/${total}</div>
+                                        </div>
+                                        <div class="clearfix dyp-detail-thumb">
+                                            ${newThumbHtml}
+                                        </div>
+                                    </div>`;
                                     $("#dyp779946-detail-box").html(detailHtml);
                                     $("#dyp779946-container-box").hide();
                                     $("#dyp779946-detail-box").show();
@@ -2907,6 +3342,7 @@
                     }, false);
                     startSame(location.origin + location.pathname);
                     qtCoupon();
+                    startVip();
                 }();    //苏宁易购页面
                 !function () {
                     if (infoGroup.plat != 'gm') {
@@ -2933,6 +3369,7 @@
                     }, false);
                     startSame(location.origin + location.pathname);
                     qtCoupon();
+                    startVip();
                 }();    //国美页面
                 !function () {
                     if (infoGroup.plat != 'dd') {
@@ -2961,6 +3398,7 @@
                     }, false);
                     startSame(location.origin + location.pathname);
                     qtCoupon();
+                    startVip();
                 }();    //当当页面
                 !function () {
                     $(".dypTop9527-logo").on("click", "b", function () {
@@ -3070,9 +3508,9 @@
                                     var html = "";
                                     $.each(response.results, function (v, k) {
                                         html += `<li data-douyababapaopao="顶部+活动+ID${k.id}">
-                                        <b class="icon${k.act_badge_label}"></b>                        
-                                        <a href="${k.act_link}" target="_blank">${k.act_name}</a>
-                                    </li>`;
+                                            <b class="icon${k.act_badge_label}"></b>                        
+                                            <a href="${k.act_link}" target="_blank">${k.act_name}</a>
+                                        </li>`;
                                     });
                                     $(".dypTop9527-swiper_wrap ul").append(html);
                                     $(".dypTop9527-font_inner li:eq(0)").clone(true).appendTo($(".dypTop9527-font_inner"));
@@ -3163,81 +3601,6 @@
                         $(".dypMid9527-absActive-box").remove();
                     }
                 }();    //顶部和中间(活动页面,固定滚动活动)
-                !function () {
-                    var page = 0;   // 当前第几页
-                    var sign = 1;
-                    var first = 0;
-                    var rowHeight = 151;
-                    var reqUrl = mainUrl.min + infoGroup.rCat + "-";
-                    if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm') {
-                        reqUrl = mainUrl.min;
-                    }
-                    $(".dypTop9527-vipCoupon").hover(function () {
-                        if (first == 0) {
-                            get();
-                            first = 1;
-                        }
-                        $(".dypTop9527-vipCouponDrop").show();
-                    }, function () {
-                        $(".dypTop9527-vipCouponDrop").hide();
-                    });
-                    $(".dypTop9527-vipCouponDrop ul").on("scroll", function () {
-                        if (sign == 1) {
-                            var allHeight = rowHeight * $(this).children().length;
-                            if (($(this).scrollTop() + $(this).height()) == allHeight) {
-                                get();
-                            }
-                        }
-                    });
-                    function get() {
-                        sign = 0;
-                        chrome.extension.sendMessage({
-                            name: "universal", url: reqUrl + page + ".json", type: "get", dataType: "json"
-                        }, function (e) {
-                            if (e && e.results && e.results.length > 0) {
-                                append(e.results);
-                                page += 1;
-                                sign = 1;
-                            }
-                        });
-                    }   //
-                    function append(d) {
-                        var list = "";
-                        $.each(d, function (v, k) {
-                            var item = JSON.parse(k.item);
-                            if (item.amount) {
-                                var couponNum = item.amount ? item.amount : 0;
-                                var a = "tb";
-                                if (item.item.tmall == 1) {
-                                    a = "tm";
-                                }
-                                list += `<li data-douyababapaopao="顶部+值得买">
-                                <a data-url="${mainUrl.chain}${item.item.shareUrl}" class="dypClear">
-                                    <div class="fl"><img src="${item.item.picUrl}_140x140.jpg" alt=""></div>
-                                    <div class="fl dypTop9527-vipCouponDrop-itemR">
-                                        <div class="${a} dypTop9527-vipCouponDrop-icon"></div>
-                                        <div class="dypTop9527-vipCouponDrop-title">${item.item.title}</div>
-                                        <div class="dypTop9527-vipCouponDrop-sale">月销量${item.item.biz30Day}</div>
-                                        <div class="dypTop9527-vipCouponDrop-price">券后价 ：
-                                            <span class="dypTop9527-vipCouponDrop-nprice">¥${numSub(item.item.discountPrice, couponNum)}</span>
-                                            &nbsp;<span class="dypTop9527-vipCouponDrop-oprice">¥${item.item.discountPrice}</span>
-                                        </div>
-                                        <div class="dypClear">
-                                            <div class="fl dypTop9527-vipCouponDrop-buttl">${couponNum}元券</div>
-                                            <div class="fl dypTop9527-vipCouponDrop-buttr">立即领取</div>
-                                        </div>
-                                        <div class="dypTop9527-vipCouponDrop-icon1212"></div>
-                                    </div>
-                                </a>
-                            </li>`;
-                            }
-                        });
-                        $('.dypTop9527-vipCouponDrop ul').append(list);
-                    }   //
-                    $('.dypTop9527-vipCouponDrop ul').on("click", "a", function () {
-                        window.open($(this).data("url"));
-                    });
-                }();    //顶部(值得买)
                 !function () {
                     var kaiGuan = JSON.parse(dypSwitch).midTime.value;  //中间(限时活动)
                     if (kaiGuan == 1) {
@@ -3396,349 +3759,8 @@
                     }
                 });   //优惠券倒计时插件
                 !function () {
-                    if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm') {
-                        return;
-                    }
-                    var requestUrl = 'https://rate.tmall.com/list_detail_rate.htm?itemId=' + infoGroup.id + '&sellerId=' + infoGroup.seller + '&order=1&append=0&content=1&tagId=&posi=&picture=1&currentPage=';
-                    var totalNum;
-                    var showKaiguan = 1;
-                    $.ajax({
-                        type: "get",
-                        dataType: "html",
-                        url: requestUrl + 0,
-                        success: function (data) {
-                            totalNum = JSON.parse(data.replace('"rateDetail":', "")).paginator ? JSON.parse(data.replace('"rateDetail":', "")).paginator.items : "error";
-                            if (totalNum == "error") {
-                                $(".dypMid9527-buyers-show").remove();
-                                return;
-                            }
-                            if (totalNum > 999) {
-                                totalNum = "999+";
-                            }
-                            $("#dypMid9527 .dypMid9527-buyers-show .dypMid9527-title span").fadeOut(function () {
-                                $(this).html('买家秀<span style="color:#ff0033;font-size: 12px;font-weight: bold;margin-left:2px; ">' + totalNum + '</span>').fadeIn(1000);
-                            });
-                            var html = `<div id="dyp779946-fix-full" class="dyp779946-fix-full">
-                            <div id="dyp779946-container-box">
-                                <div class="dyp779946-header clearfix">
-                                    <div class="dyp779946-header-title"></div>
-                                    <div class="dyp779946-header-num">为您找到所有买家秀共<span class="color-red">${totalNum}</span>张</div>
-                                </div>
-                                <div id="dyp779946-waterfall-box">
-                                </div>
-                            </div>
-                            <div id="dyp779946-detail-box">
-                            </div>
-                            <div class="dyp779946-close-button"></div>
-                            <div class="dyp779946-scroll-top">
-                                <p class="scroll"></p>
-                                <p class="qq"></p>
-                            </div>
-                        </div>`;
-                            if (totalNum) {
-                                //买家秀按钮点击
-                                $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
-                                    $("body").addClass("dyp779946-body-unScroll");
-                                    $("#dyp779946-fix-full").css("visibility", "visible");
-                                    $("#dyp779946-fix-full").fadeIn();
-                                });
-                                $("body").prepend(html);
-                            } else {
-                                //买家秀按钮点击
-                                var htmlTpl = `<div class="dypMid9527-no-buyers-show">暂未发现买家秀</div>`;
-                                var clickSign = 0;
-                                $("#dypMid9527 .dypMid9527-buyers-show .dypMid9527-title").append(htmlTpl);
-                                $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
-                                    if (!clickSign) {
-                                        clickSign = 1;
-                                        $("#dypMid9527 .dypMid9527-no-buyers-show").fadeIn(function () {
-                                            setTimeout(function () {
-                                                $("#dypMid9527 .dypMid9527-no-buyers-show").fadeOut(function () {
-                                                    clickSign = 0;
-                                                });
-                                            }, 2000);
-                                        });
-                                    }
-                                });
-                            }
-                            //查看评价 点击图片增加查看所有买家秀入口
-                            $("#J_TabBar").on("click", "li", function () {
-                                var _mall = window.location.host.split(".")[1];
-                                var html = `<div class="dypBot9527-SeeAll-buyerShow" data-douyababapaopao="查看评价-买家秀入口"><span class="dypBot9527-SeeAllBuyerShow-icon"></span><span class="dypBot9527-SeeAllBuyerShow-title">全部买家秀(${totalNum})</span></div>`;
-                                if (_mall == "tmall") {//天猫
-                                    $(document).on({
-                                            'mouseenter': function () {
-                                                if ($(this).find(".dypBot9527-SeeAll-buyerShow").length == 0) {
-                                                    $(this).append(html);
-                                                    $(".dypBot9527-SeeAll-buyerShow").on("click", function () {
-                                                        $("#dypMid9527 .dypMid9527-buyers-show").click();
-                                                    })
-                                                }
-                                                $(".dypBot9527-SeeAll-buyerShow").show();
-                                            },
-                                            'mouseleave': function () {
-                                                $(".dypBot9527-SeeAll-buyerShow").hide();
-                                            }
-                                        },
-                                        ".tm-m-photo-viewer")
-                                } else if (_mall == "taobao") {//淘宝
-                                    $(document).on({
-                                        'mouseenter': function () {
-                                            if ($(this).find(".dypBot9527-SeeAll-buyerShow").length == 0) {
-                                                $(this).append(html);
-                                                $(".dypBot9527-SeeAll-buyerShow").on("click", function () {
-                                                    $("#dypMid9527 .dypMid9527-buyers-show").click();
-                                                })
-                                            }
-                                            $(".dypBot9527-SeeAll-buyerShow").show();
-                                        },
-                                        'mouseleave': function () {
-                                            $(".dypBot9527-SeeAll-buyerShow").hide();
-                                        }
-                                    }, ".J_ImgWrapper")
-                                }
-                            });
-                            var sortNum = 0;
-                            $('#dyp779946-waterfall-box').waterfall({
-                                itemCls: 'item',
-                                colWidth: 250,
-                                gutterWidth: 10,
-                                gutterHeight: 10,
-                                isAutoPrefill: true,
-                                checkImagesLoaded: true,
-                                path: function (page) {
-                                    return requestUrl + page;
-                                },
-                                dataType: 'html',
-                                loadingMsg: '<div style="text-align:center;padding:10px 0; color:#999;"><img src="data:image/gif;base64,R0lGODlhEAALAPQAAP///zMzM+Li4tra2u7u7jk5OTMzM1hYWJubm4CAgMjIyE9PT29vb6KiooODg8vLy1JSUjc3N3Jycuvr6+Dg4Pb29mBgYOPj4/X19cXFxbOzs9XV1fHx8TMzMzMzMzMzMyH5BAkLAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7" alt=""><br />加载中...</div>',
-                                callbacks: {
-                                    loadingStart: function ($loading) {
-                                        $loading.show();
-                                    },
-                                    loadingFinished: function ($loading, isBeyondMaxPage) {
-                                        if (!isBeyondMaxPage) {
-                                            $loading.fadeOut();
-                                        } else {
-                                            $loading.remove();
-                                        }
-                                    },
-                                    loadingError: function ($message) {
-                                        $message.html('请稍后重试');
-                                    },
-                                    renderData: function (data) {
-                                        var res = data.replace('"rateDetail":', "");
-                                        res = JSON.parse(res).rateList ? JSON.parse(res).rateList : "error";
-                                        var oli = "";
-                                        if (res == "error") {
-                                            return oli;
-                                        }
-                                        if (res && res.length == 0) {
-                                            $('#dyp779946-waterfall-box').waterfall('pause', function () {
-                                            });
-                                            return oli;
-                                        }
-                                        $.each(res, function (key, value) {
-                                            if (value.pics && value.pics.length > 0) {
-                                                sortNum += 1;
-                                                var thumbnailPics = '';
-                                                var addComment = '';
-                                                var addPics = '';
-                                                thumbnailPics += '<div class="thumbnail">';
-                                                $.each(value.pics, function (key, value) {
-                                                    if (key == 5) {
-                                                        return false;
-                                                    }
-                                                    thumbnailPics += `<img class="thumbnail-item" src=${value}_40x40.jpg data-num="${sortNum}" data-newnum="${key}">`;
-                                                });
-                                                thumbnailPics += '</div>';
-                                                if (value.appendComment && value.appendComment.content) {
-                                                    if (value.appendComment.pics.length > 0) {
-                                                        addPics += '<div class="add-comment-thumbnail">';
-                                                        $.each(value.appendComment.pics, function (key, value) {
-                                                            if (key == 5) {
-                                                                return false;
-                                                            }
-                                                            addPics += `<img class="thumbnail-item" src=${value}_40x40.jpg data-num="${sortNum}">`;
-                                                        });
-                                                        addPics += '</div>';
-                                                    }
-                                                    addComment = `<div class="add-comment">
-                                                <div class="add-comment-title">追加 评论</div>
-                                                <div class="add-comment-content">${value.appendComment.content}</div>
-                                                ${addPics}
-                                            </div>`;
-                                                }
-                                                oli += `<div class="item">
-											<div class="top">
-												<img src="${value.pics[0]}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
-											</div>
-											<div class="middle">
-												${thumbnailPics}
-												<div class="comment">
-													<span title="${value.rateContent}">${value.rateContent}</span>
-												</div>
-												${addComment}
-											</div>
-											<div class="bottom">
-												<div class="use-logo"><b class="t${value.tamllSweetLevel}"></b></div>
-												<div class="bottom-right">
-													<div class="use-name">${value.displayUserNick}</div>
-													<div class="model-param" title="${value.auctionSku}">${value.auctionSku}</div>
-												</div>
-											</div>
-										</div>`;
-                                            }
-                                        });
-                                        return oli;
-                                    }
-                                }
-                            });
-                            $("#dyp779946-fix-full").on("click", ".thumbnail-item", function () {
-                                var height = $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height();
-                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height(height);
-                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').attr("src", $(this).attr("src").split("_40x40.jpg")[0]);
-                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').data("newnum", $(this).data("newnum"));
-                                $(this).addClass("active").siblings().removeClass("active");
-                            });
-                            $("#dyp779946-fix-full").on("click", ".top img", function () {
-                                var index = $(this).data("newnum");
-                                var num = $(this).data("num");
-                                var total = $('#dyp779946-fix-full .thumbnail img[data-num=' + $(this).data("num") + ']').length;
-                                var titleSwitch = "block";
-                                showKaiguan = 0;
-                                var detailComment = $(this).parent().parent().children(".middle").children(".comment").text();
-                                var detailAddComment = $(this).parent().parent().children(".middle").children(".add-comment").children(".add-comment-content").text();
-                                var mainPic = $(this).attr("src");
-                                if (!detailAddComment) {
-                                    titleSwitch = "none";
-                                }
-                                var thumbHtml = $(this).parent().parent().children(".middle").children(".thumbnail").children("img");
-                                var newThumbHtml = "";
-                                $.each(thumbHtml, function (v, k) {
-                                    var item = k.attributes.src.value.replace("_40x40.jpg", "_130x130.jpg");
-                                    if (k.attributes["data-newnum"].value == index) {
-                                        newThumbHtml += `<div class="active"><img src=${item} data-newnum="${v}" data-num="${num}"></div>`
-                                    } else {
-                                        newThumbHtml += `<div class=""><img src=${item} data-newnum="${v}" data-num="${num}"></div>`
-                                    }
-                                });
-                                var detailHtml = `<div class="dyp779946-header clearfix">
-                            <div class="dyp779946-header-title"></div>
-                        </div>
-                            <div id="dyp779946-waterfallDetail-box">
-                            <div class="dyp779946-waterfallDetail-back">
-                                <div class="dyp779946-waterfallDetail-img">
-                                    <img src="${mainPic}" alt="" data-newnum="${index}" data-num="${num}">
-                                    <div class="dyp779946-waterfallDetail-title dypTrans">
-                                        <p class="dypBold">初次评论</p>
-                                        <p class="dypAnimate" id="dypMjxAnimate">${detailComment}</p>
-                                        <p class="dypBold dyp-topMargin" style="display: ${titleSwitch}">追评</p>
-                                        <p style="display: ${titleSwitch}">${detailAddComment}</p>
-                                    </div>
-                                </div>
-                                <button class="l" data-douyababapaopao="工具+买家秀+详情左翻页"></button>
-                                <button class="r" data-douyababapaopao="工具+买家秀+详情右翻页"></button>
-                                <div class="dyp779946-waterfallDetail-page"><span id="dyp779946-waterfallDetail-now">${index + 1}</span>/${total}</div>
-                            </div>
-                            <div class="clearfix dyp-detail-thumb">
-                                ${newThumbHtml}
-                            </div>
-                        </div>`;
-                                $("#dyp779946-detail-box").html(detailHtml);
-                                $("#dyp779946-container-box").hide();
-                                $("#dyp779946-detail-box").show();
-                                $(".dyp-detail-thumb").on("click", "div", function () {
-                                    $(".dyp779946-waterfallDetail-img img").attr("src", $(this).children().attr("src").split("_130x130.jpg")[0]);
-                                    $(".dyp-detail-thumb").children().removeClass("active");
-                                    $(this).addClass("active");
-                                });
-                            });
-                            $("#dyp779946-detail-box").on("click", "button.r", function () {
-                                $(".dyp779946-waterfallDetail-back button").show();
-                                if ($(".dyp-detail-thumb>div.active").next().length) {
-                                    $(".dyp-detail-thumb>div.active").next().click();
-                                } else {
-                                    var index = $(this).parent().children(".dyp779946-waterfallDetail-img").children("img").data("num");
-                                    if ($('#dyp779946-waterfall-box .top img[data-num=' + index + ']').parent().parent().next().length) {
-                                        index += 1;
-                                        $('#dyp779946-waterfall-box .top img[data-num=' + index + ']').click();
-                                        $(".dyp-detail-thumb>div:first").click();
-                                    } else {
-                                        $(".dyp779946-waterfallDetail-back button.r").hide();
-                                    }
-                                }
-                                $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
-                            });
-                            $("#dyp779946-detail-box").on("click", "button.l", function () {
-                                $(".dyp779946-waterfallDetail-back button").show();
-                                if ($(".dyp-detail-thumb>div.active").prev().length) {
-                                    $(".dyp-detail-thumb>div.active").prev().click();
-                                } else {
-                                    var index = $(this).parent().children(".dyp779946-waterfallDetail-img").children("img").data("num");
-                                    if ($('#dyp779946-waterfall-box .top img[data-num=' + index + ']').parent().parent().prev().length) {
-                                        index -= 1;
-                                        $('#dyp779946-waterfall-box .top img[data-num=' + index + ']').click();
-                                        $(".dyp-detail-thumb>div:last").click();
-                                    } else {
-                                        $(".dyp779946-waterfallDetail-back button.l").hide();
-                                    }
-                                }
-                                $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
-                            });
-                            $("#dyp779946-detail-box").on("mouseenter", ".dyp779946-waterfallDetail-title", function () {
-                                $("#dypMjxAnimate").removeClass("dypAnimate");
-                                $(this).css({"height": "auto"});
-                                var height = $(this).css("height");
-                                $(this).css({"height": "89px"}).stop().animate({
-                                    height: height
-                                }, 500);
-                            });
-                            $("#dyp779946-detail-box").on("mouseleave", ".dyp779946-waterfallDetail-title", function () {
-                                $("#dypMjxAnimate").addClass("dypAnimate");
-                                $(this).stop().animate({
-                                    height: "89px"
-                                }, 500);
-                            });
-                            $("#dyp779946-fix-full").on("click", ".dyp779946-close-button", function () {
-                                if ($("#dyp779946-detail-box")[0].style.display == "block") {
-                                    showKaiguan = 1;
-                                    $("#dyp779946-container-box").show();
-                                    $("#dyp779946-detail-box").hide();
-                                } else {
-                                    $("#dyp779946-fix-full").fadeOut();
-                                    $("body").removeClass("dyp779946-body-unScroll");
-                                }
-                            });
-                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.scroll", function () {
-                                $("#dyp779946-fix-full").animate({
-                                    'scrollTop': '0px'
-                                }, 300)
-                            });
-                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.qq", function () {
-                                window.open("//shang.qq.com/wpa/qunwpa?idkey=07df4060e4b8ca7215881d58e29bdaad66177f17a11a82484c3dfa9168ebc2d2");
-                            });
-                            $("#dyp779946-fix-full").click(function (event) {
-                                var hos = $(event.target).closest($("#dyp779946-container-box")).length;
-                                var hos2 = $(event.target).closest($("#dyp779946-fix-full .dyp779946-scroll-top")).length;
-                                var hos3 = $(event.target).closest($("#dyp779946-fix-full .dyp779946-close-button")).length;
-                                var hos4 = $(event.target).closest($("#dyp779946-detail-box")).length;
-                                if (!hos && !hos2 && !hos3 && showKaiguan == 1) {
-                                    $("#dyp779946-fix-full").fadeOut();
-                                    $("body").removeClass("dyp779946-body-unScroll");
-                                } else if (!hos && !hos2 && !hos3 && !hos4 && showKaiguan == 0) {
-                                    if ($(event.target)[0].tagName != "BUTTON") {
-                                        showKaiguan = 1;
-                                        $("#dyp779946-container-box").show();
-                                        $("#dyp779946-detail-box").hide();
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }();    //中间(买家秀)
-                !function () {
                     setTimeout(function () {
-                        if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm') {
+                        if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm' && infoGroup.plat != 'ju') {
                             return;
                         }
                         var currentPage = 0;
@@ -3873,59 +3895,7 @@
                                         content += '</div>';
                                     });
                                     //创建模态框等基本结构
-                                    var html = `<div class="dypMid9527-must-see-modal" style="display:none">
-    <div class="dypMid9527-must-see-box">
-        <div class="dypMid9527-must-see-head">
-            <div class="dypMid9527-must-see-head-title"></div>
-            <div class="dypMid9527-must-see-head-total">
-                <div class="dypMid9527-question-rule">
-                    <span class="dypMid9527-question-title">哪些评价值得必看</span>
-                    <span class="dypMid9527-question-icon" title="查看筛选规则"></span>
-                </div>
-                <span class="arrow_1"></span>
-                <span class="arrow_2"></span>
-                <div class="dypMid9527-question-dialog">
-                    <div class="dypMid9527-question-padding">
-                        <div class="dypMid9527-question-item">
-                            <div class="dypMid9527-question-item-title" style="padding-top: 0;">如何看待有价值的评价？</div>
-                            <div class="dypMid9527-question-item-desc">针对买家查看评价的习惯，对商品评价内容进行详细分析，为用户筛选出实际有效的必看内容</div>
-                        </div>
-                        <div class="dypMid9527-question-item">
-
-                            <div class="dypMid9527-question-item-desc">
-                                <div class="dypMid9527-question-item-desc-item">
-                                    1、理性看待差评，差评往往会被放大，参考其他晒图与追评，多角度看待问题
-                                </div>
-                                <div class="dypMid9527-question-item-desc-item">
-                                    2、清晰晒图更有价值，更能了解商品实际情况
-                                </div>
-                                <div class="dypMid9527-question-item-desc-item">
-                                    3、保持正确的心里预期，多维度参考评价，评价越丰富，越能说明商品特点，请相信一分价钱一分货
-                                </div>
-                                <div class="dypMid9527-question-item-desc-item">
-                                    4、购买过程中如果实在不放心，请买运费险
-                                </div>
-                            </div>
-                        </div>
-                        <div class="dypMid9527-question-item dypMid9527-question-item-last">
-                            <div class="dypMid9527-question-item-desc" style="padding-top: 7px;">
-                                <div class="dypMid9527-question-item-desc-item">
-                                    Ps: 感谢您对豆芽购物助手的支持，如果您有更好的建议，欢迎反馈给我们<a href="http://www.douyapu.com/index/feedback/" target="_blank">意见反馈</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="dypMid9527-must-see-body">
-            <div class="dypMid9527-must-sees-body-content">${content}</div>
-        </div>
-        <div class="dypMid9527-must-see-footer"><p>已经到底啦</p></div>
-    </div>
-    <div class="dypMid9527-must-see-close-btn"></div>
-    <div class="dypMid9527-must-see-GoTop"></div>
-</div>`;
+                                    var html = `<div class="dypMid9527-must-see-modal" style="display:none"><div class="dypMid9527-must-see-box"><div class="dypMid9527-must-see-head"><div class="dypMid9527-must-see-head-title"></div><div class="dypMid9527-must-see-head-total"><div class="dypMid9527-question-rule"><span class="dypMid9527-question-title">哪些评价值得必看</span><span class="dypMid9527-question-icon" title="查看筛选规则"></span></div><span class="arrow_1"></span><span class="arrow_2"></span><div class="dypMid9527-question-dialog"><div class="dypMid9527-question-padding"><div class="dypMid9527-question-item"><div class="dypMid9527-question-item-title" style="padding-top: 0;">如何看待有价值的评价？</div><div class="dypMid9527-question-item-desc">针对买家查看评价的习惯，对商品评价内容进行详细分析，为用户筛选出实际有效的必看内容</div></div><div class="dypMid9527-question-item"><div class="dypMid9527-question-item-desc"><div class="dypMid9527-question-item-desc-item">                                    1、理性看待差评，差评往往会被放大，参考其他晒图与追评，多角度看待问题</div><div class="dypMid9527-question-item-desc-item">                                    2、清晰晒图更有价值，更能了解商品实际情况</div><div class="dypMid9527-question-item-desc-item">                                    3、保持正确的心里预期，多维度参考评价，评价越丰富，越能说明商品特点，请相信一分价钱一分货</div><div class="dypMid9527-question-item-desc-item">                                    4、购买过程中如果实在不放心，请买运费险</div></div></div><div class="dypMid9527-question-item dypMid9527-question-item-last"><div class="dypMid9527-question-item-desc" style="padding-top: 7px;"><div class="dypMid9527-question-item-desc-item">                                    Ps: 感谢您对豆芽购物助手的支持，如果您有更好的建议，欢迎反馈给我们<a href="http://www.douyapu.com/index/feedback/" target="_blank">意见反馈</a></div></div></div></div></div></div></div><div class="dypMid9527-must-see-body"><div class="dypMid9527-must-sees-body-content">${content}</div></div><div class="dypMid9527-must-see-footer"><p>已经到底啦</p></div></div><div class="dypMid9527-must-see-close-btn"></div><div class="dypMid9527-must-see-GoTop"></div></div>`;
                                     $("body").prepend(html);
                                     $(".dypMid9527-must-see-modal").click(function (event) {
                                         var hos = $(event.target).closest($(".dypMid9527-must-see-box")).length;
@@ -4043,12 +4013,16 @@
                 function creatBottom(e, t) {
                     $(function () {
                         setTimeout(function () {
-                            if (locHost == "detail.tmall.com" || locHost == "item.taobao.com") {
+                            if (locHost == "detail.tmall.com" || locHost == "item.taobao.com" || locHost == "detail.ju.taobao.com") {
                                 if (creatBottomSign == 0) {
                                     var bottomTemplateHtml = `<div id="dypBot9527">
-                                <div class="dypBot9527-icon"></div>
-                            </div>`;
-                                    $("#J_TabBar").append(bottomTemplateHtml);
+                                        <div class="dypBot9527-icon"></div>
+                                    </div>`;
+                                    if (locHost == "detail.ju.taobao.com") {
+                                        $(".detail-detail .dd-header").append(bottomTemplateHtml);
+                                    } else {
+                                        $("#J_TabBar").append(bottomTemplateHtml);
+                                    }
                                     creatBottomSign = 1;
                                     if (locHost == "item.taobao.com") {
                                         $(document).on("scroll", function () {
@@ -4219,30 +4193,30 @@
                                 var priceChart = echarts.init(that.find(".douyapulist-price-drop-echat")[0]);
                                 priceChart.setOption(optionSet);
                                 that.parent().parent().find(".douyapulist-price-drop-zhide").html(`
-                            历史最低 : <span class="douyapulist-price-drop-zhideMin">${min}元</span>
-                            <div class="douyapulist-price-drop-zhideBack"></div>`);
+                                历史最低 : <span class="douyapulist-price-drop-zhideMin">${min}元</span>
+                                <div class="douyapulist-price-drop-zhideBack"></div>`);
                                 if (valueList[valueList.length - 1] == min) {
                                     that.parent().parent().find(".douyapulist-price-drop-zhideBack").show();
                                 }
                             },
                             error: function () {
                                 var html = `<div class="douyapulist-price-ErrorContent">
-                    				<div class="douyapulist-price-ErrorTitle">
-                    					<p>小豆芽正在努力完善商品价格库，敬请期待哦~</p>
-                    				</div>
-                    				<div class="douyapulist-price-ErrorImg"></div>
-                				  </div>`;
+                                    <div class="douyapulist-price-ErrorTitle">
+                                        <p>小豆芽正在努力完善商品价格库，敬请期待哦~</p>
+                                    </div>
+                                    <div class="douyapulist-price-ErrorImg"></div>
+                                </div>`;
                                 that.find(".douyapulist-price-drop-echat").html(html);
                             }
                         });
                     }   //请求惠惠助手接口拿取商品历史价格数据
                     $.each($(k[0]), function () {
                         $(this).append(`<div class="douyapulist-price-item" data-type="0" data-douyamovepaopao="列表+查看+${k[2]}">
-                    <div class="douyapulist-price-box" >
-                        <div class="douyapulist-price-icon"></div>
-                        <div>价格趋势</div>
-                    </div>
-                </div>`);
+                            <div class="douyapulist-price-box" >
+                                <div class="douyapulist-price-icon"></div>
+                                <div>价格趋势</div>
+                            </div>
+                        </div>`);
                         if ($(this).offset().left > ($(document).width() * 1 - $(this).offset().left * 1)) {
                             $(this).children(".douyapulist-price-item").addClass("left");
                         }
@@ -4361,9 +4335,9 @@
                                     var html = "";
                                     $.each(activeData, function (v, k) {
                                         html += `<div data-douyababapaopao="列表+活动+ID${k.id}" class="douyapulist-price-drop-adItem">
-                                    <div class="douyapulist-price-drop-icon icon${k.act_badge_label}"></div>
-                                    <div><a href="${k.act_link}" target="_blank">${k.act_name}</a></div>
-                                </div>`
+                                            <div class="douyapulist-price-drop-icon icon${k.act_badge_label}"></div>
+                                            <div><a href="${k.act_link}" target="_blank">${k.act_name}</a></div>
+                                        </div>`
                                     });
                                     that.find(".douyapulist-price-drop-adAll").append(html);
                                     that.find(".douyapulist-price-drop-adItem:eq(0)").clone(true).appendTo(that.find(".douyapulist-price-drop-adAll"));
