@@ -1,0 +1,278 @@
+{include file="../common/header" /}
+{include file="../common/nav" /}
+<div class="bg-F4F4F4" ng-app='myApp' ng-controller='myController'>
+    <div class="couponbook-box clear">
+        <div id="couponbook-main" class="fl">
+            <div class="bg-FFF" id="couponbook-fixed">
+                <div class="clear couponbook-crumbs">
+                    <div class="fl couponbook-crumbs-box"><span>当前页面</span>
+                        {volist name='nav' id="vp"}
+                        > <a href='<{$vp.url}>'><{$vp.name}></a>
+                        {/volist}
+                    </div>
+                    <div class="fr clear">
+                        <div class="couponbook-category2-sorttitle fl">排序 :</div>
+                        <div class="couponbook-category2-sorttype fr">
+                            <a data-type="1" id="couponbook-defaultsort">默认</a>
+                            <a data-type="3">折扣力度</a>
+                            <a data-type="2">最受关注</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear couponbook-category">
+                    {volist name='catList' id="vo"}
+                    <div class="fl couponbook-category-item" data-cid="<{$vo.cat_id}>">
+                        <div><b class="icon<{$vo.id}>"></b></div>
+                        <p class="c-464646"><{$vo.name}></p>
+                        <div class="couponbook-category-dropdown bg-FFF" style="display: none">
+                            <div class="c-464646">
+                                <div class="couponbook-category2-title">分类 :</div>
+                                <div class="couponbook-category2-type clear">
+                                    {volist name="$vo.nodes" id="ve"}
+                                    <a data-cid="<{$ve.cat_id}>"><{$ve.name}></a>
+                                    {/volist}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+            <div class="bg-FFF">
+                <div class="clear couponbook-sort c-464646">
+                    <div class="fl">推荐商品</div>
+                    <div class="fr">原价</div>
+                    <div class="fr">折扣</div>
+                    <div class="fr">当前价</div>
+                </div>
+                <ul infinite-scroll='reddit.nextPage()' infinite-scroll-disabled='reddit.busy' infinite-scroll-distance='0'>
+                    <li class="couponbook-goods-item clear" ng-repeat="a in reddit.items" ng-cloak>
+                        <div class="fl couponbook-goods-imgbox">
+                            <a href="/coupon/detail?id={{a.item.itemId}}" target="_blank">
+                                <img ng-src={{a.item.picUrl+"_120x120.jpg"}} alt={{a.item.title+"|优惠券¥"+a.amount}} class="couponbook-goods-img">
+                            </a>
+                        </div>
+                        <div class="couponbook-goods-title fl">
+                            <a href="/coupon/detail?id={{a.item.itemId}}" target="_blank">
+                                <h3 class="c-464646" ng-bind-html="a.item.title | trustHtml"></h3>
+                            </a>
+                            <p>过期时间 : {{a.effectiveEndTime | split}} &nbsp;&nbsp;|&nbsp;&nbsp; {{a.tt}}</p>
+                        </div>
+                        <div class="couponbook-goods-oprice fr">{{a.item.discountPrice}}元</div>
+                        <div class="couponbook-goods-discount fr">
+                            <span>{{(a.item.discountPrice-a.amount) / a.item.discountPrice * 100/10 | fixedTo1}} 折</span>
+                        </div>
+                        <div class="couponbook-goods-price fr">{{(a.item.discountPrice-a.amount) | fixedTo0}}元</div>
+                        <div class="couponbook-goods-amount">
+                            <a href="{{a.item.shareUrl}}" target="_blank">
+                                <h3>{{a.amount}}<span class="fs12">元</span></h3>
+                                <p>精选优惠券</p>
+                            </a>
+                        </div>
+                    </li>
+                    <li ng-show='reddit.busy' class="couponbook-goods-load" ng-cloak>{{reddit.zezhaoVal}}</li>
+                </ul>
+            </div>
+        </div>
+        <div id="couponbook-sidebar" class="fr">
+            <div class="bg-FFF">
+                <div class="sellernav">
+                    <h2><b class="db"></b></h2>
+                    <div class="clear">
+                        <a href="https://www.tmall.com/" class="tm" target="_blank"></a>
+                        <a href="https://www.taobao.com/" class="tb" target="_blank"></a>
+                        <a href="https://www.yhd.com/" class="yh" target="_blank"></a>
+                        <a href="https://www.jd.com/" class="jd" target="_blank"></a>
+                        <a href="https://www.suning.com/" class="sn" target="_blank"></a>
+                        <a href="https://www.vip.com/" class="wp" target="_blank"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-FFF">
+                <div class="couponbook-hot">
+                    <h2><b class="db"></b></h2>
+                    <ul>
+                        <li class="couponbook-hot-item clear" ng-repeat="a in items1" ng-cloak>
+                            <div class="fl">
+                                <a href="/coupon/detail?id={{a.item.itemId}}" target="_blank">
+                                    <img ng-src='{{a.item.picUrl+"_80x80.jpg"}}' alt="" class="couponbook-hot-img">
+                                </a>
+                            </div>
+                            <div class="fr couponbook-hot-content">
+                                <div class="couponbook-hot-title">
+                                    <a href="/coupon/detail?id={{a.item.itemId}}" class="c-464646" target="_blank">{{a.item.title}}</a>
+                                </div>
+                                <div class="clear">
+                                    <div class="fl">
+                                        <div class="couponbook-hot-price">
+                                            <span class="fs12">¥</span>{{(a.item.discountPrice-a.amount) | fixedTo0}}
+                                        </div>
+                                        <div class="couponbook-hot-oprice"><span class="fs12">¥</span>{{a.item.discountPrice}}</div>
+                                    </div>
+                                    <a href="{{a.item.shareUrl}}" target="_blank">
+                                        <div class="fr couponbook-hot-tlimit">限时抢购</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/public/static/js/ng-infinite-scroll.js"></script>
+{include file="../common/footer" /}
+<script type="text/javascript" src="/public/static/js/cmarket.js"></script>
+<script>
+    //生成新的跳转的URL
+    function combineUrl(url, name, value) {
+        var part = new RegExp(name);
+        if (part.test(url)) {
+            return replaceParamVal(url, name, value);
+        } else {
+            return url + '&' + name + '=' + value;
+        }
+    }
+    //修改浏览器对应的GET参数
+    function replaceParamVal(oUrl, paramName, replaceWith) {
+        var re = eval('/(' + paramName + '=)([^&]*)/gi');
+        return oUrl.replace(re, paramName + '=' + replaceWith);
+    }
+    //页面加载后显示排序方式
+    $(".couponbook-category2-sorttype a").each(function () {
+        if (getUrlParam("sort") == $(this).attr("data-type")) {
+            $(this).addClass('active');
+        }
+    });
+    //页面加载后显示一级分类
+    $(".couponbook-category-item").each(function () {
+        if (getUrlParam("cid") == $(this).attr("data-cid")) {
+            $(this).addClass('active');
+            document.title += " - " + $(this).children("p").text();
+        }
+    });
+    //页面加载后显示二级分类
+    $(".couponbook-category2-type a").each(function () {
+        if (getUrlParam("cat") == $(this).attr("data-cid")) {
+            $(this).addClass('active');
+            document.title += " - " + $(this).text();
+        }
+    });
+    //为排序添加一个单击事件
+    $(".couponbook-category2-sorttype").on("click", "a", function () {
+        var sort = $(this).attr('data-type');
+        var url = window.location.href;
+        url = combineUrl(url, 'page', 1);
+        url = combineUrl(url, 'sort', sort);
+        window.location.href = url;
+    });
+    //为二级分类添加一个单击事件
+    $(".couponbook-category2-type").on("click", "a", function (e) {
+        e.stopPropagation();
+        var catId = $(this).attr('data-cid');
+        var cid = $(this).parent().parent().parent().parent().attr('data-cid');
+        var url = window.location.href;
+        url = combineUrl(url, 'cid', cid);
+        url = combineUrl(url, 'cat', catId);
+        url = combineUrl(url, 'page', 1);
+        url = combineUrl(url, 'sort', 1);
+        window.location.href = url;
+    });
+    //一级分类添加一个点击事件
+    $(".couponbook-category").on("click", ".couponbook-category-item", function () {
+        var cid = $(this).attr('data-cid');
+        var url = window.location.href;
+        url = combineUrl(url, 'cid', cid);
+        url = combineUrl(url, 'page', 1);
+        url = combineUrl(url, 'sort', 1);
+        url = combineUrl(url, 'cat', "");
+        window.location.href = url;
+    });
+    var myApp = angular.module('myApp', ['infinite-scroll']);
+    myApp.filter('fixedTo0', function () {
+        return function (val) {
+            return (val - 0).toFixed(0);
+        }
+    });
+    myApp.filter('fixedTo1', function () {
+        return function (val) {
+            return (val - 0).toFixed(1);
+        }
+    });
+    myApp.filter('split', function () {
+        return function (val) {
+            return val.split(" ")[0];
+        }
+    });
+    myApp.filter('trustHtml', function ($sce) {
+        return function (input) {
+            return $sce.trustAsHtml(input);
+        }
+    });
+    myApp.factory('Reddit', function ($http) {
+        var Reddit = function () {
+            this.items = [];
+            this.busy = false;
+            this.page = 1;
+            this.zezhao = true;
+            this.zezhaoVal = "正在为您加载···";
+        };
+        Reddit.prototype.nextPage = function () {
+            var sort = getUrlParam("sort") ? getUrlParam("sort") : 1;
+            var cid = getUrlParam("cid");
+            var cat = getUrlParam("cat") ? getUrlParam("cat") : "";
+            if (this.busy) {
+                return;
+            }
+            this.busy = true;
+            $http({
+                method: 'post',
+                url: '/coupon/lists/items',
+                data: {page: this.page, sort: sort, cid: cid, cat: cat},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                transformRequest: function (data) {
+                    return $.param(data);
+                }
+            }).then(function (data) {
+                if (data.data.results.length > 0) {
+                    for (var i = 0; i < data.data.results.length; i++) {
+                        var obj = JSON.parse(data.data.results[i].item);
+                        if (data.data.results[i].item.tmall = "1") {
+                            obj.tt = "天猫";
+                        } else {
+                            obj.tt = "淘宝";
+                        }
+                        this.items.push(obj);
+                    }
+                    this.busy = false;
+                    this.page += 1;
+                } else {
+                    if (this.page == 1) {
+                        this.zezhaoVal = "抱歉 , 暂无相关分类商品优惠券···";
+                    } else {
+                        this.zezhaoVal = "已经到底了···";
+                    }
+                }
+            }.bind(this), function () {
+                this.zezhaoVal = "网络不佳,请稍后重试···";
+            }.bind(this));
+        };
+        return Reddit;
+    });
+    myApp.controller('myController', function ($scope, Reddit, $http) {
+        $scope.reddit = new Reddit();
+        $scope.items1 = [];
+        $http({
+            method: "get",
+            url: "/coupon/detail/rehots"
+        }).then(function (data) {
+            for (var i = 0; i < data.data.length; i++) {
+                $scope.items1.push(JSON.parse(data.data[i].item));
+            }
+        }, function () {
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+{include file="../common/header" /}
+{include file="../common/nav" /}
+<div class="bg-F4F4F4">
+    <div id="couponhot" class="clear">
+        <div class="couponhot-box" ng-app='myApp' ng-controller='myController'>
+            <div class="clear couponhot-goods-box" infinite-scroll='reddit.nextPage()' infinite-scroll-disabled='reddit.busy' infinite-scroll-distance='0'>
+                <div class="couponhot-goods-item fs12 c-464646" ng-repeat="a in reddit.items" ng-cloak>
+                    <div class="couponhot-goods-img">
+                        <b class="couponhot-goods-abs">券 ¥ {{a.amount}}</b>
+                        <a href="/coupon/detail?id={{a.item.itemId}}" target="_blank">
+                            <img ng-src={{a.item.picUrl+"_200x200.jpg"}} alt={{a.item.title+"|优惠券¥"+a.amount}}>
+                        </a>
+                    </div>
+                    <div class="couponhot-goods-info">
+                        <a href="/coupon/detail?id={{a.item.itemId}}" target="_blank"><h3 ng-bind-html="a.item.title | trustHtml" class="c-464646"></h3></a>
+                        <p>原价 &nbsp;<span>¥{{a.item.discountPrice | fixedTo2}}</span></p>
+                        <div class="clear">
+                            <div class="fl couponhot-goods-price">
+                                <span class="fs14">¥ </span><span>{{(a.item.discountPrice-a.amount) | fixedTo2}}</span><b class="couponhot-goods-icon"></b>
+                            </div>
+                            <div class="fr">销量 <span class="couponhot-goods-salenum">{{a.item.biz30Day}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="couponhot-zezhao" ng-class="{true:'show',false:'hidden'}[reddit.zezhao]">
+                <span ng-cloak>{{reddit.zezhaoVal}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/public/static/js/ng-infinite-scroll.js"></script>
+{include file="../common/footer" /}
+<script>
+    var myApp = angular.module('myApp', ['infinite-scroll']);
+    myApp.filter('fixedTo2', function () {
+        return function (val) {
+            return (val - 0).toFixed(2);
+        }
+    });
+    myApp.filter('trustHtml', function ($sce) {
+        return function (input) {
+            return $sce.trustAsHtml(input);
+        }
+    });
+    myApp.factory('Reddit', function ($http) {
+        var Reddit = function () {
+            this.items = [];
+            this.busy = false;
+            this.page = 1;
+            this.zezhao = true;
+            this.zezhaoVal = "正在为您加载···";
+        };
+        Reddit.prototype.nextPage = function () {
+            if (this.busy) {
+                return;
+            }
+            this.busy = true;
+            $http({
+                method: 'get',
+                url: '/coupon/hots/items?page=' + this.page
+            }).then(function (data) {
+                if (data.data.results.length > 0) {
+                    for (var i = 0; i < data.data.results.length; i++) {
+                        this.items.push(JSON.parse(data.data.results[i].item));
+                    }
+                    this.busy = false;
+                    this.page += 1;
+                    this.zezhao = false;
+                } else {
+                    if (this.page == 1) {
+                        this.zezhaoVal = "抱歉 , 暂无相关商品优惠券···";
+                    }
+                }
+            }.bind(this), function () {
+                this.zezhaoVal = "网络不佳,请稍后重试···";
+            }.bind(this));
+        };
+        return Reddit;
+    });
+    myApp.controller('myController', function ($scope, Reddit) {
+        $scope.reddit = new Reddit();
+    });
+</script>
+</body>
+</html>
