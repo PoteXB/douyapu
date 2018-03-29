@@ -46,57 +46,57 @@
     })
 </script>
 <!--底部广告栏-->
-<div class="bottom-ad dypslideInLeft dypanimated">
-    <div></div>
-    <i></i>
-</div>
-<div class="new-add">
-    <img src="/public/static/img/newAdd.png" alt="">
-    <div class="new-add-X"><img src="/public/static/img/index/cancel.png" alt=""></div>
-</div>
-<script>
-    $(document).ready(function () {
-        setTimeout(function () {
-            if (document.cookie.indexOf("add=1") == -1) {
-                function douyaCreateScript(t, m) {
-                    var myScript = document.createElement("script");
-                    myScript.type = "text/javascript";
-                    myScript.async = false;
-                    myScript.appendChild(document.createTextNode(`
-                                var _czc = _czc || [];
-                                _czc.push(["_setAccount", "1264352198"]);
-                                _czc.push(["_trackEvent", '${m}', "弹出"]);
-                            `));
-                    document[t].appendChild(myScript);
-                }   //打点统计代码向页面插入点击script
-                !function () {
-                    douyaCreateScript("body", "支付宝红包");
-                    var cnzzCreateScript = document.createElement("script");
-                    cnzzCreateScript.type = 'text/javascript';
-                    cnzzCreateScript.async = false;
-                    cnzzCreateScript.src = "https://s13.cnzz.com/z_stat.php?id=1264352198&web_id=1264352198";
-                    document.body.appendChild(cnzzCreateScript);
-                }();    //打点统计代码
-                var curDate = new Date();
-                var curTamp = curDate.getTime();
-                var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;
-                var passedTamp = curTamp - curWeeHours;
-                var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;
-                var leftTime = new Date();
-                leftTime.setTime(leftTamp + curTamp);
-                document.cookie = "add=1;expires=" + leftTime;
-                $(".new-add").show();
-                $(".new-add-X").click(function () {
-                    $(".new-add").hide()
-                });
-                $(".bottom-ad").show();
-                $(".bottom-ad div").click(function () {
-                    $(".bottom-ad").fadeOut()
-                });
-            }
-        }, 2000)
-    });
-</script>
+<!--<div class="bottom-ad dypslideInLeft dypanimated">-->
+<!--<div></div>-->
+<!--<i></i>-->
+<!--</div>-->
+<!--<div class="new-add">-->
+<!--<img src="/public/static/img/newAdd.png" alt="">-->
+<!--<div class="new-add-X"><img src="/public/static/img/index/cancel.png" alt=""></div>-->
+<!--</div>-->
+<!--<script>-->
+<!--$(document).ready(function () {-->
+<!--setTimeout(function () {-->
+<!--if (document.cookie.indexOf("add=1") == -1) {-->
+<!--function douyaCreateScript(t, m) {-->
+<!--var myScript = document.createElement("script");-->
+<!--myScript.type = "text/javascript";-->
+<!--myScript.async = false;-->
+<!--myScript.appendChild(document.createTextNode(`-->
+<!--var _czc = _czc || [];-->
+<!--_czc.push(["_setAccount", "1264352198"]);-->
+<!--_czc.push(["_trackEvent", '${m}', "弹出"]);-->
+<!--`));-->
+<!--document[t].appendChild(myScript);-->
+<!--}   //打点统计代码向页面插入点击script-->
+<!--!function () {-->
+<!--douyaCreateScript("body", "支付宝红包");-->
+<!--var cnzzCreateScript = document.createElement("script");-->
+<!--cnzzCreateScript.type = 'text/javascript';-->
+<!--cnzzCreateScript.async = false;-->
+<!--cnzzCreateScript.src = "https://s13.cnzz.com/z_stat.php?id=1264352198&web_id=1264352198";-->
+<!--document.body.appendChild(cnzzCreateScript);-->
+<!--}();    //打点统计代码-->
+<!--var curDate = new Date();-->
+<!--var curTamp = curDate.getTime();-->
+<!--var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;-->
+<!--var passedTamp = curTamp - curWeeHours;-->
+<!--var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;-->
+<!--var leftTime = new Date();-->
+<!--leftTime.setTime(leftTamp + curTamp);-->
+<!--document.cookie = "add=1;expires=" + leftTime;-->
+<!--$(".new-add").show();-->
+<!--$(".new-add-X").click(function () {-->
+<!--$(".new-add").hide()-->
+<!--});-->
+<!--$(".bottom-ad").show();-->
+<!--$(".bottom-ad div").click(function () {-->
+<!--$(".bottom-ad").fadeOut()-->
+<!--});-->
+<!--}-->
+<!--}, 2000)-->
+<!--});-->
+<!--</script>-->
 <!--靠右大黑边-->
 <div class="body-right-border"></div>
 <!--快捷顶部-->
