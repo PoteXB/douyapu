@@ -5,12 +5,10 @@
             this.mode = QRMode.MODE_8BIT_BYTE;
             this.data = data;
             this.parsedData = [];
-
             // Added to support UTF-8 Characters
-            for (var i = 0, l = this.data.length; i < l; i++) {
+            for (var i = 0,l = this.data.length; i < l; i++) {
                 var byteArray = [];
                 var code = this.data.charCodeAt(i);
-
                 if (code > 0x10000) {
                     byteArray[0] = 0xF0 | ((code & 0x1C0000) >>> 18);
                     byteArray[1] = 0x80 | ((code & 0x3F000) >>> 12);
@@ -26,12 +24,9 @@
                 } else {
                     byteArray[0] = code;
                 }
-
                 this.parsedData.push(byteArray);
             }
-
-            this.parsedData = Array.prototype.concat.apply([], this.parsedData);
-
+            this.parsedData = Array.prototype.concat.apply([],this.parsedData);
             if (this.parsedData.length != this.data.length) {
                 this.parsedData.unshift(191);
                 this.parsedData.unshift(187);
@@ -40,17 +35,16 @@
         }
 
         QR8bitByte.prototype = {
-            getLength: function (buffer) {
+            getLength:function (buffer) {
                 return this.parsedData.length;
             },
-            write: function (buffer) {
-                for (var i = 0, l = this.parsedData.length; i < l; i++) {
-                    buffer.put(this.parsedData[i], 8);
+            write:function (buffer) {
+                for (var i = 0,l = this.parsedData.length; i < l; i++) {
+                    buffer.put(this.parsedData[i],8);
                 }
             }
         };
-
-        function QRCodeModel(typeNumber, errorCorrectLevel) {
+        function QRCodeModel(typeNumber,errorCorrectLevel) {
             this.typeNumber = typeNumber;
             this.errorCorrectLevel = errorCorrectLevel;
             this.modules = null;
@@ -60,20 +54,20 @@
         }
 
         QRCodeModel.prototype = {
-            addData: function (data) {
+            addData:function (data) {
                 var newData = new QR8bitByte(data);
                 this.dataList.push(newData);
                 this.dataCache = null;
-            }, isDark: function (row, col) {
+            },isDark:function (row,col) {
                 if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
                     throw new Error(row + "," + col);
                 }
                 return this.modules[row][col];
-            }, getModuleCount: function () {
+            },getModuleCount:function () {
                 return this.moduleCount;
-            }, make: function () {
-                this.makeImpl(false, this.getBestMaskPattern());
-            }, makeImpl: function (test, maskPattern) {
+            },make:function () {
+                this.makeImpl(false,this.getBestMaskPattern());
+            },makeImpl:function (test,maskPattern) {
                 this.moduleCount = this.typeNumber * 4 + 17;
                 this.modules = new Array(this.moduleCount);
                 for (var row = 0; row < this.moduleCount; row++) {
@@ -82,20 +76,20 @@
                         this.modules[row][col] = null;
                     }
                 }
-                this.setupPositionProbePattern(0, 0);
-                this.setupPositionProbePattern(this.moduleCount - 7, 0);
-                this.setupPositionProbePattern(0, this.moduleCount - 7);
+                this.setupPositionProbePattern(0,0);
+                this.setupPositionProbePattern(this.moduleCount - 7,0);
+                this.setupPositionProbePattern(0,this.moduleCount - 7);
                 this.setupPositionAdjustPattern();
                 this.setupTimingPattern();
-                this.setupTypeInfo(test, maskPattern);
+                this.setupTypeInfo(test,maskPattern);
                 if (this.typeNumber >= 7) {
                     this.setupTypeNumber(test);
                 }
                 if (this.dataCache == null) {
-                    this.dataCache = QRCodeModel.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+                    this.dataCache = QRCodeModel.createData(this.typeNumber,this.errorCorrectLevel,this.dataList);
                 }
-                this.mapData(this.dataCache, maskPattern);
-            }, setupPositionProbePattern: function (row, col) {
+                this.mapData(this.dataCache,maskPattern);
+            },setupPositionProbePattern:function (row,col) {
                 for (var r = -1; r <= 7; r++) {
                     if (row + r <= -1 || this.moduleCount <= row + r)continue;
                     for (var c = -1; c <= 7; c++) {
@@ -107,11 +101,11 @@
                         }
                     }
                 }
-            }, getBestMaskPattern: function () {
+            },getBestMaskPattern:function () {
                 var minLostPoint = 0;
                 var pattern = 0;
                 for (var i = 0; i < 8; i++) {
-                    this.makeImpl(true, i);
+                    this.makeImpl(true,i);
                     var lostPoint = QRUtil.getLostPoint(this);
                     if (i == 0 || minLostPoint > lostPoint) {
                         minLostPoint = lostPoint;
@@ -119,8 +113,8 @@
                     }
                 }
                 return pattern;
-            }, createMovieClip: function (target_mc, instance_name, depth) {
-                var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+            },createMovieClip:function (target_mc,instance_name,depth) {
+                var qr_mc = target_mc.createEmptyMovieClip(instance_name,depth);
                 var cs = 1;
                 this.make();
                 for (var row = 0; row < this.modules.length; row++) {
@@ -129,17 +123,17 @@
                         var x = col * cs;
                         var dark = this.modules[row][col];
                         if (dark) {
-                            qr_mc.beginFill(0, 100);
-                            qr_mc.moveTo(x, y);
-                            qr_mc.lineTo(x + cs, y);
-                            qr_mc.lineTo(x + cs, y + cs);
-                            qr_mc.lineTo(x, y + cs);
+                            qr_mc.beginFill(0,100);
+                            qr_mc.moveTo(x,y);
+                            qr_mc.lineTo(x + cs,y);
+                            qr_mc.lineTo(x + cs,y + cs);
+                            qr_mc.lineTo(x,y + cs);
                             qr_mc.endFill();
                         }
                     }
                 }
                 return qr_mc;
-            }, setupTimingPattern: function () {
+            },setupTimingPattern:function () {
                 for (var r = 8; r < this.moduleCount - 8; r++) {
                     if (this.modules[r][6] != null) {
                         continue;
@@ -152,7 +146,7 @@
                     }
                     this.modules[6][c] = (c % 2 == 0);
                 }
-            }, setupPositionAdjustPattern: function () {
+            },setupPositionAdjustPattern:function () {
                 var pos = QRUtil.getPatternPosition(this.typeNumber);
                 for (var i = 0; i < pos.length; i++) {
                     for (var j = 0; j < pos.length; j++) {
@@ -172,7 +166,7 @@
                         }
                     }
                 }
-            }, setupTypeNumber: function (test) {
+            },setupTypeNumber:function (test) {
                 var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
                 for (var i = 0; i < 18; i++) {
                     var mod = (!test && ((bits >> i) & 1) == 1);
@@ -182,7 +176,7 @@
                     var mod = (!test && ((bits >> i) & 1) == 1);
                     this.modules[i % 3 + this.moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
                 }
-            }, setupTypeInfo: function (test, maskPattern) {
+            },setupTypeInfo:function (test,maskPattern) {
                 var data = (this.errorCorrectLevel << 3) | maskPattern;
                 var bits = QRUtil.getBCHTypeInfo(data);
                 for (var i = 0; i < 15; i++) {
@@ -206,7 +200,7 @@
                     }
                 }
                 this.modules[this.moduleCount - 8][8] = (!test);
-            }, mapData: function (data, maskPattern) {
+            },mapData:function (data,maskPattern) {
                 var inc = -1;
                 var row = this.moduleCount - 1;
                 var bitIndex = 7;
@@ -220,7 +214,7 @@
                                 if (byteIndex < data.length) {
                                     dark = (((data[byteIndex] >>> bitIndex) & 1) == 1);
                                 }
-                                var mask = QRUtil.getMask(maskPattern, row, col - c);
+                                var mask = QRUtil.getMask(maskPattern,row,col - c);
                                 if (mask) {
                                     dark = !dark;
                                 }
@@ -244,13 +238,13 @@
         };
         QRCodeModel.PAD0 = 0xEC;
         QRCodeModel.PAD1 = 0x11;
-        QRCodeModel.createData = function (typeNumber, errorCorrectLevel, dataList) {
-            var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+        QRCodeModel.createData = function (typeNumber,errorCorrectLevel,dataList) {
+            var rsBlocks = QRRSBlock.getRSBlocks(typeNumber,errorCorrectLevel);
             var buffer = new QRBitBuffer();
             for (var i = 0; i < dataList.length; i++) {
                 var data = dataList[i];
-                buffer.put(data.mode, 4);
-                buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber));
+                buffer.put(data.mode,4);
+                buffer.put(data.getLength(),QRUtil.getLengthInBits(data.mode,typeNumber));
                 data.write(buffer);
             }
             var totalDataCount = 0;
@@ -265,7 +259,7 @@
                     + ")");
             }
             if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
-                buffer.put(0, 4);
+                buffer.put(0,4);
             }
             while (buffer.getLengthInBits() % 8 != 0) {
                 buffer.putBit(false);
@@ -274,15 +268,15 @@
                 if (buffer.getLengthInBits() >= totalDataCount * 8) {
                     break;
                 }
-                buffer.put(QRCodeModel.PAD0, 8);
+                buffer.put(QRCodeModel.PAD0,8);
                 if (buffer.getLengthInBits() >= totalDataCount * 8) {
                     break;
                 }
-                buffer.put(QRCodeModel.PAD1, 8);
+                buffer.put(QRCodeModel.PAD1,8);
             }
-            return QRCodeModel.createBytes(buffer, rsBlocks);
+            return QRCodeModel.createBytes(buffer,rsBlocks);
         };
-        QRCodeModel.createBytes = function (buffer, rsBlocks) {
+        QRCodeModel.createBytes = function (buffer,rsBlocks) {
             var offset = 0;
             var maxDcCount = 0;
             var maxEcCount = 0;
@@ -291,15 +285,15 @@
             for (var r = 0; r < rsBlocks.length; r++) {
                 var dcCount = rsBlocks[r].dataCount;
                 var ecCount = rsBlocks[r].totalCount - dcCount;
-                maxDcCount = Math.max(maxDcCount, dcCount);
-                maxEcCount = Math.max(maxEcCount, ecCount);
+                maxDcCount = Math.max(maxDcCount,dcCount);
+                maxEcCount = Math.max(maxEcCount,ecCount);
                 dcdata[r] = new Array(dcCount);
                 for (var i = 0; i < dcdata[r].length; i++) {
                     dcdata[r][i] = 0xff & buffer.buffer[i + offset];
                 }
                 offset += dcCount;
                 var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
-                var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+                var rawPoly = new QRPolynomial(dcdata[r],rsPoly.getLength() - 1);
                 var modPoly = rawPoly.mod(rsPoly);
                 ecdata[r] = new Array(rsPoly.getLength() - 1);
                 for (var i = 0; i < ecdata[r].length; i++) {
@@ -329,29 +323,29 @@
             }
             return data;
         };
-        var QRMode = {MODE_NUMBER: 1 << 0, MODE_ALPHA_NUM: 1 << 1, MODE_8BIT_BYTE: 1 << 2, MODE_KANJI: 1 << 3};
-        var QRErrorCorrectLevel = {L: 1, M: 0, Q: 3, H: 2};
-        var QRMaskPattern = {PATTERN000: 0, PATTERN001: 1, PATTERN010: 2, PATTERN011: 3, PATTERN100: 4, PATTERN101: 5, PATTERN110: 6, PATTERN111: 7};
+        var QRMode = {MODE_NUMBER:1 << 0,MODE_ALPHA_NUM:1 << 1,MODE_8BIT_BYTE:1 << 2,MODE_KANJI:1 << 3};
+        var QRErrorCorrectLevel = {L:1,M:0,Q:3,H:2};
+        var QRMaskPattern = {PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7};
         var QRUtil = {
-            PATTERN_POSITION_TABLE: [[], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34], [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50], [6, 30, 54], [6, 32, 58], [6, 34, 62], [6, 26, 46, 66], [6, 26, 48, 70], [6, 26, 50, 74], [6, 30, 54, 78], [6, 30, 56, 82], [6, 30, 58, 86], [6, 34, 62, 90], [6, 28, 50, 72, 94], [6, 26, 50, 74, 98], [6, 30, 54, 78, 102], [6, 28, 54, 80, 106], [6, 32, 58, 84, 110], [6, 30, 58, 86, 114], [6, 34, 62, 90, 118], [6, 26, 50, 74, 98, 122], [6, 30, 54, 78, 102, 126], [6, 26, 52, 78, 104, 130], [6, 30, 56, 82, 108, 134], [6, 34, 60, 86, 112, 138], [6, 30, 58, 86, 114, 142], [6, 34, 62, 90, 118, 146], [6, 30, 54, 78, 102, 126, 150], [6, 24, 50, 76, 102, 128, 154], [6, 28, 54, 80, 106, 132, 158], [6, 32, 58, 84, 110, 136, 162], [6, 26, 54, 82, 110, 138, 166], [6, 30, 58, 86, 114, 142, 170]],
-            G15: (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
-            G18: (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
-            G15_MASK: (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1),
-            getBCHTypeInfo: function (data) {
+            PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],
+            G15:(1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+            G18:(1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+            G15_MASK:(1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1),
+            getBCHTypeInfo:function (data) {
                 var d = data << 10;
                 while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
                     d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15)));
                 }
                 return ((data << 10) | d) ^ QRUtil.G15_MASK;
             },
-            getBCHTypeNumber: function (data) {
+            getBCHTypeNumber:function (data) {
                 var d = data << 12;
                 while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
                     d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18)));
                 }
                 return (data << 12) | d;
             },
-            getBCHDigit: function (data) {
+            getBCHDigit:function (data) {
                 var digit = 0;
                 while (data != 0) {
                     digit++;
@@ -359,10 +353,10 @@
                 }
                 return digit;
             },
-            getPatternPosition: function (typeNumber) {
+            getPatternPosition:function (typeNumber) {
                 return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
             },
-            getMask: function (maskPattern, i, j) {
+            getMask:function (maskPattern,i,j) {
                 switch (maskPattern) {
                     case QRMaskPattern.PATTERN000:
                         return (i + j) % 2 == 0;
@@ -384,14 +378,14 @@
                         throw new Error("bad maskPattern:" + maskPattern);
                 }
             },
-            getErrorCorrectPolynomial: function (errorCorrectLength) {
-                var a = new QRPolynomial([1], 0);
+            getErrorCorrectPolynomial:function (errorCorrectLength) {
+                var a = new QRPolynomial([1],0);
                 for (var i = 0; i < errorCorrectLength; i++) {
-                    a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0));
+                    a = a.multiply(new QRPolynomial([1,QRMath.gexp(i)],0));
                 }
                 return a;
             },
-            getLengthInBits: function (mode, type) {
+            getLengthInBits:function (mode,type) {
                 if (1 <= type && type < 10) {
                     switch (mode) {
                         case QRMode.MODE_NUMBER:
@@ -435,13 +429,13 @@
                     throw new Error("type:" + type);
                 }
             },
-            getLostPoint: function (qrCode) {
+            getLostPoint:function (qrCode) {
                 var moduleCount = qrCode.getModuleCount();
                 var lostPoint = 0;
                 for (var row = 0; row < moduleCount; row++) {
                     for (var col = 0; col < moduleCount; col++) {
                         var sameCount = 0;
-                        var dark = qrCode.isDark(row, col);
+                        var dark = qrCode.isDark(row,col);
                         for (var r = -1; r <= 1; r++) {
                             if (row + r < 0 || moduleCount <= row + r) {
                                 continue;
@@ -453,7 +447,7 @@
                                 if (r == 0 && c == 0) {
                                     continue;
                                 }
-                                if (dark == qrCode.isDark(row + r, col + c)) {
+                                if (dark == qrCode.isDark(row + r,col + c)) {
                                     sameCount++;
                                 }
                             }
@@ -466,10 +460,10 @@
                 for (var row = 0; row < moduleCount - 1; row++) {
                     for (var col = 0; col < moduleCount - 1; col++) {
                         var count = 0;
-                        if (qrCode.isDark(row, col)) count++;
-                        if (qrCode.isDark(row + 1, col)) count++;
-                        if (qrCode.isDark(row, col + 1)) count++;
-                        if (qrCode.isDark(row + 1, col + 1)) count++;
+                        if (qrCode.isDark(row,col)) count++;
+                        if (qrCode.isDark(row + 1,col)) count++;
+                        if (qrCode.isDark(row,col + 1)) count++;
+                        if (qrCode.isDark(row + 1,col + 1)) count++;
                         if (count == 0 || count == 4) {
                             lostPoint += 3;
                         }
@@ -477,14 +471,14 @@
                 }
                 for (var row = 0; row < moduleCount; row++) {
                     for (var col = 0; col < moduleCount - 6; col++) {
-                        if (qrCode.isDark(row, col) && !qrCode.isDark(row, col + 1) && qrCode.isDark(row, col + 2) && qrCode.isDark(row, col + 3) && qrCode.isDark(row, col + 4) && !qrCode.isDark(row, col + 5) && qrCode.isDark(row, col + 6)) {
+                        if (qrCode.isDark(row,col) && !qrCode.isDark(row,col + 1) && qrCode.isDark(row,col + 2) && qrCode.isDark(row,col + 3) && qrCode.isDark(row,col + 4) && !qrCode.isDark(row,col + 5) && qrCode.isDark(row,col + 6)) {
                             lostPoint += 40;
                         }
                     }
                 }
                 for (var col = 0; col < moduleCount; col++) {
                     for (var row = 0; row < moduleCount - 6; row++) {
-                        if (qrCode.isDark(row, col) && !qrCode.isDark(row + 1, col) && qrCode.isDark(row + 2, col) && qrCode.isDark(row + 3, col) && qrCode.isDark(row + 4, col) && !qrCode.isDark(row + 5, col) && qrCode.isDark(row + 6, col)) {
+                        if (qrCode.isDark(row,col) && !qrCode.isDark(row + 1,col) && qrCode.isDark(row + 2,col) && qrCode.isDark(row + 3,col) && qrCode.isDark(row + 4,col) && !qrCode.isDark(row + 5,col) && qrCode.isDark(row + 6,col)) {
                             lostPoint += 40;
                         }
                     }
@@ -492,7 +486,7 @@
                 var darkCount = 0;
                 for (var col = 0; col < moduleCount; col++) {
                     for (var row = 0; row < moduleCount; row++) {
-                        if (qrCode.isDark(row, col)) {
+                        if (qrCode.isDark(row,col)) {
                             darkCount++;
                         }
                     }
@@ -503,12 +497,12 @@
             }
         };
         var QRMath = {
-            glog: function (n) {
+            glog:function (n) {
                 if (n < 1) {
                     throw new Error("glog(" + n + ")");
                 }
                 return QRMath.LOG_TABLE[n];
-            }, gexp: function (n) {
+            },gexp:function (n) {
                 while (n < 0) {
                     n += 255;
                 }
@@ -516,7 +510,7 @@
                     n -= 255;
                 }
                 return QRMath.EXP_TABLE[n];
-            }, EXP_TABLE: new Array(256), LOG_TABLE: new Array(256)
+            },EXP_TABLE:new Array(256),LOG_TABLE:new Array(256)
         };
         for (var i = 0; i < 8; i++) {
             QRMath.EXP_TABLE[i] = 1 << i;
@@ -527,7 +521,7 @@
         for (var i = 0; i < 255; i++) {
             QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
         }
-        function QRPolynomial(num, shift) {
+        function QRPolynomial(num,shift) {
             if (num.length == undefined) {
                 throw new Error(num.length + "/" + shift);
             }
@@ -542,19 +536,19 @@
         }
 
         QRPolynomial.prototype = {
-            get: function (index) {
+            get:function (index) {
                 return this.num[index];
-            }, getLength: function () {
+            },getLength:function () {
                 return this.num.length;
-            }, multiply: function (e) {
+            },multiply:function (e) {
                 var num = new Array(this.getLength() + e.getLength() - 1);
                 for (var i = 0; i < this.getLength(); i++) {
                     for (var j = 0; j < e.getLength(); j++) {
                         num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
                     }
                 }
-                return new QRPolynomial(num, 0);
-            }, mod: function (e) {
+                return new QRPolynomial(num,0);
+            },mod:function (e) {
                 if (this.getLength() - e.getLength() < 0) {
                     return this;
                 }
@@ -566,17 +560,17 @@
                 for (var i = 0; i < e.getLength(); i++) {
                     num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
                 }
-                return new QRPolynomial(num, 0).mod(e);
+                return new QRPolynomial(num,0).mod(e);
             }
         };
-        function QRRSBlock(totalCount, dataCount) {
+        function QRRSBlock(totalCount,dataCount) {
             this.totalCount = totalCount;
             this.dataCount = dataCount;
         }
 
-        QRRSBlock.RS_BLOCK_TABLE = [[1, 26, 19], [1, 26, 16], [1, 26, 13], [1, 26, 9], [1, 44, 34], [1, 44, 28], [1, 44, 22], [1, 44, 16], [1, 70, 55], [1, 70, 44], [2, 35, 17], [2, 35, 13], [1, 100, 80], [2, 50, 32], [2, 50, 24], [4, 25, 9], [1, 134, 108], [2, 67, 43], [2, 33, 15, 2, 34, 16], [2, 33, 11, 2, 34, 12], [2, 86, 68], [4, 43, 27], [4, 43, 19], [4, 43, 15], [2, 98, 78], [4, 49, 31], [2, 32, 14, 4, 33, 15], [4, 39, 13, 1, 40, 14], [2, 121, 97], [2, 60, 38, 2, 61, 39], [4, 40, 18, 2, 41, 19], [4, 40, 14, 2, 41, 15], [2, 146, 116], [3, 58, 36, 2, 59, 37], [4, 36, 16, 4, 37, 17], [4, 36, 12, 4, 37, 13], [2, 86, 68, 2, 87, 69], [4, 69, 43, 1, 70, 44], [6, 43, 19, 2, 44, 20], [6, 43, 15, 2, 44, 16], [4, 101, 81], [1, 80, 50, 4, 81, 51], [4, 50, 22, 4, 51, 23], [3, 36, 12, 8, 37, 13], [2, 116, 92, 2, 117, 93], [6, 58, 36, 2, 59, 37], [4, 46, 20, 6, 47, 21], [7, 42, 14, 4, 43, 15], [4, 133, 107], [8, 59, 37, 1, 60, 38], [8, 44, 20, 4, 45, 21], [12, 33, 11, 4, 34, 12], [3, 145, 115, 1, 146, 116], [4, 64, 40, 5, 65, 41], [11, 36, 16, 5, 37, 17], [11, 36, 12, 5, 37, 13], [5, 109, 87, 1, 110, 88], [5, 65, 41, 5, 66, 42], [5, 54, 24, 7, 55, 25], [11, 36, 12], [5, 122, 98, 1, 123, 99], [7, 73, 45, 3, 74, 46], [15, 43, 19, 2, 44, 20], [3, 45, 15, 13, 46, 16], [1, 135, 107, 5, 136, 108], [10, 74, 46, 1, 75, 47], [1, 50, 22, 15, 51, 23], [2, 42, 14, 17, 43, 15], [5, 150, 120, 1, 151, 121], [9, 69, 43, 4, 70, 44], [17, 50, 22, 1, 51, 23], [2, 42, 14, 19, 43, 15], [3, 141, 113, 4, 142, 114], [3, 70, 44, 11, 71, 45], [17, 47, 21, 4, 48, 22], [9, 39, 13, 16, 40, 14], [3, 135, 107, 5, 136, 108], [3, 67, 41, 13, 68, 42], [15, 54, 24, 5, 55, 25], [15, 43, 15, 10, 44, 16], [4, 144, 116, 4, 145, 117], [17, 68, 42], [17, 50, 22, 6, 51, 23], [19, 46, 16, 6, 47, 17], [2, 139, 111, 7, 140, 112], [17, 74, 46], [7, 54, 24, 16, 55, 25], [34, 37, 13], [4, 151, 121, 5, 152, 122], [4, 75, 47, 14, 76, 48], [11, 54, 24, 14, 55, 25], [16, 45, 15, 14, 46, 16], [6, 147, 117, 4, 148, 118], [6, 73, 45, 14, 74, 46], [11, 54, 24, 16, 55, 25], [30, 46, 16, 2, 47, 17], [8, 132, 106, 4, 133, 107], [8, 75, 47, 13, 76, 48], [7, 54, 24, 22, 55, 25], [22, 45, 15, 13, 46, 16], [10, 142, 114, 2, 143, 115], [19, 74, 46, 4, 75, 47], [28, 50, 22, 6, 51, 23], [33, 46, 16, 4, 47, 17], [8, 152, 122, 4, 153, 123], [22, 73, 45, 3, 74, 46], [8, 53, 23, 26, 54, 24], [12, 45, 15, 28, 46, 16], [3, 147, 117, 10, 148, 118], [3, 73, 45, 23, 74, 46], [4, 54, 24, 31, 55, 25], [11, 45, 15, 31, 46, 16], [7, 146, 116, 7, 147, 117], [21, 73, 45, 7, 74, 46], [1, 53, 23, 37, 54, 24], [19, 45, 15, 26, 46, 16], [5, 145, 115, 10, 146, 116], [19, 75, 47, 10, 76, 48], [15, 54, 24, 25, 55, 25], [23, 45, 15, 25, 46, 16], [13, 145, 115, 3, 146, 116], [2, 74, 46, 29, 75, 47], [42, 54, 24, 1, 55, 25], [23, 45, 15, 28, 46, 16], [17, 145, 115], [10, 74, 46, 23, 75, 47], [10, 54, 24, 35, 55, 25], [19, 45, 15, 35, 46, 16], [17, 145, 115, 1, 146, 116], [14, 74, 46, 21, 75, 47], [29, 54, 24, 19, 55, 25], [11, 45, 15, 46, 46, 16], [13, 145, 115, 6, 146, 116], [14, 74, 46, 23, 75, 47], [44, 54, 24, 7, 55, 25], [59, 46, 16, 1, 47, 17], [12, 151, 121, 7, 152, 122], [12, 75, 47, 26, 76, 48], [39, 54, 24, 14, 55, 25], [22, 45, 15, 41, 46, 16], [6, 151, 121, 14, 152, 122], [6, 75, 47, 34, 76, 48], [46, 54, 24, 10, 55, 25], [2, 45, 15, 64, 46, 16], [17, 152, 122, 4, 153, 123], [29, 74, 46, 14, 75, 47], [49, 54, 24, 10, 55, 25], [24, 45, 15, 46, 46, 16], [4, 152, 122, 18, 153, 123], [13, 74, 46, 32, 75, 47], [48, 54, 24, 14, 55, 25], [42, 45, 15, 32, 46, 16], [20, 147, 117, 4, 148, 118], [40, 75, 47, 7, 76, 48], [43, 54, 24, 22, 55, 25], [10, 45, 15, 67, 46, 16], [19, 148, 118, 6, 149, 119], [18, 75, 47, 31, 76, 48], [34, 54, 24, 34, 55, 25], [20, 45, 15, 61, 46, 16]];
-        QRRSBlock.getRSBlocks = function (typeNumber, errorCorrectLevel) {
-            var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+        QRRSBlock.RS_BLOCK_TABLE = [[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]];
+        QRRSBlock.getRSBlocks = function (typeNumber,errorCorrectLevel) {
+            var rsBlock = QRRSBlock.getRsBlockTable(typeNumber,errorCorrectLevel);
             if (rsBlock == undefined) {
                 throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
             }
@@ -587,12 +581,12 @@
                 var totalCount = rsBlock[i * 3 + 1];
                 var dataCount = rsBlock[i * 3 + 2];
                 for (var j = 0; j < count; j++) {
-                    list.push(new QRRSBlock(totalCount, dataCount));
+                    list.push(new QRRSBlock(totalCount,dataCount));
                 }
             }
             return list;
         };
-        QRRSBlock.getRsBlockTable = function (typeNumber, errorCorrectLevel) {
+        QRRSBlock.getRsBlockTable = function (typeNumber,errorCorrectLevel) {
             switch (errorCorrectLevel) {
                 case QRErrorCorrectLevel.L:
                     return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
@@ -612,16 +606,16 @@
         }
 
         QRBitBuffer.prototype = {
-            get: function (index) {
+            get:function (index) {
                 var bufIndex = Math.floor(index / 8);
                 return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1) == 1;
-            }, put: function (num, length) {
+            },put:function (num,length) {
                 for (var i = 0; i < length; i++) {
                     this.putBit(((num >>> (length - i - 1)) & 1) == 1);
                 }
-            }, getLengthInBits: function () {
+            },getLengthInBits:function () {
                 return this.length;
-            }, putBit: function (bit) {
+            },putBit:function (bit) {
                 var bufIndex = Math.floor(this.length / 8);
                 if (this.buffer.length <= bufIndex) {
                     this.buffer.push(0);
@@ -632,7 +626,7 @@
                 this.length++;
             }
         };
-        var QRCodeLimitLength = [[17, 14, 11, 7], [32, 26, 20, 14], [53, 42, 32, 24], [78, 62, 46, 34], [106, 84, 60, 44], [134, 106, 74, 58], [154, 122, 86, 64], [192, 152, 108, 84], [230, 180, 130, 98], [271, 213, 151, 119], [321, 251, 177, 137], [367, 287, 203, 155], [425, 331, 241, 177], [458, 362, 258, 194], [520, 412, 292, 220], [586, 450, 322, 250], [644, 504, 364, 280], [718, 560, 394, 310], [792, 624, 442, 338], [858, 666, 482, 382], [929, 711, 509, 403], [1003, 779, 565, 439], [1091, 857, 611, 461], [1171, 911, 661, 511], [1273, 997, 715, 535], [1367, 1059, 751, 593], [1465, 1125, 805, 625], [1528, 1190, 868, 658], [1628, 1264, 908, 698], [1732, 1370, 982, 742], [1840, 1452, 1030, 790], [1952, 1538, 1112, 842], [2068, 1628, 1168, 898], [2188, 1722, 1228, 958], [2303, 1809, 1283, 983], [2431, 1911, 1351, 1051], [2563, 1989, 1423, 1093], [2699, 2099, 1499, 1139], [2809, 2213, 1579, 1219], [2953, 2331, 1663, 1273]];
+        var QRCodeLimitLength = [[17,14,11,7],[32,26,20,14],[53,42,32,24],[78,62,46,34],[106,84,60,44],[134,106,74,58],[154,122,86,64],[192,152,108,84],[230,180,130,98],[271,213,151,119],[321,251,177,137],[367,287,203,155],[425,331,241,177],[458,362,258,194],[520,412,292,220],[586,450,322,250],[644,504,364,280],[718,560,394,310],[792,624,442,338],[858,666,482,382],[929,711,509,403],[1003,779,565,439],[1091,857,611,461],[1171,911,661,511],[1273,997,715,535],[1367,1059,751,593],[1465,1125,805,625],[1528,1190,868,658],[1628,1264,908,698],[1732,1370,982,742],[1840,1452,1030,790],[1952,1538,1112,842],[2068,1628,1168,898],[2188,1722,1228,958],[2303,1809,1283,983],[2431,1911,1351,1051],[2563,1989,1423,1093],[2699,2099,1499,1139],[2809,2213,1579,1219],[2953,2331,1663,1273]];
 
         function _isSupportCanvas() {
             return typeof CanvasRenderingContext2D != "undefined";
@@ -641,54 +635,45 @@
         function _getAndroid() {
             var android = false;
             var sAgent = navigator.userAgent;
-
             if (/android/i.test(sAgent)) { // android
                 android = true;
                 var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
-
                 if (aMat && aMat[1]) {
                     android = parseFloat(aMat[1]);
                 }
             }
-
             return android;
         }
 
         var svgDrawer = (function () {
-
-            var Drawing = function (el, htOption) {
+            var Drawing = function (el,htOption) {
                 this._el = el;
                 this._htOption = htOption;
             };
-
             Drawing.prototype.draw = function (oQRCode) {
                 var _htOption = this._htOption;
                 var _el = this._el;
                 var nCount = oQRCode.getModuleCount();
                 var nWidth = Math.floor(_htOption.width / nCount);
                 var nHeight = Math.floor(_htOption.height / nCount);
-
                 this.clear();
-
-                function makeSVG(tag, attrs) {
-                    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+                function makeSVG(tag,attrs) {
+                    var el = document.createElementNS('http://www.w3.org/2000/svg',tag);
                     for (var k in attrs)
-                        if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+                        if (attrs.hasOwnProperty(k)) el.setAttribute(k,attrs[k]);
                     return el;
                 }
 
-                var svg = makeSVG("svg", {'viewBox': '0 0 ' + String(nCount) + " " + String(nCount), 'width': '100%', 'height': '100%', 'fill': _htOption.colorLight});
-                svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
+                var svg = makeSVG("svg",{'viewBox':'0 0 ' + String(nCount) + " " + String(nCount),'width':'100%','height':'100%','fill':_htOption.colorLight});
+                svg.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns:xlink","http://www.w3.org/1999/xlink");
                 _el.appendChild(svg);
-
-                svg.appendChild(makeSVG("rect", {"fill": _htOption.colorLight, "width": "100%", "height": "100%"}));
-                svg.appendChild(makeSVG("rect", {"fill": _htOption.colorDark, "width": "1", "height": "1", "id": "template"}));
-
+                svg.appendChild(makeSVG("rect",{"fill":_htOption.colorLight,"width":"100%","height":"100%"}));
+                svg.appendChild(makeSVG("rect",{"fill":_htOption.colorDark,"width":"1","height":"1","id":"template"}));
                 for (var row = 0; row < nCount; row++) {
                     for (var col = 0; col < nCount; col++) {
-                        if (oQRCode.isDark(row, col)) {
-                            var child = makeSVG("use", {"x": String(col), "y": String(row)});
-                            child.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#template")
+                        if (oQRCode.isDark(row,col)) {
+                            var child = makeSVG("use",{"x":String(col),"y":String(row)});
+                            child.setAttributeNS("http://www.w3.org/1999/xlink","href","#template")
                             svg.appendChild(child);
                         }
                     }
@@ -700,15 +685,12 @@
             };
             return Drawing;
         })();
-
         var useSVG = document.documentElement.tagName.toLowerCase() === "svg";
-
         var Drawing = useSVG ? svgDrawer : !_isSupportCanvas() ? (function () {
-            var Drawing = function (el, htOption) {
+            var Drawing = function (el,htOption) {
                 this._el = el;
                 this._htOption = htOption;
             };
-
             /**
              * Draw the QRCode
              *
@@ -721,37 +703,29 @@
                 var nWidth = Math.floor(_htOption.width / nCount);
                 var nHeight = Math.floor(_htOption.height / nCount);
                 var aHTML = ['<table style="border:0;border-collapse:collapse;">'];
-
                 for (var row = 0; row < nCount; row++) {
                     aHTML.push('<tr>');
-
                     for (var col = 0; col < nCount; col++) {
-                        aHTML.push('<td style="border:0;border-collapse:collapse;padding:0;margin:0;width:' + nWidth + 'px;height:' + nHeight + 'px;background-color:' + (oQRCode.isDark(row, col) ? _htOption.colorDark : _htOption.colorLight) + ';"></td>');
+                        aHTML.push('<td style="border:0;border-collapse:collapse;padding:0;margin:0;width:' + nWidth + 'px;height:' + nHeight + 'px;background-color:' + (oQRCode.isDark(row,col) ? _htOption.colorDark : _htOption.colorLight) + ';"></td>');
                     }
-
                     aHTML.push('</tr>');
                 }
-
                 aHTML.push('</table>');
                 _el.innerHTML = aHTML.join('');
-
                 // Fix the margin values as real size.
                 var elTable = _el.childNodes[0];
                 var nLeftMarginTable = (_htOption.width - elTable.offsetWidth) / 2;
                 var nTopMarginTable = (_htOption.height - elTable.offsetHeight) / 2;
-
                 if (nLeftMarginTable > 0 && nTopMarginTable > 0) {
                     elTable.style.margin = nTopMarginTable + "px " + nLeftMarginTable + "px";
                 }
             };
-
             /**
              * Clear the QRCode
              */
             Drawing.prototype.clear = function () {
                 this._el.innerHTML = '';
             };
-
             return Drawing;
         })() : (function () { // Drawing in Canvas
             function _onMakeImage() {
@@ -765,7 +739,7 @@
             if (this._android && this._android <= 2.1) {
                 var factor = 1 / window.devicePixelRatio;
                 var drawImage = CanvasRenderingContext2D.prototype.drawImage;
-                CanvasRenderingContext2D.prototype.drawImage = function (image, sx, sy, sw, sh, dx, dy, dw, dh) {
+                CanvasRenderingContext2D.prototype.drawImage = function (image,sx,sy,sw,sh,dx,dy,dw,dh) {
                     if (("nodeName" in image) && /img/i.test(image.nodeName)) {
                         for (var i = arguments.length - 1; i >= 1; i--) {
                             arguments[i] = arguments[i] * factor;
@@ -776,11 +750,9 @@
                         arguments[3] *= factor;
                         arguments[4] *= factor;
                     }
-
-                    drawImage.apply(this, arguments);
+                    drawImage.apply(this,arguments);
                 };
             }
-
             /**
              * Check whether the user's browser supports Data URI or not
              *
@@ -788,29 +760,25 @@
              * @param {Function} fSuccess Occurs if it supports Data URI
              * @param {Function} fFail Occurs if it doesn't support Data URI
              */
-            function _safeSetDataURI(fSuccess, fFail) {
+            function _safeSetDataURI(fSuccess,fFail) {
                 var self = this;
                 self._fFail = fFail;
                 self._fSuccess = fSuccess;
-
                 // Check it just once
                 if (self._bSupportDataURI === null) {
                     var el = document.createElement("img");
                     var fOnError = function () {
                         self._bSupportDataURI = false;
-
                         if (self._fFail) {
                             self._fFail.call(self);
                         }
                     };
                     var fOnSuccess = function () {
                         self._bSupportDataURI = true;
-
                         if (self._fSuccess) {
                             self._fSuccess.call(self);
                         }
                     };
-
                     el.onabort = fOnError;
                     el.onerror = fOnError;
                     el.onload = fOnSuccess;
@@ -822,7 +790,6 @@
                     self._fFail.call(self);
                 }
             };
-
             /**
              * Drawing QRCode by using canvas
              *
@@ -830,10 +797,9 @@
              * @param {HTMLElement} el
              * @param {Object} htOption QRCode Options
              */
-            var Drawing = function (el, htOption) {
+            var Drawing = function (el,htOption) {
                 this._bIsPainted = false;
                 this._android = _getAndroid();
-
                 this._htOption = htOption;
                 this._elCanvas = document.createElement("canvas");
                 this._elCanvas.width = htOption.width;
@@ -848,7 +814,6 @@
                 this._el.appendChild(this._elImage);
                 this._bSupportDataURI = null;
             };
-
             /**
              * Draw the QRCode
              *
@@ -858,26 +823,22 @@
                 var _elImage = this._elImage;
                 var _oContext = this._oContext;
                 var _htOption = this._htOption;
-
                 var nCount = oQRCode.getModuleCount();
                 var nWidth = _htOption.width / nCount;
                 var nHeight = _htOption.height / nCount;
                 var nRoundedWidth = Math.round(nWidth);
                 var nRoundedHeight = Math.round(nHeight);
-
                 _elImage.style.display = "none";
                 this.clear();
-
                 for (var row = 0; row < nCount; row++) {
                     for (var col = 0; col < nCount; col++) {
-                        var bIsDark = oQRCode.isDark(row, col);
+                        var bIsDark = oQRCode.isDark(row,col);
                         var nLeft = col * nWidth;
                         var nTop = row * nHeight;
                         _oContext.strokeStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;
                         _oContext.lineWidth = 1;
                         _oContext.fillStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;
-                        _oContext.fillRect(nLeft, nTop, nWidth, nHeight);
-
+                        _oContext.fillRect(nLeft,nTop,nWidth,nHeight);
                         // 안티 앨리어싱 방지 처리
                         _oContext.strokeRect(
                             Math.floor(nLeft) + 0.5,
@@ -885,7 +846,6 @@
                             nRoundedWidth,
                             nRoundedHeight
                         );
-
                         _oContext.strokeRect(
                             Math.ceil(nLeft) - 0.5,
                             Math.ceil(nTop) - 0.5,
@@ -894,19 +854,16 @@
                         );
                     }
                 }
-
                 this._bIsPainted = true;
             };
-
             /**
              * Make the image from Canvas if the browser supports Data URI.
              */
             Drawing.prototype.makeImage = function () {
                 if (this._bIsPainted) {
-                    _safeSetDataURI.call(this, _onMakeImage);
+                    _safeSetDataURI.call(this,_onMakeImage);
                 }
             };
-
             /**
              * Return whether the QRCode is painted or not
              *
@@ -915,15 +872,13 @@
             Drawing.prototype.isPainted = function () {
                 return this._bIsPainted;
             };
-
             /**
              * Clear the QRCode
              */
             Drawing.prototype.clear = function () {
-                this._oContext.clearRect(0, 0, this._elCanvas.width, this._elCanvas.height);
+                this._oContext.clearRect(0,0,this._elCanvas.width,this._elCanvas.height);
                 this._bIsPainted = false;
             };
-
             /**
              * @private
              * @param {Number} nNumber
@@ -932,20 +887,16 @@
                 if (!nNumber) {
                     return nNumber;
                 }
-
                 return Math.floor(nNumber * 1000) / 1000;
             };
-
             return Drawing;
         })();
 
-        function _getTypeNumber(sText, nCorrectLevel) {
+        function _getTypeNumber(sText,nCorrectLevel) {
             var nType = 1;
             var length = _getUTF8Length(sText);
-
-            for (var i = 0, len = QRCodeLimitLength.length; i <= len; i++) {
+            for (var i = 0,len = QRCodeLimitLength.length; i <= len; i++) {
                 var nLimit = 0;
-
                 switch (nCorrectLevel) {
                     case QRErrorCorrectLevel.L :
                         nLimit = QRCodeLimitLength[i][0];
@@ -960,136 +911,123 @@
                         nLimit = QRCodeLimitLength[i][3];
                         break;
                 }
-
                 if (length <= nLimit) {
                     break;
                 } else {
                     nType++;
                 }
             }
-
             if (nType > QRCodeLimitLength.length) {
                 throw new Error("Too long data");
             }
-
             return nType;
         }
 
         function _getUTF8Length(sText) {
-            var replacedText = encodeURI(sText).toString().replace(/\%[0-9a-fA-F]{2}/g, 'a');
+            var replacedText = encodeURI(sText).toString().replace(/\%[0-9a-fA-F]{2}/g,'a');
             return replacedText.length + (replacedText.length != sText ? 3 : 0);
         }
 
-        QRCode = function (el, vOption) {
+        QRCode = function (el,vOption) {
             this._htOption = {
-                width: 256,
-                height: 256,
-                typeNumber: 4,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRErrorCorrectLevel.H
+                width:256,
+                height:256,
+                typeNumber:4,
+                colorDark:"#000000",
+                colorLight:"#ffffff",
+                correctLevel:QRErrorCorrectLevel.H
             };
-
             if (typeof vOption === 'string') {
                 vOption = {
-                    text: vOption
+                    text:vOption
                 };
             }
-
             // Overwrites options
             if (vOption) {
                 for (var i in vOption) {
                     this._htOption[i] = vOption[i];
                 }
             }
-
             if (typeof el == "string") {
                 el = document.getElementById(el);
             }
-
             if (this._htOption.useSVG) {
                 Drawing = svgDrawer;
             }
-
             this._android = _getAndroid();
             this._el = el;
             this._oQRCode = null;
-            this._oDrawing = new Drawing(this._el, this._htOption);
-
+            this._oDrawing = new Drawing(this._el,this._htOption);
             if (this._htOption.text) {
                 this.makeCode(this._htOption.text);
             }
         };
-
         QRCode.prototype.makeCode = function (sText) {
-            this._oQRCode = new QRCodeModel(_getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel);
+            this._oQRCode = new QRCodeModel(_getTypeNumber(sText,this._htOption.correctLevel),this._htOption.correctLevel);
             this._oQRCode.addData(sText);
             this._oQRCode.make();
             this._el.title = sText;
             this._oDrawing.draw(this._oQRCode);
             this.makeImage();
         };
-
         QRCode.prototype.makeImage = function () {
             if (typeof this._oDrawing.makeImage == "function" && (!this._android || this._android >= 3)) {
                 this._oDrawing.makeImage();
             }
         };
-
         QRCode.prototype.clear = function () {
             this._oDrawing.clear();
         };
-
         QRCode.CorrectLevel = QRErrorCorrectLevel;
     })();
     function cnzzAppend() {
         if (!$('html').html().match(`1264352198`)) {
             $("<script></script>").html(`var _czc = _czc || [];_czc.push(["_setAccount", "1264352198"]);`).appendTo($("head"));
-            $.getScript("https://s13.cnzz.com/z_stat.php?id=1264352198&web_id=1264352198", function () {
-                $(document).on("click", "[data-douyababapaopao]", function () {
+            $.getScript("https://s13.cnzz.com/z_stat.php?id=1264352198&web_id=1264352198",function () {
+                $(document).on("click","[data-douyababapaopao]",function () {
                     var name = $(this).attr("data-douyababapaopao");
                     var myScript = document.createElement("script");
                     myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent", "${name}", "点击"]);`));
                     document.head.appendChild(myScript);
                 });
                 var clock;
-                $(document).on("mouseenter", "[data-douyamovepaopao]", function () {
+                $(document).on("mouseenter","[data-douyamovepaopao]",function () {
                     var that = $(this);
                     clock = setTimeout(function () {
                         var name = that.attr("data-douyamovepaopao");
                         var myScript = document.createElement("script");
                         myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent", "${name}", "移入"]);`));
                         document.head.appendChild(myScript);
-                    }, 500);
+                    },500);
                 });
-                $(document).on("mouseleave", "[data-douyamovepaopao]", function () {
+                $(document).on("mouseleave","[data-douyamovepaopao]",function () {
                     clearInterval(clock);
                 });
             });
         }
     }                  //CNZZ统计
-    function cnzzEvent(n, e) {
+    function cnzzEvent(n,e) {
         var myScript = document.createElement("script");
         myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent", "${n}", "${e}"]);`));
         document.head.appendChild(myScript);
     }               //CNZZ统计
-    function douyaTongji(id, name, uniq) {
+    function douyaTongji(id,name,uniq) {
         chrome.extension.sendMessage({
-            name: "universal",
-            url: "http://event.douyapu.com/event",
-            type: "get",
-            dataType: "json",
-            data: {
-                id: id, name: name, uniq: uniq
+            name:"universal",
+            url:"http://event.douyapu.com/event",
+            type:"get",
+            dataType:"json",
+            data:{
+                id:id,name:name,uniq:uniq
             },
-        }, function () {
+        },function () {
         });
     }                //豆芽铺统计
     function douyaTongjiSet(e) {
-        chrome.storage.local.set({dypSign20180323: e});
+        chrome.storage.local.set({dypSign20180323:e});
     }               //豆芽铺统计
     function douyaTongjiCoupon(e) {
-        chrome.storage.local.set({dypCoupon20180323: e});
+        chrome.storage.local.set({dypCoupon20180323:e});
     }               //豆芽铺统计
     function getUrlParam(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -1097,7 +1035,7 @@
         if (r != null) return decodeURI(r[2]);
         return null;
     }             // 当前地址取参
-    function getParam(url, name) {
+    function getParam(url,name) {
         url = url.split("?")[1];
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = url.substr(0).match(reg);
@@ -1105,77 +1043,77 @@
         return null;
     }           //指定url提参方法
     function unicodeToUtf8(data) {
-        str = unescape(data.replace(/\\u/g, "%u"));
+        str = unescape(data.replace(/\\u/g,"%u"));
         return str;
     }           //unicode转中文方法
     function md5(t) {
-        function e(t, e) {
+        function e(t,e) {
             return t << e | t >>> 32 - e
         }
 
-        function n(t, e) {
-            var n, i, r, o, a;
+        function n(t,e) {
+            var n,i,r,o,a;
             return r = 2147483648 & t, o = 2147483648 & e, n = 1073741824 & t, i = 1073741824 & e, a = (1073741823 & t) + (1073741823 & e), n & i ? 2147483648 ^ a ^ r ^ o : n | i ? 1073741824 & a ? 3221225472 ^ a ^ r ^ o : 1073741824 ^ a ^ r ^ o : a ^ r ^ o
         }
 
-        function i(t, e, n) {
+        function i(t,e,n) {
             return t & e | ~t & n
         }
 
-        function r(t, e, n) {
+        function r(t,e,n) {
             return t & n | e & ~n
         }
 
-        function o(t, e, n) {
+        function o(t,e,n) {
             return t ^ e ^ n
         }
 
-        function a(t, e, n) {
+        function a(t,e,n) {
             return e ^ (t | ~n)
         }
 
-        function s(t, r, o, a, s, u, l) {
-            return t = n(t, n(n(i(r, o, a), s), l)), n(e(t, u), r)
+        function s(t,r,o,a,s,u,l) {
+            return t = n(t,n(n(i(r,o,a),s),l)), n(e(t,u),r)
         }
 
-        function u(t, i, o, a, s, u, l) {
-            return t = n(t, n(n(r(i, o, a), s), l)), n(e(t, u), i)
+        function u(t,i,o,a,s,u,l) {
+            return t = n(t,n(n(r(i,o,a),s),l)), n(e(t,u),i)
         }
 
-        function l(t, i, r, a, s, u, l) {
-            return t = n(t, n(n(o(i, r, a), s), l)), n(e(t, u), i)
+        function l(t,i,r,a,s,u,l) {
+            return t = n(t,n(n(o(i,r,a),s),l)), n(e(t,u),i)
         }
 
-        function c(t, i, r, o, s, u, l) {
-            return t = n(t, n(n(a(i, r, o), s), l)), n(e(t, u), i)
+        function c(t,i,r,o,s,u,l) {
+            return t = n(t,n(n(a(i,r,o),s),l)), n(e(t,u),i)
         }
 
         function p(t) {
-            var e, n, i = "", r = "";
-            for (n = 0; 3 >= n; n++) e = t >>> 8 * n & 255, r = "0" + e.toString(16), i += r.substr(r.length - 2, 2);
+            var e,n,i = "",r = "";
+            for (n = 0; 3 >= n; n++) e = t >>> 8 * n & 255, r = "0" + e.toString(16), i += r.substr(r.length - 2,2);
             return i
         }
 
-        var f, d, h, g, m, v, y, b, k, x = [];
+        var f,d,h,g,m,v,y,b,k,x = [];
         for (t = function (t) {
-            t = t.replace(/\r\n/g, "\n");
-            for (var e = "", n = 0; n < t.length; n++) {
+            t = t.replace(/\r\n/g,"\n");
+            for (var e = "",n = 0; n < t.length; n++) {
                 var i = t.charCodeAt(n);
                 128 > i ? e += String.fromCharCode(i) : i > 127 && 2048 > i ? (e += String.fromCharCode(i >> 6 | 192), e += String.fromCharCode(63 & i | 128)) : (e += String.fromCharCode(i >> 12 | 224), e += String.fromCharCode(i >> 6 & 63 | 128), e += String.fromCharCode(63 & i | 128))
             }
             return e
         }(t), x = function (t) {
-            for (var e, n = t.length, i = n + 8, r = (i - i % 64) / 64, o = 16 * (r + 1), a = new Array(o - 1), s = 0, u = 0; n > u;) e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | t.charCodeAt(u) << s, u++;
+            for (var e,n = t.length,i = n + 8,r = (i - i % 64) / 64,o = 16 * (r + 1),a = new Array(o - 1),s = 0,u = 0; n > u;) e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | t.charCodeAt(u) << s, u++;
             return e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | 128 << s, a[o - 2] = n << 3, a[o - 1] = n >>> 29, a
-        }(t), v = 1732584193, y = 4023233417, b = 2562383102, k = 271733878, f = 0; f < x.length; f += 16) d = v, h = y, g = b, m = k, v = s(v, y, b, k, x[f + 0], 7, 3614090360), k = s(k, v, y, b, x[f + 1], 12, 3905402710), b = s(b, k, v, y, x[f + 2], 17, 606105819), y = s(y, b, k, v, x[f + 3], 22, 3250441966), v = s(v, y, b, k, x[f + 4], 7, 4118548399), k = s(k, v, y, b, x[f + 5], 12, 1200080426), b = s(b, k, v, y, x[f + 6], 17, 2821735955), y = s(y, b, k, v, x[f + 7], 22, 4249261313), v = s(v, y, b, k, x[f + 8], 7, 1770035416), k = s(k, v, y, b, x[f + 9], 12, 2336552879), b = s(b, k, v, y, x[f + 10], 17, 4294925233), y = s(y, b, k, v, x[f + 11], 22, 2304563134), v = s(v, y, b, k, x[f + 12], 7, 1804603682), k = s(k, v, y, b, x[f + 13], 12, 4254626195), b = s(b, k, v, y, x[f + 14], 17, 2792965006), y = s(y, b, k, v, x[f + 15], 22, 1236535329), v = u(v, y, b, k, x[f + 1], 5, 4129170786), k = u(k, v, y, b, x[f + 6], 9, 3225465664), b = u(b, k, v, y, x[f + 11], 14, 643717713), y = u(y, b, k, v, x[f + 0], 20, 3921069994), v = u(v, y, b, k, x[f + 5], 5, 3593408605), k = u(k, v, y, b, x[f + 10], 9, 38016083), b = u(b, k, v, y, x[f + 15], 14, 3634488961), y = u(y, b, k, v, x[f + 4], 20, 3889429448), v = u(v, y, b, k, x[f + 9], 5, 568446438), k = u(k, v, y, b, x[f + 14], 9, 3275163606), b = u(b, k, v, y, x[f + 3], 14, 4107603335), y = u(y, b, k, v, x[f + 8], 20, 1163531501), v = u(v, y, b, k, x[f + 13], 5, 2850285829), k = u(k, v, y, b, x[f + 2], 9, 4243563512), b = u(b, k, v, y, x[f + 7], 14, 1735328473), y = u(y, b, k, v, x[f + 12], 20, 2368359562), v = l(v, y, b, k, x[f + 5], 4, 4294588738), k = l(k, v, y, b, x[f + 8], 11, 2272392833), b = l(b, k, v, y, x[f + 11], 16, 1839030562), y = l(y, b, k, v, x[f + 14], 23, 4259657740), v = l(v, y, b, k, x[f + 1], 4, 2763975236), k = l(k, v, y, b, x[f + 4], 11, 1272893353), b = l(b, k, v, y, x[f + 7], 16, 4139469664), y = l(y, b, k, v, x[f + 10], 23, 3200236656), v = l(v, y, b, k, x[f + 13], 4, 681279174), k = l(k, v, y, b, x[f + 0], 11, 3936430074), b = l(b, k, v, y, x[f + 3], 16, 3572445317), y = l(y, b, k, v, x[f + 6], 23, 76029189), v = l(v, y, b, k, x[f + 9], 4, 3654602809), k = l(k, v, y, b, x[f + 12], 11, 3873151461), b = l(b, k, v, y, x[f + 15], 16, 530742520), y = l(y, b, k, v, x[f + 2], 23, 3299628645), v = c(v, y, b, k, x[f + 0], 6, 4096336452), k = c(k, v, y, b, x[f + 7], 10, 1126891415), b = c(b, k, v, y, x[f + 14], 15, 2878612391), y = c(y, b, k, v, x[f + 5], 21, 4237533241), v = c(v, y, b, k, x[f + 12], 6, 1700485571), k = c(k, v, y, b, x[f + 3], 10, 2399980690), b = c(b, k, v, y, x[f + 10], 15, 4293915773), y = c(y, b, k, v, x[f + 1], 21, 2240044497), v = c(v, y, b, k, x[f + 8], 6, 1873313359), k = c(k, v, y, b, x[f + 15], 10, 4264355552), b = c(b, k, v, y, x[f + 6], 15, 2734768916), y = c(y, b, k, v, x[f + 13], 21, 1309151649), v = c(v, y, b, k, x[f + 4], 6, 4149444226), k = c(k, v, y, b, x[f + 11], 10, 3174756917), b = c(b, k, v, y, x[f + 2], 15, 718787259), y = c(y, b, k, v, x[f + 9], 21, 3951481745), v = n(v, d), y = n(y, h), b = n(b, g), k = n(k, m);
+        }(t), v = 1732584193, y = 4023233417, b = 2562383102, k = 271733878, f = 0; f < x.length; f += 16) d = v, h = y, g = b, m = k, v = s(v,y,b,k,x[f + 0],7,3614090360), k = s(k,v,y,b,x[f + 1],12,3905402710), b = s(b,k,v,y,x[f + 2],17,606105819), y = s(y,b,k,v,x[f + 3],22,3250441966), v = s(v,y,b,k,x[f + 4],7,4118548399), k = s(k,v,y,b,x[f + 5],12,1200080426), b = s(b,k,v,y,x[f + 6],17,2821735955), y = s(y,b,k,v,x[f + 7],22,4249261313), v = s(v,y,b,k,x[f + 8],7,1770035416), k = s(k,v,y,b,x[f + 9],12,2336552879), b = s(b,k,v,y,x[f + 10],17,4294925233), y = s(y,b,k,v,x[f + 11],22,2304563134), v = s(v,y,b,k,x[f + 12],7,1804603682), k = s(k,v,y,b,x[f + 13],12,4254626195), b = s(b,k,v,y,x[f + 14],17,2792965006), y = s(y,b,k,v,x[f + 15],22,1236535329), v = u(v,y,b,k,x[f + 1],5,4129170786), k = u(k,v,y,b,x[f + 6],9,3225465664), b = u(b,k,v,y,x[f + 11],14,643717713), y = u(y,b,k,v,x[f + 0],20,3921069994), v = u(v,y,b,k,x[f + 5],5,3593408605), k = u(k,v,y,b,x[f + 10],9,38016083), b = u(b,k,v,y,x[f + 15],14,3634488961), y = u(y,b,k,v,x[f + 4],20,3889429448), v = u(v,y,b,k,x[f + 9],5,568446438), k = u(k,v,y,b,x[f + 14],9,3275163606), b = u(b,k,v,y,x[f + 3],14,4107603335), y = u(y,b,k,v,x[f + 8],20,1163531501), v = u(v,y,b,k,x[f + 13],5,2850285829), k = u(k,v,y,b,x[f + 2],9,4243563512), b = u(b,k,v,y,x[f + 7],14,1735328473), y = u(y,b,k,v,x[f + 12],20,2368359562), v = l(v,y,b,k,x[f + 5],4,4294588738), k = l(k,v,y,b,x[f + 8],11,2272392833), b = l(b,k,v,y,x[f + 11],16,1839030562), y = l(y,b,k,v,x[f + 14],23,4259657740), v = l(v,y,b,k,x[f + 1],4,2763975236), k = l(k,v,y,b,x[f + 4],11,1272893353), b = l(b,k,v,y,x[f + 7],16,4139469664), y = l(y,b,k,v,x[f + 10],23,3200236656), v = l(v,y,b,k,x[f + 13],4,681279174), k = l(k,v,y,b,x[f + 0],11,3936430074), b = l(b,k,v,y,x[f + 3],16,3572445317), y = l(y,b,k,v,x[f + 6],23,76029189), v = l(v,y,b,k,x[f + 9],4,3654602809), k = l(k,v,y,b,x[f + 12],11,3873151461), b = l(b,k,v,y,x[f + 15],16,530742520), y = l(y,b,k,v,x[f + 2],23,3299628645), v = c(v,y,b,k,x[f + 0],6,4096336452), k = c(k,v,y,b,x[f + 7],10,1126891415), b = c(b,k,v,y,x[f + 14],15,2878612391), y = c(y,b,k,v,x[f + 5],21,4237533241), v = c(v,y,b,k,x[f + 12],6,1700485571), k = c(k,v,y,b,x[f + 3],10,2399980690), b = c(b,k,v,y,x[f + 10],15,4293915773), y = c(y,b,k,v,x[f + 1],21,2240044497), v = c(v,y,b,k,x[f + 8],6,1873313359), k = c(k,v,y,b,x[f + 15],10,4264355552), b = c(b,k,v,y,x[f + 6],15,2734768916), y = c(y,b,k,v,x[f + 13],21,1309151649), v = c(v,y,b,k,x[f + 4],6,4149444226), k = c(k,v,y,b,x[f + 11],10,3174756917), b = c(b,k,v,y,x[f + 2],15,718787259), y = c(y,b,k,v,x[f + 9],21,3951481745), v = n(v,d), y = n(y,h), b = n(b,g), k = n(k,m);
         return (p(v) + p(y) + p(b) + p(k)).toLowerCase()
     }                        // md5
     function trim(str) {
-        return str.replace(/^(\s|\u00A0)+/, '').replace(/(\s|\u00A0)+$/, '');
+        return str.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');
     }                     // 去掉字符串前后空格
-    function numSub(a, b) {
-        var c, d, e;    //
-        function mul(a, b) {
+    function numSub(a,b) {
+        var c,d,e;    //
+        function mul(a,b) {
             var c = 0,
                 d = a.toString(),
                 e = b.toString();
@@ -1187,7 +1125,7 @@
                 c += e.split(".")[1].length;
             } catch (f) {
             }
-            return Number(d.replace(".", "")) * Number(e.replace(".", "")) / Math.pow(10, c);
+            return Number(d.replace(".","")) * Number(e.replace(".","")) / Math.pow(10,c);
         }   //
         try {
             c = a.toString().split(".")[1].length;
@@ -1199,29 +1137,29 @@
         } catch (f) {
             d = 0;
         }
-        e = Math.pow(10, Math.max(c, d));
-        return (mul(a, e) - mul(b, e)) / e;
+        e = Math.pow(10,Math.max(c,d));
+        return (mul(a,e) - mul(b,e)) / e;
     }                  //去掉浮点数的相减方法
     var locHost = location.host;
     var refer = document.referrer;
     //详情页
     !function () {
         var adaptationArr = {
-            'detail.tmall.com': {'name': "tm", 'dom': ['#J_TabBarBox', '#side-shop-info .hd', '.tm-floatcart-link', '#mainwrap .tabbar-bg']},
-            'detail.tmall.hk': {'name': "tm", 'dom': ['#J_TabBarBox', '#side-shop-info .hd', '.tm-floatcart-link', '#mainwrap .tabbar-bg']},
-            'item.taobao.com': {'name': "tb", 'dom': ['#J_TabBarWrap']},
-            'item.taobao.hk': {'name': "tb", 'dom': ['#J_TabBarWrap']},
-            'detail.ju.taobao.com': {'name': "ju", 'dom': ['.dd-header']},
-            'chaoshi.detail.tmall.com': {'name': "tm", 'dom': ['#page .tm-chaoshi-nav']},
-            'item.jd.com': {'name': "jd", 'dom': ['#detail .tab-main']},
-            'item.jd.hk': {'name': "jd", 'dom': ['#detail .tab-main']},
-            'product.suning.com': {'name': "sn", 'dom': ['.fixbar', '.d-an-list']},
-            'item.gome.com.cn': {'name': "gm", 'dom': ['#fixtabox']},
-            'product.dangdang.com': {'name': "dd", 'dom': ['#tab-panels']}
+            'detail.tmall.com':{'name':"tm",'dom':['#J_TabBarBox','#side-shop-info .hd','.tm-floatcart-link','#mainwrap .tabbar-bg']},
+            'detail.tmall.hk':{'name':"tm",'dom':['#J_TabBarBox','#side-shop-info .hd','.tm-floatcart-link','#mainwrap .tabbar-bg']},
+            'item.taobao.com':{'name':"tb",'dom':['#J_TabBarWrap']},
+            'item.taobao.hk':{'name':"tb",'dom':['#J_TabBarWrap']},
+            'detail.ju.taobao.com':{'name':"ju",'dom':['.dd-header']},
+            'chaoshi.detail.tmall.com':{'name':"tm",'dom':['#page .tm-chaoshi-nav']},
+            'item.jd.com':{'name':"jd",'dom':['#detail .tab-main']},
+            'item.jd.hk':{'name':"jd",'dom':['#detail .tab-main']},
+            'product.suning.com':{'name':"sn",'dom':['.fixbar','.d-an-list']},
+            'item.gome.com.cn':{'name':"gm",'dom':['#fixtabox']},
+            'product.dangdang.com':{'name':"dd",'dom':['#tab-panels']}
         };
         var adaptationOk = 0;
         var nowPlat = "";
-        $.each(adaptationArr, function (v, k) {
+        $.each(adaptationArr,function (v,k) {
             if (locHost == v) {
                 adaptationOk = 1;
                 nowPlat = k.name;
@@ -1235,12 +1173,12 @@
             // var cssStyle1212 = '';
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
-            var mainUrl, setting, dypSwitch, settingNew, dypNav, dypmyswi, dypVer, qqOnline, dypRandom;
+            var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,dypRandom;
             infoGroup = {
-                id: '', plat: nowPlat, title: "", price: "", sameNew: {}, pid: "", seller: "", rCat: "", shop: "",
-                pic: "", sale: "", amount: "", amountReq: "", amountT: 0, amountL: 0, tkCom: 0, startT: "", endT: ""
+                id:'',plat:nowPlat,title:"",price:"",sameNew:{},pid:"",seller:"",rCat:"",shop:"",
+                pic:"",sale:"",amount:"",amountReq:"",amountT:0,amountL:0,tkCom:0,startT:"",endT:""
             };
-            chrome.storage.local.get(null, function (e) {
+            chrome.storage.local.get(null,function (e) {
                 // var id = e.dypjsonvdata.myMmId;
                 // dypmyswi = 1;
                 // id = id[Math.floor((Math.random() * id.length))];
@@ -1261,34 +1199,34 @@
                 dypRandom = e.dypRandom;
                 dypVer = `backv : ${e.dypbackv} mainv : ${e.dypmainv} jsonv : ${e.dypjsonv} popv : ${e.dyppopv} setv : ${e.dypsetv}`;
                 mainUrl = {
-                    min: e.dypjsonvdata.mainUrlMin,
-                    coupon: e.dypjsonvdata.mainUrlCoupon,
-                    jdCoupon: e.dypjsonvdata.mainUrlJdCoupon,
-                    storage: e.dypjsonvdata.mainUrlStorage,
-                    myMmId: id,
-                    website: e.dypjsonvdata.website,
-                    parity: e.dypjsonvdata.website + 'coupon/parity?urls=',
-                    chain: e.dypjsonvdata.website + 'coupon/chain?urls='
+                    min:e.dypjsonvdata.mainUrlMin,
+                    coupon:e.dypjsonvdata.mainUrlCoupon,
+                    jdCoupon:e.dypjsonvdata.mainUrlJdCoupon,
+                    storage:e.dypjsonvdata.mainUrlStorage,
+                    myMmId:id,
+                    website:e.dypjsonvdata.website,
+                    parity:e.dypjsonvdata.website + 'coupon/parity?urls=',
+                    chain:e.dypjsonvdata.website + 'coupon/chain?urls='
                 };
                 qqOnline = e.dypjsonvdata.mainUrlQQ;
                 setting = e.dypSetting;
-                settingNew = !$.isEmptyObject(e.dypSetNew) ? e.dypSetNew : {dypTop: 'show', dypMid: 'show'};
+                settingNew = !$.isEmptyObject(e.dypSetNew) ? e.dypSetNew : {dypTop:'show',dypMid:'show'};
                 dypSwitch = e.dypSwitch;
                 dypNav = e.dypNav201815;
                 if ($("body").attr("dypSign159357") != 1) {
                     start();
-                    $("body").attr("dypSign159357", "1");
+                    $("body").attr("dypSign159357","1");
                 }
             });
             function start() {
                 $("body").after(`<div id="dypTop9527"><div class="dypTop9527-box dypClear"><div class="dypTop9527-logo fl" title="豆芽购物助手" data-douyababapaopao="顶部+logo"><b></b></div><div class="dypTop9527-mall fl" data-douyamovepaopao="顶部+导航+查看"><div class="dypTop9527-topMask"></div><b></b><span>购物导航</span><div class="dypTop9527-rMask"></div><div class="dypTop9527-mask"></div><div class="dypTop9527-mallDrop" style="display:none"><ul class="dypClear"></ul></div></div><div class="dypTop9527-vipCoupon fl" data-douyamovepaopao="顶部+值得买+查看"><div class="dypTop9527-topMask"></div><b></b><span>值得买</span><div class="dypTop9527-rMask"></div><div class="dypTop9527-mask"></div><div class="dypTop9527-vipCouponDrop"><ul class="dypClear"></ul></div></div><div class="dypTop9527-bijia fl"><b></b><span>全网比价</span><div class="dypTop9527-bijia-rMask"></div></div><div class="dypTop9527-sameStyle fl"></div><div class="dypTop9527-set fr" data-douyamovepaopao="顶部+设置+查看"><div class="dypTop9527-set-box"><div class="dypTop9527-set-lMask"></div><b></b><div class="dypTop9527-mask"></div><div class="dypTop9527-setDrop"><ul><li data-type="gb" data-douyababapaopao="顶部+设置+本次关闭">本次关闭</li><li data-type="fk" data-douyababapaopao="顶部+设置+意见反馈">意见反馈</li></ul></div></div><i data-douyababapaopao="顶部+展开"></i></div><div class="dypTop9527-search-box fr"><div class="dypTop9527-search"><input type="text" id="dypTop9527-search" maxlength="10" placeholder="搜索全网优惠"> <span data-id="dyp"><em id="dypTop9527-searchBtn" data-douyababapaopao="顶部+搜索+点击搜索">豆芽铺</em><i data-type="1"></i></span><ul style="display:none"><li data-id="dyp" data-douyababapaopao="顶部+搜索+豆芽铺">豆芽铺</li><li data-id="tm" data-douyababapaopao="顶部+搜索+天猫">天　猫</li><li data-id="jd" data-douyababapaopao="顶部+搜索+京东">京　东</li><li data-id="tb" data-douyababapaopao="顶部+搜索+淘宝">淘　宝</li><li data-id="wph" data-douyababapaopao="顶部+搜索+唯品会">唯品会</li><li data-id="mgj" data-douyababapaopao="顶部+搜索+蘑菇街">蘑菇街</li><li data-id="yoho" data-douyababapaopao="顶部+搜索+YOHO!">YOHO</li><li data-id="sn" data-douyababapaopao="顶部+搜索+苏宁">苏　宁</li><li data-id="ymx" data-douyababapaopao="顶部+搜索+亚马逊">亚马逊</li><li data-id="dd" data-douyababapaopao="顶部+搜索+当当">当　当</li><li data-id="jm" data-douyababapaopao="顶部+搜索+聚美">聚　美</li><li data-id="kl" data-douyababapaopao="顶部+搜索+考拉">考　拉</li><li data-id="yx" data-douyababapaopao="顶部+搜索+严选">严　选</li><li data-id="yhd" data-douyababapaopao="顶部+搜索+一号店">一号店</li><li data-id="gm" data-douyababapaopao="顶部+搜索+国美">国　美</li><p class="p1"></p><p class="p2"></p><p class="p3"></p></ul><u class="u1" style="display:none"></u> <u class="u2" style="display:none"></u></div></div><div class="dypTop9527-qq-online fr"><a href="${qqOnline}" target="_blank" data-douyababapaopao="顶部+QQ在线"></a></div><div class="dypTop9527-activity fr dypTop9527-swiper_wrap"><ul class="dypTop9527-font_inner"></ul></div></div><div class="dypTop9527-mini" data-douyababapaopao="顶部+展开"></div></div>`);   //上面区域插入代码块
                 var picArr = JSON.parse(dypNav).results;
-                $.each(picArr, function (v, k) {
+                $.each(picArr,function (v,k) {
                     $(".dypTop9527-mallDrop ul").append(`<li data-douyababapaopao="顶部+导航+${k.name}"><a href="${k.link}" target="_blank"><img src="${k.img_src}"><h5>${k.name}</h5></a></li>`)
                 });
                 !function () {
                     var ymove = [];
-                    $.each(adaptationArr, function (key, item) {
+                    $.each(adaptationArr,function (key,item) {
                         if (locHost == key) {
                             ymove = item.dom;
                             return false;
@@ -1297,12 +1235,12 @@
                     if (ymove.length) {
                         $(document).scroll(function () {
                             if (($(ymove[0]).css("position") == "fixed") && (setting.dypTop == 'show') && settingNew.dypTop == 'show') {
-                                $.each(ymove, function (key, item) {
-                                    $(item).css("transform", 'translate(0,41px)');
+                                $.each(ymove,function (key,item) {
+                                    $(item).css("transform",'translate(0,41px)');
                                 });
                             } else {
-                                $.each(ymove, function (key, item) {
-                                    $(item).css("transform", 'translate(0,0)');
+                                $.each(ymove,function (key,item) {
+                                    $(item).css("transform",'translate(0,0)');
                                 });
                             }
                         })
@@ -1310,16 +1248,16 @@
                 }();    //插件内嵌元素占据位子，原网站悬浮元素重新向下填充
                 var middleTemplateHtml = `<div><div id="dypMid9527"><div class="dypMid9527-logo" data-douyababapaopao="工具+logo"><a href="${mainUrl.website}" target="_blank"></a></div><div class="dypMid9527-coupon"><div class="dypMid9527-title" data-douyamovepaopao="工具+优惠券+查看"><span>优惠折扣</span><div class="dypMid9527-borderMask"></div></div><div class="dypMid9527-box dypMid9527-box-coupon"><p class="dypClear"><a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多"><span                                class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span></a></p><div class="dypMid9527-no-coupon"><b class="dypMid9527-coupon-loading"></b><span>正在全力加载中</span></div></div></div><div class="dypMid9527-active"><div class="dypMid9527-title" data-douyamovepaopao="工具+活动+查看"><span>限时活动</span><div class="dypMid9527-borderMask"></div></div><div class="dypMid9527-box dypMid9527-box-active"><ul></ul><div><button class="l"></button><button class="r"></button></div></div></div><div class="dypMid9527-price-trend"><div class="dypMid9527-title dypMid9527-price-title" data-douyamovepaopao="工具+价格+查看"><span>价格平稳</span><b></b><div class="dypMid9527-borderMask"></div></div><div class="dypMid9527-box dypMid9527-box-price yhq-chart-box"><div id="douyapu-line-chart"></div><div class="dypMid9527-priceBox-title">注意：价格趋势由<span>豆芽网</span>提供，数据仅供参考</div><div class="dypMid9527-priceBox-back"><span>抱歉，该商品的价格趋势正在收录中</span></div><div class="dypMid9527-AllShop-price"><div class="dypMid9527-AllShop-box"><div class="dypMid9527-AllShop-title"><span class="dypMid9527-World-icon"></span><span class="dypMid9527-World-title">全网比价</span></div><div class="dypMid9527-AllShop-content"></div></div></div></div></div><div class="dypMid9527-must-see"><div class="dypMid9527-title" data-douyababapaopao="工具+必看评价"><span>必看评价</span></div></div><div class="dypMid9527-buyers-show"><div class="dypMid9527-title" data-douyababapaopao="工具+买家秀"><span>买家秀</span></div></div><div class="dypMid9527-phone"><div class="dypMid9527-title" data-douyamovepaopao="工具+二维码+查看"><span>领券神器</span><div class="dypMid9527-borderMask"></div></div><div class="dypMid9527-box dypMid9527-box-phone"><div class="dypMid9527-box-phoner">领券 , 省钱</div><div class="dypMid9527-box-phoner">随时随地享优惠</div><div class="dypMid9527-phone-qr"><div id="dypMid9527-phone-qr"></div></div><div class="dypMid9527-box-phonet">扫码下载省钱APP-豆芽铺</div></div></div><div class="dypMid9527-setting"><div class="dypMid9527-title dypMid9527-setting-title" data-douyamovepaopao="工具+设置+查看"><b></b><div class="dypMid9527-borderMask"></div></div><div class="dypMid9527-box dypMid9527-box-setting"><ul><li data-type="2" data-douyababapaopao="工具+设置+意见反馈">意见反馈</li><li data-type="1" data-douyababapaopao="工具+设置+本次关闭">本次关闭</li></ul></div></div></div><div class="dypMid9527-absActive-box"><div class="dypMid9527-absActive dypClear"><div id="dai360_link" class="fl" title="精选"><div class="dai360_title" data-douyababapaopao="精选商品,全场半价"><b                                    class="dai360_logo"></b><span>精</span><span>选</span><span>商</span><span>品 </span><span> , </span><span> 全</span><span>场</span><span>半</span><span>价</span></div></div><div class="dypMid9527-font_inner1-box fl"><ul class="dypMid9527-font_inner1"></ul></div></div></div></div>`;
                 var middleTemplateDom = {
-                    ".tm-fcs-panel": 0,
-                    ".tb-promo-meta": 0,
-                    ".tb-meta": 0,
-                    ".summary-price-wrap": 0,
-                    ".proinfo-focus": 1,
-                    ".prd-price-1": 1,
-                    ".price_info": 1,
-                    ".J_statusBanner": 0
+                    ".tm-fcs-panel":0,
+                    ".tb-promo-meta":0,
+                    ".tb-meta":0,
+                    ".summary-price-wrap":0,
+                    ".proinfo-focus":1,
+                    ".prd-price-1":1,
+                    ".price_info":1,
+                    ".J_statusBanner":0
                 };
-                $.each(middleTemplateDom, function (v, k) {
+                $.each(middleTemplateDom,function (v,k) {
                     if ($(v).length) {
                         if (v == ".tm-fcs-panel") {
                             $(v).after("<div style='margin-right: 20px'>" + middleTemplateHtml + "</div>");
@@ -1338,36 +1276,36 @@
                 function inits() {
                     if ($("body").hasClass("dyp779946-body-unScroll")) {
                         $(".dypTop9527-sameStyle").css({
-                            "width": $(".dypTop9527-box").width() - 975
+                            "width":$(".dypTop9527-box").width() - 975
                         });
                     } else {
                         $(".dypTop9527-sameStyle").css({
-                            "width": $(".dypTop9527-box").width() - 958
+                            "width":$(".dypTop9527-box").width() - 958
                         });
                     }
                     $("#dypMid9527 .dypMid9527-box-price").css({
-                        "width": $("#dypMid9527").width()
+                        "width":$("#dypMid9527").width()
                     });
                     if (locHost.indexOf("item.taobao") != -1) {
                         if ($(window).width() < 1163) {
                             $("#dai360_link").width("45px");
                             $("#dai360_link span").hide();
                             $(".dypMid9527-setting").hide();
-                            $("#dai360_link > .dai360_title > .dai360_logo").css("margin-right", "0");
-                            $(".dypMid9527-box-phone").css("right", "0");
+                            $("#dai360_link > .dai360_title > .dai360_logo").css("margin-right","0");
+                            $(".dypMid9527-box-phone").css("right","0");
                             $(".dypMid9527-absActive-box").width("331px");
                         } else {
                             $("#dai360_link").width("194px");
                             $("#dai360_link span").show();
                             $(".dypMid9527-setting").show();
-                            $("#dai360_link > .dai360_title > .dai360_logo").css("margin-right", "5px");
-                            $(".dypMid9527-box-phone").css("right", "32px");
+                            $("#dai360_link > .dai360_title > .dai360_logo").css("margin-right","5px");
+                            $(".dypMid9527-box-phone").css("right","32px");
                             $(".dypMid9527-absActive-box").width("480px");
                         }
                     }
                 }   //中部三个box的宽度加载后js设定
                 inits();
-                $(window).on("resize", function () {
+                $(window).on("resize",function () {
                     inits();
                 });
                 !function () {
@@ -1382,7 +1320,7 @@
                     // $("body").on("click", "#dai360_link", function () {
                     //     $("#dai360Pop").css("display", "block");
                     // });
-                    $("body").on("click", "#dai360_link", function () {
+                    $("body").on("click","#dai360_link",function () {
                         window.open("https://temai.taobao.com/event2549927.htm?q=zIZJi72DTCHzX1yJ4zwwtqtujjtJViRVKKPwiwsBZjTrHEPWRherKw35rLQv0%2BddsBnxIH1nzuATT7r2KojiYg%3D%3D")
                     });
                     // $("body").on("click", "#dai360Pop>.shadow", function () {
@@ -1400,38 +1338,38 @@
                         showOrHideTop(1);
                     }
                     if (setting.dypMid == 'hidden' || settingNew.dypMid == 'hidden') {
-                        $("#dypMid9527").parent().css('display', 'none');
+                        $("#dypMid9527").parent().css('display','none');
                     }
                 }   //配置用户设置决定插件上面部分和中间部分是否显示
                 function showOrHideTop(or) {
                     if (or) {
-                        $(".dypTop9527-box").css({'transform': 'translate(0,0)'});
-                        $(".dypTop9527-mini").css({'transform': 'translate(0,-50px)'});
-                        $("body").css({'transition': 'all .5s', "padding-top": "41px"});
+                        $(".dypTop9527-box").css({'transform':'translate(0,0)'});
+                        $(".dypTop9527-mini").css({'transform':'translate(0,-50px)'});
+                        $("body").css({'transition':'all .5s',"padding-top":"41px"});
                         setting.dypTop = 'show';
                     } else {
-                        $(".dypTop9527-box").css({'transform': 'translate(0,-50px)'});
-                        $(".dypTop9527-mini").css({'transform': 'translate(0,0)'});
-                        $("body").css({'transition': 'all .5s', "padding-top": "0px"});
+                        $(".dypTop9527-box").css({'transform':'translate(0,-50px)'});
+                        $(".dypTop9527-mini").css({'transform':'translate(0,0)'});
+                        $("body").css({'transition':'all .5s',"padding-top":"0px"});
                         setting.dypTop = 'hidden';
                     }
                 }   //显示或者隐藏插件top工具栏
                 initpage();
-                function changeColor(c, v, i) {
-                    $(".dypTop9527-search input").css("border-color", c);
-                    $(".dypTop9527-search span").css("background", c);
+                function changeColor(c,v,i) {
+                    $(".dypTop9527-search input").css("border-color",c);
+                    $(".dypTop9527-search span").css("background",c);
                     $(".dypTop9527-search span em").html(v);
-                    $(".dypTop9527-search span").data("id", i);
+                    $(".dypTop9527-search span").data("id",i);
                 }   //
                 cnzzAppend();    //打点统计代码
                 function startPrice(url) {
                     $.ajax({
-                        url: "https://zhushou.huihui.cn/productSense",
-                        data: {phu: url, type: "canvas"},
-                        type: 'GET',
-                        timeout: 5000,
-                        dataType: 'json',
-                        success: function (response) {
+                        url:"https://zhushou.huihui.cn/productSense",
+                        data:{phu:url,type:"canvas"},
+                        type:'GET',
+                        timeout:5000,
+                        dataType:'json',
+                        success:function (response) {
                             var data = response.priceHistoryData.list;
                             var time = new Date();
                             var nowTime = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
@@ -1451,30 +1389,30 @@
                             }
                             var trueObj = newData[newData.length - 1];
                             if (newData[newData.length - 1].price == infoGroup.price) {
-                                newData[newData.length - 1] = {price: infoGroup.price, time: nowTime};
+                                newData[newData.length - 1] = {price:infoGroup.price,time:nowTime};
                             } else {
-                                newData[newData.length] = {price: infoGroup.price, time: nowTime};
+                                newData[newData.length] = {price:infoGroup.price,time:nowTime};
                             }
                             var isOne = true;
                             if (newData.length == 1) {
                                 var obj = newData[0];
-                                newData = [obj, obj, obj];
+                                newData = [obj,obj,obj];
                                 isOne = false;
                             }
                             var arrSlice = newData.slice(-7);
-                            $.each(arrSlice, function (v, k) {
+                            $.each(arrSlice,function (v,k) {
                                 valueList.push(k.price);
                                 var res1 = [];
-                                res1[0] = k.time.split('-')[1].replace(/^[0]/, '');
-                                res1[1] = k.time.split('-')[2].replace(/^[0]/, '');
+                                res1[0] = k.time.split('-')[1].replace(/^[0]/,'');
+                                res1[1] = k.time.split('-')[2].replace(/^[0]/,'');
                                 res1 = res1.join('/');
                                 dateList.push(res1);
                             });
                             if (isOne == false) {
                                 dateList[0] = "";
                                 var res2 = [];
-                                res2[0] = trueObj.time.split('-')[1].replace(/^[0]/, '');
-                                res2[1] = trueObj.time.split('-')[2].replace(/^[0]/, '');
+                                res2[0] = trueObj.time.split('-')[1].replace(/^[0]/,'');
+                                res2[1] = trueObj.time.split('-')[2].replace(/^[0]/,'');
                                 res2 = res2.join('/');
                                 dateList[1] = res2;
                             }
@@ -1485,7 +1423,7 @@
                                     } else {
                                         $(this).html("价格上涨").fadeIn(1000);
                                     }
-                                    $(this).next().fadeIn(1000).css("display", "inline-block").addClass("up");
+                                    $(this).next().fadeIn(1000).css("display","inline-block").addClass("up");
                                 });
                             } else if (valueList[valueList.length - 1] < valueList[valueList.length - 2]) {
                                 $(".dypMid9527-price-title span").fadeOut(function () {
@@ -1494,69 +1432,69 @@
                                     } else {
                                         $(this).html("价格下降").fadeIn(1000);
                                     }
-                                    $(this).next().fadeIn(1000).css("display", "inline-block").addClass("down");
+                                    $(this).next().fadeIn(1000).css("display","inline-block").addClass("down");
                                 });
                             }
                             var optionSet = {
-                                tooltip: {trigger: 'axis'},
-                                xAxis: [{
-                                    data: dateList,
-                                    axisLine: {lineStyle: {color: "#ddd", width: 2,}},
-                                    axisTick: {show: false},
-                                    axisLabel: {textStyle: {color: '#999'},}
+                                tooltip:{trigger:'axis'},
+                                xAxis:[{
+                                    data:dateList,
+                                    axisLine:{lineStyle:{color:"#ddd",width:2,}},
+                                    axisTick:{show:false},
+                                    axisLabel:{textStyle:{color:'#999'},}
                                 }],
-                                yAxis: [{
-                                    scale: "true",
-                                    splitNumber: 2,
-                                    minInterval: 1,
-                                    axisLine: {show: false},
-                                    axisTick: {show: false},
-                                    splitLine: {show: true, lineStyle: {color: '#eee', width: 1, type: 'dotted'}},
-                                    axisLabel: {textStyle: {color: '#999'},}
+                                yAxis:[{
+                                    scale:"true",
+                                    splitNumber:2,
+                                    minInterval:1,
+                                    axisLine:{show:false},
+                                    axisTick:{show:false},
+                                    splitLine:{show:true,lineStyle:{color:'#eee',width:1,type:'dotted'}},
+                                    axisLabel:{textStyle:{color:'#999'},}
                                 }],
-                                grid: [{
-                                    bottom: '70',
-                                    top: '50',
-                                    left: '12%',
-                                    right: '8%'
+                                grid:[{
+                                    bottom:'70',
+                                    top:'50',
+                                    left:'12%',
+                                    right:'8%'
                                 }],
-                                series: [{
-                                    type: 'line',
-                                    smooth: "true",
-                                    symbol: "circle",
-                                    symbolSize: 6,
-                                    data: valueList,
-                                    label: {normal: {show: true, color: "#F40035", fontFamily: "Microsoft Yahei", position: "top"}},
-                                    itemStyle: {normal: {color: "#F40035", label: {show: true}}},
-                                    lineStyle: {normal: {color: "#F40035"}},
-                                    markPoint: {
-                                        symbol: "rect",
-                                        symbolSize: [50, 10],
-                                        symbolOffset: [0, -26],
-                                        itemStyle: {normal: {color: "transparent",}},
-                                        label: {normal: {textStyle: {color: '#333'}}},
-                                        data: [{
-                                            type: 'max', name: '最大值',
-                                            label: {
-                                                normal: {show: isOne, formatter: "最高"},
+                                series:[{
+                                    type:'line',
+                                    smooth:"true",
+                                    symbol:"circle",
+                                    symbolSize:6,
+                                    data:valueList,
+                                    label:{normal:{show:true,color:"#F40035",fontFamily:"Microsoft Yahei",position:"top"}},
+                                    itemStyle:{normal:{color:"#F40035",label:{show:true}}},
+                                    lineStyle:{normal:{color:"#F40035"}},
+                                    markPoint:{
+                                        symbol:"rect",
+                                        symbolSize:[50,10],
+                                        symbolOffset:[0,-26],
+                                        itemStyle:{normal:{color:"transparent",}},
+                                        label:{normal:{textStyle:{color:'#333'}}},
+                                        data:[{
+                                            type:'max',name:'最大值',
+                                            label:{
+                                                normal:{show:isOne,formatter:"最高"},
                                             }
-                                        }, {
-                                            type: 'min', name: '最小值',
-                                            label: {
-                                                normal: {show: isOne, formatter: "最低"},
+                                        },{
+                                            type:'min',name:'最小值',
+                                            label:{
+                                                normal:{show:isOne,formatter:"最低"},
                                             }
                                         }]
                                     }
                                 }]
                             };
                             $("#dypMid9527 #douyapu-line-chart").css({
-                                "width": $("#dypMid9527").width()
+                                "width":$("#dypMid9527").width()
                             });
                             var priceChart2 = echarts.init($('#dypMid9527 #douyapu-line-chart')[0]);    //
                             priceChart2.setOption(optionSet);
                             $(".dypMid9527-priceBox-title").show();
                         },
-                        error: function () {
+                        error:function () {
                             $(".dypMid9527-priceBox-back").show();
                         }
                     });
@@ -1575,13 +1513,13 @@
                     }   //
                     var num = Number.POSITIVE_INFINITY;
                     var smlArr = {
-                        jd: {list: [], min: num, value: 14, url: ""}, tb: {list: [], min: num, value: 13, url: ""}, tm: {list: [], min: num, value: 12, url: ""},
-                        wph: {list: [], min: num, value: 11, url: ""}, dd: {list: [], min: num, value: 10, url: ""}, sn: {list: [], min: num, value: 9, url: ""},
-                        ymx: {list: [], min: num, value: 8, url: ""}, gm: {list: [], min: num, value: 7, url: ""}, yhd: {list: [], min: num, value: 6, url: ""},
-                        yoho: {list: [], min: num, value: 5, url: ""}, jm: {list: [], min: num, value: 4, url: ""}, kl: {list: [], min: num, value: 3, url: ""},
-                        yx: {list: [], min: num, value: 2, url: ""}, mgj: {list: [], min: num, value: 1, url: ""}, qt: {list: [], min: num, value: 0, url: ""},
+                        jd:{list:[],min:num,value:14,url:""},tb:{list:[],min:num,value:13,url:""},tm:{list:[],min:num,value:12,url:""},
+                        wph:{list:[],min:num,value:11,url:""},dd:{list:[],min:num,value:10,url:""},sn:{list:[],min:num,value:9,url:""},
+                        ymx:{list:[],min:num,value:8,url:""},gm:{list:[],min:num,value:7,url:""},yhd:{list:[],min:num,value:6,url:""},
+                        yoho:{list:[],min:num,value:5,url:""},jm:{list:[],min:num,value:4,url:""},kl:{list:[],min:num,value:3,url:""},
+                        yx:{list:[],min:num,value:2,url:""},mgj:{list:[],min:num,value:1,url:""},qt:{list:[],min:num,value:0,url:""},
                     };//
-                    function makeObj(a, k, t) {
+                    function makeObj(a,k,t) {
                         if (t) {
                             smlArr[a].list.push(k);
                             if (k.view_price * 1 < smlArr[a].min) {
@@ -1596,55 +1534,55 @@
                             }
                         }
                     }   //
-                    function changeUrl(icon, k) {
+                    function changeUrl(icon,k) {
                         var url = '';
                         var title = '';
                         if (k.hasOwnProperty("sitename")) {
                             url = k.url;
-                            url = decodeURIComponent(getParam(url, "url"));
+                            url = decodeURIComponent(getParam(url,"url"));
                             if (icon == "jd") {
-                                url = decodeURIComponent(getParam(url, "t"));
+                                url = decodeURIComponent(getParam(url,"t"));
                                 url = `http://www.yiyaowei.com/index.php?mod=jump&act=out&subid=VGNO76KE&url=${url}`;
                             } else if (icon == "tb" || icon == "tm") {
-                                url = getParam(url, "id");
+                                url = getParam(url,"id");
                                 title = k.title;
                             } else if (icon == "gm") {
-                                url = decodeURIComponent(getParam(url, "t"));
+                                url = decodeURIComponent(getParam(url,"t"));
                                 url = `${url}?cmpid=cps_17016_22656&sid=17016&wid=22656`;
                             } else if (icon == "kl") {
-                                url = decodeURIComponent(getParam(url, "t"));
+                                url = decodeURIComponent(getParam(url,"t"));
                                 url = `http://cps.kaola.com/cps/login?unionId=999684138053&uid=&trackingCode=&targetUrl=${url}`;
                             } else if (icon == "sn" || icon == "dd" || icon == "wph") {
-                                url = decodeURIComponent(getParam(url, "t"));
+                                url = decodeURIComponent(getParam(url,"t"));
                                 url = 'https://p.gouwuke.com/b?w=949095&e=&t=' + url;
                             }
                         } else {
-                            url = getParam(k.detail_url, "id");
+                            url = getParam(k.detail_url,"id");
                             title = k.raw_title
                         }
-                        return {url: url, title: title};
+                        return {url:url,title:title};
                     }   //价格排序方法
-                    function tmAjax(errorUrl, title, id) {
+                    function tmAjax(errorUrl,title,id) {
                         chrome.extension.sendMessage({
-                            name: "getCook", url: "https://www.taobao.com/", key: "_m_h5_tk"
-                        }, function (d) {
+                            name:"getCook",url:"https://www.taobao.com/",key:"_m_h5_tk"
+                        },function (d) {
                             if (d && d[0] && d[0].value) {
                                 var time = Date.now();
                                 var s = `{"q":"${title}","pid":"${mainUrl.myMmId}","page":1}`;
                                 $.ajax({
-                                    url: "https://acs.m.taobao.com/h5/mtop.aitaobao.item.search/7.0/", type: "get", dataType: "json",
-                                    data: {
-                                        v: "7.0", api: "mtop.aitaobao.item.search", appKey: "12574478", t: time,
-                                        sign: md5(d[0].value.split("_")[0] + "&" + time + "&12574478&" + s), data: s
+                                    url:"https://acs.m.taobao.com/h5/mtop.aitaobao.item.search/7.0/",type:"get",dataType:"json",
+                                    data:{
+                                        v:"7.0",api:"mtop.aitaobao.item.search",appKey:"12574478",t:time,
+                                        sign:md5(d[0].value.split("_")[0] + "&" + time + "&12574478&" + s),data:s
                                     },
-                                    success: function (r) {
+                                    success:function (r) {
                                         if (r && r.ret && r.ret[0] && r.ret[0].match("调用成功")) {
                                             if (r && r.data && r.data.items && r.data.items.length) {
                                                 var data = r.data.items;
                                                 var hasSwi = 1;
-                                                $.each(data, function (v, k) {
+                                                $.each(data,function (v,k) {
                                                     if (k.nid == id && k.nid != infoGroup.id) {
-                                                        window.open(`${mainUrl.parity}//s.click.taobao.com/t?e=${getParam("https:" + k.clickUrl, "e")}`);
+                                                        window.open(`${mainUrl.parity}//s.click.taobao.com/t?e=${getParam("https:" + k.clickUrl,"e")}`);
                                                         hasSwi = 0;
                                                         return false;
                                                     }
@@ -1664,64 +1602,64 @@
                                 $("body").append(`<iframe src="//h5.m.taobao.com/" id="douya-yangxue9527" style="display:none"></iframe>`);
                                 setTimeout(function () {
                                     $("#douya-yangxue9527").remove();
-                                }, 3000);
+                                },3000);
                                 window.open(errorUrl);
                             }
                         });
                     }   //
                     function getSameNew(url) {
                         chrome.extension.sendMessage({
-                            name: "universal", url: "http://pricecomparison.browser.qq.com/get_comparison_info", type: "get", dataType: "json", data: {url: url}
-                        }, function (e) {
+                            name:"universal",url:"http://pricecomparison.browser.qq.com/get_comparison_info",type:"get",dataType:"json",data:{url:url}
+                        },function (e) {
                             if (e && e.product && e.product.length) {
                                 var data = e.product;
-                                $.each(data, function (v, k) {
+                                $.each(data,function (v,k) {
                                     var name = k.sitename;
                                     switch (name) {
                                         case (name.match("京东") || {}).input:
-                                            makeObj("jd", k);
+                                            makeObj("jd",k);
                                             break;
                                         case (name.match("淘宝") || {}).input:
-                                            makeObj("tb", k);
+                                            makeObj("tb",k);
                                             break;
                                         case (name.match("天猫") || {}).input:
-                                            makeObj("tm", k);
+                                            makeObj("tm",k);
                                             break;
                                         case (name.match("唯品会") || {}).input:
-                                            makeObj("wph", k);
+                                            makeObj("wph",k);
                                             break;
                                         case (name.match("当当") || {}).input:
-                                            makeObj("dd", k);
+                                            makeObj("dd",k);
                                             break;
                                         case (name.match("苏宁") || {}).input:
-                                            makeObj("sn", k);
+                                            makeObj("sn",k);
                                             break;
                                         case (name.match("亚马逊") || {}).input:
-                                            makeObj("ymx", k);
+                                            makeObj("ymx",k);
                                             break;
                                         case (name.match("国美") || {}).input:
-                                            makeObj("gm", k);
+                                            makeObj("gm",k);
                                             break;
                                         case (name.match("号店") || {}).input:
-                                            makeObj("yhd", k);
+                                            makeObj("yhd",k);
                                             break;
                                         case (name.match("YOHO") || {}).input:
-                                            makeObj("yoho", k);
+                                            makeObj("yoho",k);
                                             break;
                                         case (name.match("聚美") || {}).input:
-                                            makeObj("jm", k);
+                                            makeObj("jm",k);
                                             break;
                                         case (name.match("考拉") || {}).input:
-                                            makeObj("kl", k);
+                                            makeObj("kl",k);
                                             break;
                                         case (name.match("严选") || {}).input:
-                                            makeObj("yx", k);
+                                            makeObj("yx",k);
                                             break;
                                         case (name.match("蘑菇") || {}).input:
-                                            makeObj("mgj", k);
+                                            makeObj("mgj",k);
                                             break;
                                         default:
-                                            makeObj("qt", k);
+                                            makeObj("qt",k);
                                     }
                                 });
                             }
@@ -1730,30 +1668,30 @@
                     }   //新的获取不同商家同款数据
                     function getSame() {
                         if (infoGroup.pid) {
-                            getSameStyleByPid(infoGroup.pid, infoGroup.id);
+                            getSameStyleByPid(infoGroup.pid,infoGroup.id);
                         } else {
                             getSameStyleByTitle(infoGroup.title);
                         }
-                        function getSameStyleByPid(pid, id) {
+                        function getSameStyleByPid(pid,id) {
                             var url = "https://s.taobao.com/search?type=samestyle&app=i2i&uniqpid=" + pid + "&nid=" + id + "&sort=sale-desc";
-                            chrome.extension.sendMessage({name: "clearCook", url: url}, function () {
+                            chrome.extension.sendMessage({name:"clearCook",url:url},function () {
                                 $.ajax({
-                                    type: "get", url: url,
-                                    success: function (e) {
+                                    type:"get",url:url,
+                                    success:function (e) {
                                         var r = e.match(/<script>\s+g_page_config\s=\s(.*)/);
                                         if (r && r[1] && r[1].match(/({.*});/) && r[1].match(/({.*});/)[1] && JSON.parse(r[1].match(/({.*});/)[1])) {
                                             var data = JSON.parse(r[1].match(/({.*});/)[1]);
                                             data = data.mods.recitem.data ? data.mods.recitem.data.items : [];
                                         }
-                                        $.each(data, function (v, k) {
+                                        $.each(data,function (v,k) {
                                             var name = k.detail_url.match('tmall');
                                             if (name) {
-                                                makeObj("tm", k, 1);
+                                                makeObj("tm",k,1);
                                             } else {
-                                                makeObj("tb", k, 1);
+                                                makeObj("tb",k,1);
                                             }
                                         });
-                                    }, complete: function () {
+                                    },complete:function () {
                                         sameCount();
                                     }
                                 });
@@ -1761,23 +1699,23 @@
                         }   //根据pid请求同款商品
                         function getSameStyleByTitle(title) {
                             $.ajax({
-                                type: "get",
-                                url: "https://s.taobao.com/search?q=" + title + "&sort=sale-desc",
-                                success: function (e) {
+                                type:"get",
+                                url:"https://s.taobao.com/search?q=" + title + "&sort=sale-desc",
+                                success:function (e) {
                                     var r = e.match(/<script>\s+g_page_config\s=\s(.*)/);
                                     if (r && r[1] && r[1].match(/({.*});/) && r[1].match(/({.*});/)[1] && JSON.parse(r[1].match(/({.*});/)[1])) {
                                         var data = JSON.parse(r[1].match(/({.*});/)[1]);
                                         data = data.mods.itemlist.data ? data.mods.itemlist.data.auctions : [];
-                                        $.each(data, function (v, k) {
+                                        $.each(data,function (v,k) {
                                             var name = k.detail_url.match('tmall');
                                             if (name) {
-                                                makeObj("tm", k, 1);
+                                                makeObj("tm",k,1);
                                             } else {
-                                                makeObj("tb", k, 1);
+                                                makeObj("tb",k,1);
                                             }
                                         });
                                     }
-                                }, complete: function () {
+                                },complete:function () {
                                     sameCount();
                                 }
                             });
@@ -1785,16 +1723,16 @@
                     }   //淘宝天猫顶部各大商城同款商品爆款比价
                     function appendTitle() {
                         var obj = {
-                            "tm": "天猫", "tb": "淘宝", "jd": "京东", "wph": "唯品会", "dd": "当当", "sn": "苏宁", "ymx": "亚马逊",
-                            "gm": "国美", "yhd": "1号店", "yoho": "YOHO", "jm": "聚美", "kl": "考拉", "yx": "严选", "mgj": "蘑菇街", "qt": "其他"
+                            "tm":"天猫","tb":"淘宝","jd":"京东","wph":"唯品会","dd":"当当","sn":"苏宁","ymx":"亚马逊",
+                            "gm":"国美","yhd":"1号店","yoho":"YOHO","jm":"聚美","kl":"考拉","yx":"严选","mgj":"蘑菇街","qt":"其他"
                         };
                         // appendMidPrice(obj, infoGroup.sameNew, 2);
                         infoGroup.sameNew = smlArr;
-                        $.each(infoGroup.sameNew, function (v, k) {
+                        $.each(infoGroup.sameNew,function (v,k) {
                             !function () {
                                 if (k.list && k.list.length > 0) {
                                     var name = "";
-                                    $.each(obj, function (m, n) {
+                                    $.each(obj,function (m,n) {
                                         if (v == m) {
                                             name = n;
                                             return false;
@@ -1814,13 +1752,13 @@
                                     var allData = k.list;  //已经加载好的数据存进一个数组里面
                                     dom.hover(function () {
                                         domDrop.show();
-                                    }, function () {
+                                    },function () {
                                         domDrop.hide();
                                     });
                                     var list = "";
                                     var icon = v;      //
-                                    $.each(allData, function (v, k) {
-                                        var url = changeUrl(icon, k);
+                                    $.each(allData,function (v,k) {
+                                        var url = changeUrl(icon,k);
                                         var img = k.sitename ? k.originalimage : k.pic_url;
                                         var title = k.sitename ? k.title : k.raw_title;
                                         var commentnum = k.sitename ? k.commentnum : k.comment_count;
@@ -1841,13 +1779,13 @@
                                     });
                                     domDrop.children("ul").html(list);
                                     if (icon == "tb" || icon == "tm") {
-                                        domDrop.on("click", "a", function (e) {
+                                        domDrop.on("click","a",function (e) {
                                             e.preventDefault();
                                             var that = $(this);
                                             var title = that.data("title");
                                             var id = that.data("id");
                                             var errorUrl = mainUrl.parity + "https://item.taobao.com/item.htm?id=" + id;
-                                            tmAjax(errorUrl, title, id);
+                                            tmAjax(errorUrl,title,id);
                                         });
                                     }
                                 }
@@ -1863,7 +1801,7 @@
                                 return;
                             }
                             var totalWith = 0;
-                            $.each(totalWithArr, function (v, k) {
+                            $.each(totalWithArr,function (v,k) {
                                 totalWith += k;
                                 totalWith += 24;
                                 if (totalWith > $(".dypTop9527-sameStyle").width()) {
@@ -1876,7 +1814,7 @@
                             $(".dypTop9527-sameStyle>div").eq(m - 1).show();
                         }   //顶部比价的宽度加载后js设定
                         initBiWidth();
-                        $(window).on("resize", function () {
+                        $(window).on("resize",function () {
                             initBiWidth();
                         });
                     }   //append相似商品标题
@@ -1899,11 +1837,11 @@
                         <div><a href="${qqOnline}" target="_blank" data-douyababapaopao="工具+QQ在线" class="dypMid9527-coupon-priceCutQQ"></a></div>
                     </div>`);
                     if (e == 1) {
-                        $(".dypMid9527-box-coupon").css("min-height", "189px");
+                        $(".dypMid9527-box-coupon").css("min-height","189px");
                     } else if (e == 2) {
-                        $(".dypMid9527-coupon-priceCut").css({"padding-left": "132px", "padding-bottom": "6px", "margin-top": "15px"});
+                        $(".dypMid9527-coupon-priceCut").css({"padding-left":"132px","padding-bottom":"6px","margin-top":"15px"});
                     }
-                    var t, first = 0;
+                    var t,first = 0;
                     var nowPlat = infoGroup.plat;
                     switch (nowPlat) {
                         case "tm":
@@ -1933,38 +1871,38 @@
                             // var textPrice = 10;
                             if (nowPlat == "tm" || nowPlat == "tb") {
                                 chrome.extension.sendMessage({
-                                    name: "universal", url: "http://min.douyapu.com/wechat/qrCode.php", type: "get", dataType: "html",
-                                    data: {"itemId": infoGroup.id, "type": t, "price": infoGroup.price}
-                                }, function (res1) {
+                                    name:"universal",url:"http://min.douyapu.com/wechat/qrCode.php",type:"get",dataType:"html",
+                                    data:{"itemId":infoGroup.id,"type":t,"price":infoGroup.price}
+                                },function (res1) {
                                     if (res1) {
-                                        $(".dypMid9527-coupon-erweimaImg img").attr("src", res1);
+                                        $(".dypMid9527-coupon-erweimaImg img").attr("src",res1);
                                     } else {
                                         first = 0;
                                     }
                                 });
                                 chrome.extension.sendMessage({
-                                    name: "universal", url: "http://min.douyapu.com/wechat/collect.php", type: "post", dataType: "json",
-                                    data: {"itemId": infoGroup.id, "type": t, "price": textPrice, "reqMethod": "getPrice"}
-                                }, function (res) {
+                                    name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
+                                    data:{"itemId":infoGroup.id,"type":t,"price":textPrice,"reqMethod":"getPrice"}
+                                },function (res) {
                                     if (res && res.results && res.results.length) {
                                         var arr = "";
-                                        $.each(res.results, function (v, k) {
+                                        $.each(res.results,function (v,k) {
                                             if (k * 1 > textPrice) {
                                                 arr += k + "|";
                                             }
                                         });
                                         if (arr.length) {
                                             chrome.extension.sendMessage({
-                                                name: "universal", url: "https://storage.douyapu.com/taobao/sign.php", type: "get", dataType: "json",
-                                                data: {"url": urls, "title": infoGroup.title}    //天猫淘宝用于请求淘口令
-                                            }, function (res1) {
+                                                name:"universal",url:"https://storage.douyapu.com/taobao/sign.php",type:"get",dataType:"json",
+                                                data:{"url":urls,"title":infoGroup.title}    //天猫淘宝用于请求淘口令
+                                            },function (res1) {
                                                 if (res1 && res1.status && res1.status == 1) {
                                                     var taokou;
                                                     taokou = `https://storage.douyapu.com/wechat/decline?title=${infoGroup.title}&price=${infoGroup.price}&shop=${infoGroup.shop}&sign=${res1.sign}&pic=${infoGroup.pic}&total30=${infoGroup.sale}`;
                                                     chrome.extension.sendMessage({
-                                                        name: "universal", url: "http://min.douyapu.com/wechat/collect.php", type: "post", dataType: "json",
-                                                        data: {"itemId": infoGroup.id, "type": t, "price": arr, "reqMethod": "send", "urls": taokou}
-                                                    }, function (res2) {
+                                                        name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
+                                                        data:{"itemId":infoGroup.id,"type":t,"price":arr,"reqMethod":"send","urls":taokou}
+                                                    },function (res2) {
                                                     });
                                                 }
                                             });
@@ -1974,22 +1912,22 @@
                             }
                             if (nowPlat == "jd" || nowPlat == "sn" || nowPlat == "gm" || nowPlat == "dd") {
                                 chrome.extension.sendMessage({
-                                    name: "universal", url: "http://min.douyapu.com/wechat/qrCode.php", type: "get", dataType: "html",
-                                    data: {"itemId": infoGroup.id, "type": t, "price": infoGroup.price}
-                                }, function (res1) {
+                                    name:"universal",url:"http://min.douyapu.com/wechat/qrCode.php",type:"get",dataType:"html",
+                                    data:{"itemId":infoGroup.id,"type":t,"price":infoGroup.price}
+                                },function (res1) {
                                     if (res1) {
-                                        $(".dypMid9527-coupon-erweimaImg img").attr("src", res1);
+                                        $(".dypMid9527-coupon-erweimaImg img").attr("src",res1);
                                     } else {
                                         first = 0;
                                     }
                                 });
                                 chrome.extension.sendMessage({
-                                    name: "universal", url: "http://min.douyapu.com/wechat/collect.php", type: "post", dataType: "json",
-                                    data: {"itemId": infoGroup.id, "type": t, "price": textPrice, "reqMethod": "getPrice"}
-                                }, function (res) {
+                                    name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
+                                    data:{"itemId":infoGroup.id,"type":t,"price":textPrice,"reqMethod":"getPrice"}
+                                },function (res) {
                                     if (res && res.results && res.results.length) {
                                         var arr = "";
-                                        $.each(res.results, function (v, k) {
+                                        $.each(res.results,function (v,k) {
                                             if (k * 1 > textPrice) {
                                                 arr += k + "|";
                                             }
@@ -2004,23 +1942,23 @@
                                                 taokou = `${urls}?cmpid=cps_17016_22656&sid=17016&wid=22656`;
                                             }
                                             chrome.extension.sendMessage({
-                                                name: "universal", url: "http://min.douyapu.com/wechat/collect.php", type: "post", dataType: "json",
-                                                data: {"itemId": infoGroup.id, "type": t, "price": arr, "reqMethod": "send", "urls": taokou}
-                                            }, function (res2) {
+                                                name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
+                                                data:{"itemId":infoGroup.id,"type":t,"price":arr,"reqMethod":"send","urls":taokou}
+                                            },function (res2) {
                                             });
                                         }
                                     }
                                 });
                             }
                         }
-                        $(".dypMid9527-title").css("z-index", "998");
+                        $(".dypMid9527-title").css("z-index","998");
                         $("#dypMid9527").addClass("zdmax");
                         var width = $(".dypMid9527-borderMask").width();
-                        $(".dypMid9527-erweima-mask").css("width", width).show();
+                        $(".dypMid9527-erweima-mask").css("width",width).show();
                         $(".dypMid9527-coupon-erweima").show();
                         $(".dypMid9527-coupon-priceCutIcon").removeClass("douyapuyaohuang");
-                    }, function () {
-                        $(".dypMid9527-title").css("z-index", "1000");
+                    },function () {
+                        $(".dypMid9527-title").css("z-index","1000");
                         $("#dypMid9527").removeClass("zdmax");
                         $(".dypMid9527-erweima-mask").hide();
                         $(".dypMid9527-coupon-erweima").hide();
@@ -2042,10 +1980,10 @@
                             first = 1;
                         }
                         $(".dypTop9527-vipCouponDrop").show();
-                    }, function () {
+                    },function () {
                         $(".dypTop9527-vipCouponDrop").hide();
                     });
-                    $(".dypTop9527-vipCouponDrop ul").on("scroll", function () {
+                    $(".dypTop9527-vipCouponDrop ul").on("scroll",function () {
                         if (sign == 1) {
                             var allHeight = rowHeight * $(this).children().length;
                             if (($(this).scrollTop() + $(this).height()) == allHeight) {
@@ -2056,8 +1994,8 @@
                     function get() {
                         sign = 0;
                         chrome.extension.sendMessage({
-                            name: "universal", url: reqUrl + page + ".json", type: "get", dataType: "json"
-                        }, function (e) {
+                            name:"universal",url:reqUrl + page + ".json",type:"get",dataType:"json"
+                        },function (e) {
                             if (e && e.results && e.results.length > 0) {
                                 append(e.results);
                                 page += 1;
@@ -2067,7 +2005,7 @@
                     }   //
                     function append(d) {
                         var list = "";
-                        $.each(d, function (v, k) {
+                        $.each(d,function (v,k) {
                             var item = JSON.parse(k.item);
                             if (item.amount) {
                                 var couponNum = item.amount ? item.amount : 0;
@@ -2083,7 +2021,7 @@
                                             <div class="dypTop9527-vipCouponDrop-title">${item.item.title}</div>
                                             <div class="dypTop9527-vipCouponDrop-sale">月销量${item.item.biz30Day}</div>
                                             <div class="dypTop9527-vipCouponDrop-price">券后价 ：
-                                                <span class="dypTop9527-vipCouponDrop-nprice">¥${numSub(item.item.discountPrice, couponNum)}</span>
+                                                <span class="dypTop9527-vipCouponDrop-nprice">¥${numSub(item.item.discountPrice,couponNum)}</span>
                                                 &nbsp;<span class="dypTop9527-vipCouponDrop-oprice">¥${item.item.discountPrice}</span>
                                             </div>
                                             <div class="dypClear">
@@ -2098,7 +2036,7 @@
                         });
                         $('.dypTop9527-vipCouponDrop ul').append(list);
                     }   //
-                    $('.dypTop9527-vipCouponDrop ul').on("click", "a", function () {
+                    $('.dypTop9527-vipCouponDrop ul').on("click","a",function () {
                         window.open($(this).data("url"));
                     });
                 }                //顶部(值得买)
@@ -2110,11 +2048,11 @@
                     var totalNum;
                     var showKaiguan = 1;
                     $.ajax({
-                        type: "get",
-                        dataType: "html",
-                        url: requestUrl + 0,
-                        success: function (data) {
-                            totalNum = JSON.parse(data.replace('"rateDetail":', "")).paginator ? JSON.parse(data.replace('"rateDetail":', "")).paginator.items : "error";
+                        type:"get",
+                        dataType:"html",
+                        url:requestUrl + 0,
+                        success:function (data) {
+                            totalNum = JSON.parse(data.replace('"rateDetail":',"")).paginator ? JSON.parse(data.replace('"rateDetail":',"")).paginator.items : "error";
                             if (totalNum == "error") {
                                 $(".dypMid9527-buyers-show").remove();
                                 return;
@@ -2144,9 +2082,9 @@
                             </div>`;
                             if (totalNum) {
                                 //买家秀按钮点击
-                                $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
+                                $("#dypMid9527 .dypMid9527-buyers-show").on("click",function () {
                                     $("body").addClass("dyp779946-body-unScroll");
-                                    $("#dyp779946-fix-full").css("visibility", "visible");
+                                    $("#dyp779946-fix-full").css("visibility","visible");
                                     $("#dyp779946-fix-full").fadeIn();
                                 });
                                 $("body").prepend(html);
@@ -2155,7 +2093,7 @@
                                 var htmlTpl = `<div class="dypMid9527-no-buyers-show">暂未发现买家秀</div>`;
                                 var clickSign = 0;
                                 $("#dypMid9527 .dypMid9527-buyers-show .dypMid9527-title").append(htmlTpl);
-                                $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
+                                $("#dypMid9527 .dypMid9527-buyers-show").on("click",function () {
                                     if (!clickSign) {
                                         clickSign = 1;
                                         $("#dypMid9527 .dypMid9527-no-buyers-show").fadeIn(function () {
@@ -2163,95 +2101,95 @@
                                                 $("#dypMid9527 .dypMid9527-no-buyers-show").fadeOut(function () {
                                                     clickSign = 0;
                                                 });
-                                            }, 2000);
+                                            },2000);
                                         });
                                     }
                                 });
                             }
                             //查看评价 点击图片增加查看所有买家秀入口
-                            $("#J_TabBar").on("click", "li", function () {
+                            $("#J_TabBar").on("click","li",function () {
                                 var _mall = window.location.host.split(".")[1];
                                 var html = `<div class="dypBot9527-SeeAll-buyerShow" data-douyababapaopao="查看评价-买家秀入口"><span class="dypBot9527-SeeAllBuyerShow-icon"></span><span class="dypBot9527-SeeAllBuyerShow-title">全部买家秀(${totalNum})</span></div>`;
                                 if (_mall == "tmall") {//天猫
                                     $(document).on({
-                                            'mouseenter': function () {
+                                            'mouseenter':function () {
                                                 if ($(this).find(".dypBot9527-SeeAll-buyerShow").length == 0) {
                                                     $(this).append(html);
-                                                    $(".dypBot9527-SeeAll-buyerShow").on("click", function () {
+                                                    $(".dypBot9527-SeeAll-buyerShow").on("click",function () {
                                                         $("#dypMid9527 .dypMid9527-buyers-show").click();
                                                     })
                                                 }
                                                 $(".dypBot9527-SeeAll-buyerShow").show();
                                             },
-                                            'mouseleave': function () {
+                                            'mouseleave':function () {
                                                 $(".dypBot9527-SeeAll-buyerShow").hide();
                                             }
                                         },
                                         ".tm-m-photo-viewer")
                                 } else if (_mall == "taobao") {//淘宝
                                     $(document).on({
-                                        'mouseenter': function () {
+                                        'mouseenter':function () {
                                             if ($(this).find(".dypBot9527-SeeAll-buyerShow").length == 0) {
                                                 $(this).append(html);
-                                                $(".dypBot9527-SeeAll-buyerShow").on("click", function () {
+                                                $(".dypBot9527-SeeAll-buyerShow").on("click",function () {
                                                     $("#dypMid9527 .dypMid9527-buyers-show").click();
                                                 })
                                             }
                                             $(".dypBot9527-SeeAll-buyerShow").show();
                                         },
-                                        'mouseleave': function () {
+                                        'mouseleave':function () {
                                             $(".dypBot9527-SeeAll-buyerShow").hide();
                                         }
-                                    }, ".J_ImgWrapper")
+                                    },".J_ImgWrapper")
                                 }
                             });
                             var sortNum = 0;
                             $('#dyp779946-waterfall-box').waterfall({
-                                itemCls: 'item',
-                                colWidth: 250,
-                                gutterWidth: 10,
-                                gutterHeight: 10,
-                                isAutoPrefill: true,
-                                checkImagesLoaded: true,
-                                path: function (page) {
+                                itemCls:'item',
+                                colWidth:250,
+                                gutterWidth:10,
+                                gutterHeight:10,
+                                isAutoPrefill:true,
+                                checkImagesLoaded:true,
+                                path:function (page) {
                                     return requestUrl + page;
                                 },
-                                dataType: 'html',
-                                loadingMsg: '<div style="text-align:center;padding:10px 0; color:#999;"><img src="data:image/gif;base64,R0lGODlhEAALAPQAAP///zMzM+Li4tra2u7u7jk5OTMzM1hYWJubm4CAgMjIyE9PT29vb6KiooODg8vLy1JSUjc3N3Jycuvr6+Dg4Pb29mBgYOPj4/X19cXFxbOzs9XV1fHx8TMzMzMzMzMzMyH5BAkLAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7" alt=""><br />加载中...</div>',
-                                callbacks: {
-                                    loadingStart: function ($loading) {
+                                dataType:'html',
+                                loadingMsg:'<div style="text-align:center;padding:10px 0; color:#999;"><img src="data:image/gif;base64,R0lGODlhEAALAPQAAP///zMzM+Li4tra2u7u7jk5OTMzM1hYWJubm4CAgMjIyE9PT29vb6KiooODg8vLy1JSUjc3N3Jycuvr6+Dg4Pb29mBgYOPj4/X19cXFxbOzs9XV1fHx8TMzMzMzMzMzMyH5BAkLAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7" alt=""><br />加载中...</div>',
+                                callbacks:{
+                                    loadingStart:function ($loading) {
                                         $loading.show();
                                     },
-                                    loadingFinished: function ($loading, isBeyondMaxPage) {
+                                    loadingFinished:function ($loading,isBeyondMaxPage) {
                                         if (!isBeyondMaxPage) {
                                             $loading.fadeOut();
                                         } else {
                                             $loading.remove();
                                         }
                                     },
-                                    loadingError: function ($message) {
+                                    loadingError:function ($message) {
                                         $message.html('请稍后重试');
                                     },
-                                    renderData: function (data) {
-                                        var res = data.replace('"rateDetail":', "");
+                                    renderData:function (data) {
+                                        var res = data.replace('"rateDetail":',"");
                                         res = JSON.parse(res).rateList ? JSON.parse(res).rateList : "error";
                                         var oli = "";
                                         if (res == "error") {
                                             return oli;
                                         }
                                         if (res && res.length == 0) {
-                                            $('#dyp779946-waterfall-box').waterfall('pause', function () {
+                                            $('#dyp779946-waterfall-box').waterfall('pause',function () {
                                             });
                                             return oli;
                                         }
-                                        $.each(res, function (key, value) {
+                                        $.each(res,function (key,value) {
                                             if (value.pics && value.pics.length > 0) {
                                                 sortNum += 1;
                                                 var thumbnailPics = '';
                                                 var addComment = '';
                                                 var addPics = '';
                                                 thumbnailPics += '<div class="thumbnail">';
-                                                $.each(value.pics, function (key, value) {
+                                                $.each(value.pics,function (key,value) {
                                                     if (key == 5) {
                                                         return false;
                                                     }
@@ -2261,7 +2199,7 @@
                                                 if (value.appendComment && value.appendComment.content) {
                                                     if (value.appendComment.pics.length > 0) {
                                                         addPics += '<div class="add-comment-thumbnail">';
-                                                        $.each(value.appendComment.pics, function (key, value) {
+                                                        $.each(value.appendComment.pics,function (key,value) {
                                                             if (key == 5) {
                                                                 return false;
                                                             }
@@ -2300,14 +2238,14 @@
                                     }
                                 }
                             });
-                            $("#dyp779946-fix-full").on("click", ".thumbnail-item", function () {
+                            $("#dyp779946-fix-full").on("click",".thumbnail-item",function () {
                                 var height = $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height();
                                 $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height(height);
-                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').attr("src", $(this).attr("src").split("_40x40.jpg")[0]);
-                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').data("newnum", $(this).data("newnum"));
+                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').attr("src",$(this).attr("src").split("_40x40.jpg")[0]);
+                                $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').data("newnum",$(this).data("newnum"));
                                 $(this).addClass("active").siblings().removeClass("active");
                             });
-                            $("#dyp779946-fix-full").on("click", ".top img", function () {
+                            $("#dyp779946-fix-full").on("click",".top img",function () {
                                 var index = $(this).data("newnum");
                                 var num = $(this).data("num");
                                 var total = $('#dyp779946-fix-full .thumbnail img[data-num=' + $(this).data("num") + ']').length;
@@ -2321,8 +2259,8 @@
                                 }
                                 var thumbHtml = $(this).parent().parent().children(".middle").children(".thumbnail").children("img");
                                 var newThumbHtml = "";
-                                $.each(thumbHtml, function (v, k) {
-                                    var item = k.attributes.src.value.replace("_40x40.jpg", "_130x130.jpg");
+                                $.each(thumbHtml,function (v,k) {
+                                    var item = k.attributes.src.value.replace("_40x40.jpg","_130x130.jpg");
                                     if (k.attributes["data-newnum"].value == index) {
                                         newThumbHtml += `<div class="active"><img src=${item} data-newnum="${v}" data-num="${num}"></div>`
                                     } else {
@@ -2354,13 +2292,13 @@
                                 $("#dyp779946-detail-box").html(detailHtml);
                                 $("#dyp779946-container-box").hide();
                                 $("#dyp779946-detail-box").show();
-                                $(".dyp-detail-thumb").on("click", "div", function () {
-                                    $(".dyp779946-waterfallDetail-img img").attr("src", $(this).children().attr("src").split("_130x130.jpg")[0]);
+                                $(".dyp-detail-thumb").on("click","div",function () {
+                                    $(".dyp779946-waterfallDetail-img img").attr("src",$(this).children().attr("src").split("_130x130.jpg")[0]);
                                     $(".dyp-detail-thumb").children().removeClass("active");
                                     $(this).addClass("active");
                                 });
                             });
-                            $("#dyp779946-detail-box").on("click", "button.r", function () {
+                            $("#dyp779946-detail-box").on("click","button.r",function () {
                                 $(".dyp779946-waterfallDetail-back button").show();
                                 if ($(".dyp-detail-thumb>div.active").next().length) {
                                     $(".dyp-detail-thumb>div.active").next().click();
@@ -2376,7 +2314,7 @@
                                 }
                                 $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
                             });
-                            $("#dyp779946-detail-box").on("click", "button.l", function () {
+                            $("#dyp779946-detail-box").on("click","button.l",function () {
                                 $(".dyp779946-waterfallDetail-back button").show();
                                 if ($(".dyp-detail-thumb>div.active").prev().length) {
                                     $(".dyp-detail-thumb>div.active").prev().click();
@@ -2392,21 +2330,21 @@
                                 }
                                 $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
                             });
-                            $("#dyp779946-detail-box").on("mouseenter", ".dyp779946-waterfallDetail-title", function () {
+                            $("#dyp779946-detail-box").on("mouseenter",".dyp779946-waterfallDetail-title",function () {
                                 $("#dypMjxAnimate").removeClass("dypAnimate");
-                                $(this).css({"height": "auto"});
+                                $(this).css({"height":"auto"});
                                 var height = $(this).css("height");
-                                $(this).css({"height": "89px"}).stop().animate({
-                                    height: height
-                                }, 500);
+                                $(this).css({"height":"89px"}).stop().animate({
+                                    height:height
+                                },500);
                             });
-                            $("#dyp779946-detail-box").on("mouseleave", ".dyp779946-waterfallDetail-title", function () {
+                            $("#dyp779946-detail-box").on("mouseleave",".dyp779946-waterfallDetail-title",function () {
                                 $("#dypMjxAnimate").addClass("dypAnimate");
                                 $(this).stop().animate({
-                                    height: "89px"
-                                }, 500);
+                                    height:"89px"
+                                },500);
                             });
-                            $("#dyp779946-fix-full").on("click", ".dyp779946-close-button", function () {
+                            $("#dyp779946-fix-full").on("click",".dyp779946-close-button",function () {
                                 if ($("#dyp779946-detail-box")[0].style.display == "block") {
                                     showKaiguan = 1;
                                     $("#dyp779946-container-box").show();
@@ -2416,12 +2354,12 @@
                                     $("body").removeClass("dyp779946-body-unScroll");
                                 }
                             });
-                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.scroll", function () {
+                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click","p.scroll",function () {
                                 $("#dyp779946-fix-full").animate({
-                                    'scrollTop': '0px'
-                                }, 300)
+                                    'scrollTop':'0px'
+                                },300)
                             });
-                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.qq", function () {
+                            $("#dyp779946-fix-full .dyp779946-scroll-top").on("click","p.qq",function () {
                                 window.open("//shang.qq.com/wpa/qunwpa?idkey=07df4060e4b8ca7215881d58e29bdaad66177f17a11a82484c3dfa9168ebc2d2");
                             });
                             $("#dyp779946-fix-full").click(function (event) {
@@ -2470,7 +2408,7 @@
                     var nowPlat = '';
                     if (infoGroup.plat == 'ju' || infoGroup.plat == 'tm') {
                         nowPlat = "天猫";
-                        changeColor("#F40137", "天　猫", "tm");
+                        changeColor("#F40137","天　猫","tm");
                         if (infoGroup.plat == 'ju') {
                             infoGroup.id = getUrlParam("item_id");
                             itemId = infoGroup.id;
@@ -2481,8 +2419,8 @@
                         }
                     } else {
                         nowPlat = "淘宝";
-                        $("#dypMid9527").css("z-index", "100000");
-                        changeColor("#F42901", "淘　宝", "tb");
+                        $("#dypMid9527").css("z-index","100000");
+                        changeColor("#F42901","淘　宝","tb");
                         infoGroup.rCat = htmlT.match(/(\s+)rcid(\s+):(\s+)'(\d+)'/) ? htmlT.match(/(\s+)rcid(\s+):(\s+)'(\d+)'/)[4] : "";
                         infoGroup.seller = htmlT.match(/sellerId(\s+):(\s+)'(\d+)'/) ? htmlT.match(/sellerId(\s+):(\s+)'(\d+)'/)[3] : "";
                         infoGroup.title = htmlT.match(/title(\s+):(\s+)'(.*?)'/) ? unicodeToUtf8(htmlT.match(/title(\s+):(\s+)'(.*?)'/)[3]) : "";
@@ -2504,8 +2442,8 @@
                         }
                     }   //
                     $.ajax({
-                        url: "https://s.taobao.com/search?app=i2i&nid=" + itemId,
-                        success: function (e) {
+                        url:"https://s.taobao.com/search?app=i2i&nid=" + itemId,
+                        success:function (e) {
                             var r = e.match(/g_page_config\s=\s(.*)/);
                             if (r && r[1] && r[1].match(/({.*});/) && r[1].match(/({.*});/)[1] && JSON.parse(r[1].match(/({.*});/)[1])) {
                                 var obj = JSON.parse(r[1].match(/({.*});/)[1]);
@@ -2522,13 +2460,13 @@
                                     }
                                 }
                             }
-                        }, complete: function () {
+                        },complete:function () {
                             couCount();
                         }
                     }); //淘宝搜索拿商品数据
                     $.ajax({
-                        url: "https://pub.alimama.com/items/search.json?q=https://item.taobao.com/item.htm?id=" + itemId,
-                        success: function (e) {
+                        url:"https://pub.alimama.com/items/search.json?q=https://item.taobao.com/item.htm?id=" + itemId,
+                        success:function (e) {
                             if (e && e.data && e.data.pageList && e.data.pageList[0]) {
                                 var data = e.data.pageList[0];
                                 infoGroup.title = infoGroup.title ? infoGroup.title : data.title;
@@ -2550,14 +2488,14 @@
                                 }
                             }
                         },
-                        complete: function () {
+                        complete:function () {
                             couCount();
                         }
                     }); //阿里妈妈拿商品数据
                     $.ajax({
-                        url: "https://acs.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/",
-                        data: {data: `{"itemNumId":"${itemId}"}`},
-                        success: function (e) {
+                        url:"https://acs.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/",
+                        data:{data:`{"itemNumId":"${itemId}"}`},
+                        success:function (e) {
                             if (e && e.data && e.data.item) {
                                 var data = e.data.item;
                                 infoGroup.title = infoGroup.title ? infoGroup.title : data.title;
@@ -2583,7 +2521,7 @@
                                 infoGroup.shop = infoGroup.shop ? infoGroup.shop : seller.shopName;
                             }
                         },
-                        complete: function () {
+                        complete:function () {
                             couCount();
                         }
                     }); //淘宝H5商品数据
@@ -2592,24 +2530,24 @@
                         var getH5CouNum = 0;//
                         function getDan() {
                             chrome.extension.sendMessage({
-                                name: "getCook", url: "https://www.taobao.com/", key: "_m_h5_tk"
-                            }, function (d) {
+                                name:"getCook",url:"https://www.taobao.com/",key:"_m_h5_tk"
+                            },function (d) {
                                 if (d && d[0] && d[0].value) {
                                     var time = Date.now();
                                     var title = infoGroup.title;
                                     var s = `{"q":"${title}","pid":"${mainUrl.myMmId}","page":${page},"useItemCouponPage":"1","lunaUrlParam": "{'algo_sort':'mixcoupon','rank':'rank_profile:FirstRankScorer_atbh5','PS':'tk_item_score_atbh5','appBucket':'h'}"}`;
                                     $.ajax({
-                                        url: "https://acs.m.taobao.com/h5/mtop.aitaobao.item.search/7.0/", type: "get", dataType: "json",
-                                        data: {
-                                            v: "7.0", api: "mtop.aitaobao.item.search", appKey: "12574478", t: time,
-                                            sign: md5(d[0].value.split("_")[0] + "&" + time + "&12574478&" + s), data: s
+                                        url:"https://acs.m.taobao.com/h5/mtop.aitaobao.item.search/7.0/",type:"get",dataType:"json",
+                                        data:{
+                                            v:"7.0",api:"mtop.aitaobao.item.search",appKey:"12574478",t:time,
+                                            sign:md5(d[0].value.split("_")[0] + "&" + time + "&12574478&" + s),data:s
                                         },
-                                        success: function (r) {
+                                        success:function (r) {
                                             if (r && r.ret && r.ret[0] && r.ret[0].match("调用成功")) {
                                                 if (r && r.data && r.data.items && r.data.items.length) {
                                                     var data = r.data.items;
                                                     var hasSwi = 1;
-                                                    $.each(data, function (v, k) {
+                                                    $.each(data,function (v,k) {
                                                         if (k.nid == itemId) {
                                                             if (k.couponAmount) {
                                                                 infoGroup.amount = k.couponAmount / 100;
@@ -2651,17 +2589,17 @@
                                     setTimeout(function () {
                                         $("#douya-yangxue9527").remove();
                                         getDan()
-                                    }, 2000);
+                                    },2000);
                                 }
                             });
                         }//
                         getDan();
                         function hasDan(e) {
-                            creatBottom({item: e}, 1);
+                            creatBottom({item:e},1);
                             var data = e;
                             var amount = infoGroup.amount;
                             var amountReq = infoGroup.amountReq;
-                            var urls = `https://www.douyapu.com/coupon/chain/?urls=//uland.taobao.com/coupon/edetail?e=${getParam(data.clickUrl, "e")}`;
+                            var urls = `https://www.douyapu.com/coupon/chain/?urls=//uland.taobao.com/coupon/edetail?e=${getParam(data.clickUrl,"e")}`;
                             var oli = `<p class="dypClear">
                                 <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
                                     <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
@@ -2676,7 +2614,7 @@
                                 </a>
                                 <div class="fl dypMid9527-coupon-right">
                                     <p>
-                                        券后价 <span class="dypMid9527-coupon-price"> ${numSub(infoGroup.price, amount)}</span>
+                                        券后价 <span class="dypMid9527-coupon-price"> ${numSub(infoGroup.price,amount)}</span>
                                         <span class="font-color-ff0033"> 元</span>
                                     </p>
                                     <div class="dypClear">
@@ -2693,22 +2631,22 @@
                             $("#dypMid9527 .dypMid9527-box-coupon").html(oli);
                             $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-erweima-mask"></div>`);//
                             $("#douyapu-coupon-ling").click(function () {
-                                douyaTongji("coupon_step2", "MID栏点击", dypRandom);
+                                douyaTongji("coupon_step2","MID栏点击",dypRandom);
                                 douyaTongjiSet("coupon_step2");
                                 window.open(urls);
                                 chrome.extension.sendMessage({
-                                    name: "universal",
-                                    url: "http://storage.douyapu.com/coupon.php",
-                                    type: "post",
-                                    dataType: "json",
-                                    data: {itemId: infoGroup.id}
-                                }, function (e) {
+                                    name:"universal",
+                                    url:"http://storage.douyapu.com/coupon.php",
+                                    type:"post",
+                                    dataType:"json",
+                                    data:{itemId:infoGroup.id}
+                                },function (e) {
                                 });
                             });
                             $("#dypMid9527 .dypMid9527-coupon .dypMid9527-title span").fadeOut(function () {
                                 $(this).html(`领${amount}元劵`).css({
-                                    "color": "#ff0033",
-                                    "fontWeight": "bold"
+                                    "color":"#ff0033",
+                                    "fontWeight":"bold"
                                 }).fadeIn();
                             });
                             try {
@@ -2748,68 +2686,68 @@
                                 }
                             }//
                             $.ajax({
-                                url: "https://rate.taobao.com/detailCommon.htm?auctionNumId=" + itemId,
-                                type: "get",
-                                dataType: "html",
-                                success: function (d) {
+                                url:"https://rate.taobao.com/detailCommon.htm?auctionNumId=" + itemId,
+                                type:"get",
+                                dataType:"html",
+                                success:function (d) {
                                     d = trim(d);
-                                    d = d.substr(1, d.length - 2);
+                                    d = d.substr(1,d.length - 2);
                                     try {
                                         d = JSON.parse(d);
                                         goodRate = d.data.count.total ? (d.data.count.good / d.data.count.total * 100).toFixed(2) : 0;
                                     } catch (err) {
                                     }
                                 },
-                                complete: function () {
+                                complete:function () {
                                     rateCount();
                                 }
                             });
                             function postTo() {
                                 var type = (infoGroup.plat == "tm") ? 1 : 0;
                                 var postData = {
-                                    clickUrl: "", shareUrl: "", amount: "", discountPrice: infoGroup.price, itemId: infoGroup.id,
-                                    picUrl: infoGroup.pic, reservePrice: "", title: infoGroup.title, userId: infoGroup.seller, cat: infoGroup.rCat,
-                                    type: type, biz30Day: infoGroup.sale, effectiveEndTime: "", effectiveStartTime: "", startFee: "", rate: ""
+                                    clickUrl:"",shareUrl:"",amount:"",discountPrice:infoGroup.price,itemId:infoGroup.id,
+                                    picUrl:infoGroup.pic,reservePrice:"",title:infoGroup.title,userId:infoGroup.seller,cat:infoGroup.rCat,
+                                    type:type,biz30Day:infoGroup.sale,effectiveEndTime:"",effectiveStartTime:"",startFee:"",rate:""
                                 };
                                 if (e) {
                                     postData.reservePrice = e.reservePrice;
                                     if (e.couponAmount) {
-                                        postData.shareUrl = "//uland.taobao.com/coupon/edetail?e=" + getParam(e.clickUrl, "e");
+                                        postData.shareUrl = "//uland.taobao.com/coupon/edetail?e=" + getParam(e.clickUrl,"e");
                                         postData.amount = e.couponAmount;
                                         postData.effectiveEndTime = infoGroup.endT;
                                         postData.effectiveStartTime = infoGroup.startT;
                                         postData.startFee = infoGroup.amountReq;
                                     } else {
-                                        postData.clickUrl = "//s.click.taobao.com/t?e=" + getParam(e.clickUrl, "e");
+                                        postData.clickUrl = "//s.click.taobao.com/t?e=" + getParam(e.clickUrl,"e");
                                     }
                                 }
                                 postData.rate = {
-                                    sale: infoGroup.sale,
-                                    favCount: favCount,
-                                    picNum: picNum,
-                                    goodRate: goodRate
+                                    sale:infoGroup.sale,
+                                    favCount:favCount,
+                                    picNum:picNum,
+                                    goodRate:goodRate
                                 };
                                 // console.log(postData);
                                 // console.log(infoGroup);
                                 if ((!sessionStorage.douyapuControl || sessionStorage.douyapuControl != infoGroup.id) && dypmyswi) {
                                     chrome.extension.sendMessage({
-                                        name: "universal",
-                                        url: mainUrl.storage,
-                                        type: "post",
-                                        dataType: "json",
-                                        data: {
-                                            coupon: JSON.stringify(postData),
+                                        name:"universal",
+                                        url:mainUrl.storage,
+                                        type:"post",
+                                        dataType:"json",
+                                        data:{
+                                            coupon:JSON.stringify(postData),
                                         }
-                                    }, function () {
+                                    },function () {
                                     });
                                     sessionStorage.douyapuControl = infoGroup.id;
                                 }
                             }
                         }   //优惠券入库
                         function getRec() {
-                            $.getJSON("https://uland.taobao.com/cp/coupon_recommend", {
-                                recommendType: 0, count: 10, onlySimilar: 0, pid: mainUrl.myMmId, itemId: infoGroup.id
-                            }, function (e) {
+                            $.getJSON("https://uland.taobao.com/cp/coupon_recommend",{
+                                recommendType:0,count:10,onlySimilar:0,pid:mainUrl.myMmId,itemId:infoGroup.id
+                            },function (e) {
                                 var html = "";
                                 if (e && e.result && e.result.couponList) {
                                     $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-more-coupon">
@@ -2819,7 +2757,7 @@
                                         <button class="l"></button>
                                         <button class="r"></button>
                                     </div>`);
-                                    $.each(e.result.couponList, function (v, k) {
+                                    $.each(e.result.couponList,function (v,k) {
                                         var clickUrl = mainUrl.chain + k.item.clickUrl;
                                         html += `<li>
                                             <div>
@@ -2832,7 +2770,7 @@
                                                     <div class="fl">
                                                         <div class="dypMid9527-mcoupon-itemPrice">
                                                             <div>原价 <s>${k.item.discountPrice}</s></div>
-                                                            <div>现价 <span>${numSub(k.item.discountPrice, k.amount)}</span></div>
+                                                            <div>现价 <span>${numSub(k.item.discountPrice,k.amount)}</span></div>
                                                         </div>
                                                         <a href="${clickUrl}" target="_blank" class="dypMid9527-mcoupon-itemDraw" data-douyababapaopao="工具+优惠券+相关领取">
                                                             <div>点击领券</div>
@@ -2861,11 +2799,11 @@
                                     var clickEndFlag = true;    //
                                     function tab() {
                                         $(".dypMid9527-font_inner").stop().animate({
-                                            left: -index * liHeight
-                                        }, 400, function () {
+                                            left:-index * liHeight
+                                        },400,function () {
                                             clickEndFlag = true;//
                                             if (index == $(".dypMid9527-font_inner li").length - 1) {
-                                                $(".dypMid9527-font_inner").css({left: 0});
+                                                $(".dypMid9527-font_inner").css({left:0});
                                                 index = 0;
                                             }
                                         })
@@ -2881,32 +2819,32 @@
                                         index--;
                                         if (index < 0) {
                                             index = $(".dypMid9527-font_inner li").size() - 2;
-                                            $(".dypMid9527-font_inner").css("left", -($(".dypMid9527-font_inner li").size() - 1) * liHeight);
+                                            $(".dypMid9527-font_inner").css("left",-($(".dypMid9527-font_inner li").size() - 1) * liHeight);
                                         }
                                         tab();
                                     }   //
-                                    $(".dypMid9527-more-coupon .r").on("click", function () {
+                                    $(".dypMid9527-more-coupon .r").on("click",function () {
                                         if (clickEndFlag) {
                                             next();
                                             clickEndFlag = false;
                                         }
                                     });
-                                    $(".dypMid9527-more-coupon .l").on("click", function () {
+                                    $(".dypMid9527-more-coupon .l").on("click",function () {
                                         if (clickEndFlag) {
                                             prev();
                                             clickEndFlag = false;
                                         }
                                     });
-                                    autoTimer = setInterval(next, 2000);
+                                    autoTimer = setInterval(next,2000);
                                     $(".dypMid9527-font_inner li").hover(function () {
                                         clearInterval(autoTimer);
-                                    }, function () {
-                                        autoTimer = setInterval(next, 2000);
+                                    },function () {
+                                        autoTimer = setInterval(next,2000);
                                     });
                                     $(".dypMid9527-more-coupon .l,.dypMid9527-more-coupon .r").hover(function () {
                                         clearInterval(autoTimer);
-                                    }, function () {
-                                        autoTimer = setInterval(next, 2000);
+                                    },function () {
+                                        autoTimer = setInterval(next,2000);
                                     });
                                 } else {
                                     $(".dypMid9527-more-coupon").remove();
@@ -2920,21 +2858,21 @@
                     if (infoGroup.plat != 'jd') {
                         return;
                     }
-                    changeColor("#B61D1D", "京　东", "jd");
-                    $("#dypMid9527").css("z-index", 10);
+                    changeColor("#B61D1D","京　东","jd");
+                    $("#dypMid9527").css("z-index",10);
                     var myScript = document.createElement("script");
                     myScript.type = "text/javascript";
                     myScript.appendChild(document.createTextNode('window.postMessage({"douyapuId":pageConfig.product.skuid,"douyapuShopId":pageConfig.product.shopId,"douyapuVenderId":pageConfig.product.venderId,"douyapuCat":pageConfig.product.cat},"*")'));
                     document.body.appendChild(myScript);
-                    window.addEventListener("message", function (event) {
+                    window.addEventListener("message",function (event) {
                         if (event.data.douyapuId) {
                             productId = event.data.douyapuId;
                             infoGroup.id = event.data.douyapuId;
                             $.ajax({
-                                url: "https://p.3.cn/prices/mgets?skuIds=J_" + productId,
-                                type: 'GET',
-                                dataType: 'json',
-                                success: function (e) {
+                                url:"https://p.3.cn/prices/mgets?skuIds=J_" + productId,
+                                type:'GET',
+                                dataType:'json',
+                                success:function (e) {
                                     infoGroup.price = e[0].p;
                                     getJdCoupon(event);
                                     getJdBuyShow(event);
@@ -2942,7 +2880,7 @@
                                 }
                             });
                         }
-                    }, false);
+                    },false);
                     startSame(location.href);         //京东页面同款数据
                     startVip();
                     function getJdBuyShow(e) {
@@ -2951,10 +2889,10 @@
                         var totalNum;
                         var showKaiguan = 1;
                         $.ajax({
-                            type: "get",
-                            dataType: "json",
-                            url: requestUrl + 0,
-                            success: function (data) {
+                            type:"get",
+                            dataType:"json",
+                            url:requestUrl + 0,
+                            success:function (data) {
                                 totalNum = data.productCommentSummary.showCount;
                                 if (totalNum > 999) {
                                     totalNum = "999+";
@@ -2981,9 +2919,9 @@
                                 </div>`;
                                 if (totalNum) {
                                     //买家秀按钮点击
-                                    $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
+                                    $("#dypMid9527 .dypMid9527-buyers-show").on("click",function () {
                                         $("body").addClass("dyp779946-body-unScroll");
-                                        $("#dyp779946-fix-full").css("visibility", "visible");
+                                        $("#dyp779946-fix-full").css("visibility","visible");
                                         $("#dyp779946-fix-full").fadeIn();
                                     });
                                     $("body").prepend(html);
@@ -2992,7 +2930,7 @@
                                     var htmlTpl = `<div class="dypMid9527-no-buyers-show">暂未发现买家秀</div>`;
                                     var clickSign = 0;
                                     $("#dypMid9527 .dypMid9527-buyers-show .dypMid9527-title").append(htmlTpl);
-                                    $("#dypMid9527 .dypMid9527-buyers-show").on("click", function () {
+                                    $("#dypMid9527 .dypMid9527-buyers-show").on("click",function () {
                                         if (!clickSign) {
                                             clickSign = 1;
                                             $("#dypMid9527 .dypMid9527-no-buyers-show").fadeIn(function () {
@@ -3000,68 +2938,68 @@
                                                     $("#dypMid9527 .dypMid9527-no-buyers-show").fadeOut(function () {
                                                         clickSign = 0;
                                                     });
-                                                }, 2000);
+                                                },2000);
                                             });
                                         }
                                     });
                                 }
                                 var sortNum = 0;
                                 $('#dyp779946-waterfall-box').waterfall({
-                                    itemCls: 'item',
-                                    colWidth: 250,
-                                    gutterWidth: 10,
-                                    gutterHeight: 10,
-                                    isAutoPrefill: true,
-                                    checkImagesLoaded: true,
-                                    path: function (page) {
+                                    itemCls:'item',
+                                    colWidth:250,
+                                    gutterWidth:10,
+                                    gutterHeight:10,
+                                    isAutoPrefill:true,
+                                    checkImagesLoaded:true,
+                                    path:function (page) {
                                         return requestUrl + (page - 1);
                                     },
-                                    dataType: 'json',
-                                    loadingMsg: '<div style="text-align:center;padding:10px 0; color:#999;"><img src="data:image/gif;base64,R0lGODlhEAALAPQAAP///zMzM+Li4tra2u7u7jk5OTMzM1hYWJubm4CAgMjIyE9PT29vb6KiooODg8vLy1JSUjc3N3Jycuvr6+Dg4Pb29mBgYOPj4/X19cXFxbOzs9XV1fHx8TMzMzMzMzMzMyH5BAkLAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7" alt=""><br />加载中...</div>',
-                                    callbacks: {
-                                        loadingStart: function ($loading) {
+                                    dataType:'json',
+                                    loadingMsg:'<div style="text-align:center;padding:10px 0; color:#999;"><img src="data:image/gif;base64,R0lGODlhEAALAPQAAP///zMzM+Li4tra2u7u7jk5OTMzM1hYWJubm4CAgMjIyE9PT29vb6KiooODg8vLy1JSUjc3N3Jycuvr6+Dg4Pb29mBgYOPj4/X19cXFxbOzs9XV1fHx8TMzMzMzMzMzMyH5BAkLAAAAIf4aQ3JlYXRlZCB3aXRoIGFqYXhsb2FkLmluZm8AIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAALAAAFLSAgjmRpnqSgCuLKAq5AEIM4zDVw03ve27ifDgfkEYe04kDIDC5zrtYKRa2WQgAh+QQJCwAAACwAAAAAEAALAAAFJGBhGAVgnqhpHIeRvsDawqns0qeN5+y967tYLyicBYE7EYkYAgAh+QQJCwAAACwAAAAAEAALAAAFNiAgjothLOOIJAkiGgxjpGKiKMkbz7SN6zIawJcDwIK9W/HISxGBzdHTuBNOmcJVCyoUlk7CEAAh+QQJCwAAACwAAAAAEAALAAAFNSAgjqQIRRFUAo3jNGIkSdHqPI8Tz3V55zuaDacDyIQ+YrBH+hWPzJFzOQQaeavWi7oqnVIhACH5BAkLAAAALAAAAAAQAAsAAAUyICCOZGme1rJY5kRRk7hI0mJSVUXJtF3iOl7tltsBZsNfUegjAY3I5sgFY55KqdX1GgIAIfkECQsAAAAsAAAAABAACwAABTcgII5kaZ4kcV2EqLJipmnZhWGXaOOitm2aXQ4g7P2Ct2ER4AMul00kj5g0Al8tADY2y6C+4FIIACH5BAkLAAAALAAAAAAQAAsAAAUvICCOZGme5ERRk6iy7qpyHCVStA3gNa/7txxwlwv2isSacYUc+l4tADQGQ1mvpBAAIfkECQsAAAAsAAAAABAACwAABS8gII5kaZ7kRFGTqLLuqnIcJVK0DeA1r/u3HHCXC/aKxJpxhRz6Xi0ANAZDWa+kEAA7" alt=""><br />加载中...</div>',
+                                    callbacks:{
+                                        loadingStart:function ($loading) {
                                             $loading.show();
                                         },
-                                        loadingFinished: function ($loading, isBeyondMaxPage) {
+                                        loadingFinished:function ($loading,isBeyondMaxPage) {
                                             if (!isBeyondMaxPage) {
                                                 $loading.fadeOut();
                                             } else {
                                                 $loading.remove();
                                             }
                                         },
-                                        loadingError: function ($message) {
+                                        loadingError:function ($message) {
                                             $message.html('请稍后重试');
                                         },
-                                        renderData: function (data) {
+                                        renderData:function (data) {
                                             var res = data.comments;
                                             var oli = "";
                                             if ((res && res.length == 0) || !res) {
-                                                $('#dyp779946-waterfall-box').waterfall('pause', function () {
+                                                $('#dyp779946-waterfall-box').waterfall('pause',function () {
                                                 });
                                                 return oli;
                                             }
-                                            $.each(res, function (key, value) {
+                                            $.each(res,function (key,value) {
                                                 if (value.images && value.images.length > 0) {
                                                     sortNum += 1;
                                                     var thumbnailPics = '';
                                                     var addComment = '';
                                                     var addPics = '';
                                                     thumbnailPics += '<div class="thumbnail">';
-                                                    $.each(value.images, function (key, value) {
+                                                    $.each(value.images,function (key,value) {
                                                         if (key == 5) {
                                                             return false;
                                                         }
-                                                        thumbnailPics += `<img class="thumbnail-item" src=${value.imgUrl.replace(/((\d+)x(\d+))/, "40x40")} data-num="${sortNum}" data-newnum="${key}">`;
+                                                        thumbnailPics += `<img class="thumbnail-item" src=${value.imgUrl.replace(/((\d+)x(\d+))/,"40x40")} data-num="${sortNum}" data-newnum="${key}">`;
                                                     });
                                                     thumbnailPics += '</div>';
                                                     if (value.afterUserComment && value.afterUserComment.content) {
                                                         if (value.afterImages && value.afterImages.length > 0) {
                                                             addPics += '<div class="add-comment-thumbnail">';
-                                                            $.each(value.afterImages, function (key, value) {
+                                                            $.each(value.afterImages,function (key,value) {
                                                                 if (key == 5) {
                                                                     return false;
                                                                 }
-                                                                addPics += `<img class="thumbnail-item" src=${value.imgUrl.replace(/((\d+)x(\d+))/, "40x40")} data-num="${sortNum}">`;
+                                                                addPics += `<img class="thumbnail-item" src=${value.imgUrl.replace(/((\d+)x(\d+))/,"40x40")} data-num="${sortNum}">`;
                                                             });
                                                             addPics += '</div>';
                                                         }
@@ -3073,7 +3011,7 @@
                                                     }
                                                     oli += `<div class="item">
                                                         <div class="top">
-                                                            <img src="${value.images[0].imgUrl.replace(/((\d+)x(\d+))/, "640x480").replace(/n0/, "shaidan")}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
+                                                            <img src="${value.images[0].imgUrl.replace(/((\d+)x(\d+))/,"640x480").replace(/n0/,"shaidan")}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
                                                         </div>
                                                         <div class="middle">
                                                             ${thumbnailPics}
@@ -3096,14 +3034,14 @@
                                         }
                                     }
                                 });
-                                $("#dyp779946-fix-full").on("click", ".thumbnail-item", function () {
+                                $("#dyp779946-fix-full").on("click",".thumbnail-item",function () {
                                     var height = $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height();
                                     $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').height(height);
-                                    $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').attr("src", $(this).attr("src").replace(/((\d+)x(\d+))/, "640x480").replace(/n0/, "shaidan"));
-                                    $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').data("newnum", $(this).data("newnum"));
+                                    $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').attr("src",$(this).attr("src").replace(/((\d+)x(\d+))/,"640x480").replace(/n0/,"shaidan"));
+                                    $('#dyp779946-fix-full .top img[data-num=' + $(this).data("num") + ']').data("newnum",$(this).data("newnum"));
                                     $(this).addClass("active").siblings().removeClass("active");
                                 });
-                                $("#dyp779946-fix-full").on("click", ".top img", function () {
+                                $("#dyp779946-fix-full").on("click",".top img",function () {
                                     var index = $(this).data("newnum");
                                     var num = $(this).data("num");
                                     var total = $('#dyp779946-fix-full .thumbnail img[data-num=' + $(this).data("num") + ']').length;
@@ -3117,8 +3055,8 @@
                                     }
                                     var thumbHtml = $(this).parent().parent().children(".middle").children(".thumbnail").children("img");
                                     var newThumbHtml = "";
-                                    $.each(thumbHtml, function (v, k) {
-                                        var item = k.attributes.src.value.replace(/((\d+)x(\d+))/, "130x130");
+                                    $.each(thumbHtml,function (v,k) {
+                                        var item = k.attributes.src.value.replace(/((\d+)x(\d+))/,"130x130");
                                         if (k.attributes["data-newnum"].value == index) {
                                             newThumbHtml += `<div class="active"><img src=${item} data-newnum="${v}" data-num="${num}"></div>`
                                         } else {
@@ -3150,13 +3088,13 @@
                                     $("#dyp779946-detail-box").html(detailHtml);
                                     $("#dyp779946-container-box").hide();
                                     $("#dyp779946-detail-box").show();
-                                    $(".dyp-detail-thumb").on("click", "div", function () {
-                                        $(".dyp779946-waterfallDetail-img img").attr("src", $(this).children().attr("src").replace(/((\d+)x(\d+))/, "640x480").replace(/n0/, "shaidan"));
+                                    $(".dyp-detail-thumb").on("click","div",function () {
+                                        $(".dyp779946-waterfallDetail-img img").attr("src",$(this).children().attr("src").replace(/((\d+)x(\d+))/,"640x480").replace(/n0/,"shaidan"));
                                         $(".dyp-detail-thumb").children().removeClass("active");
                                         $(this).addClass("active");
                                     });
                                 });
-                                $("#dyp779946-detail-box").on("click", "button.r", function () {
+                                $("#dyp779946-detail-box").on("click","button.r",function () {
                                     $(".dyp779946-waterfallDetail-back button").show();
                                     if ($(".dyp-detail-thumb>div.active").next().length) {
                                         $(".dyp-detail-thumb>div.active").next().click();
@@ -3172,7 +3110,7 @@
                                     }
                                     $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
                                 });
-                                $("#dyp779946-detail-box").on("click", "button.l", function () {
+                                $("#dyp779946-detail-box").on("click","button.l",function () {
                                     $(".dyp779946-waterfallDetail-back button").show();
                                     if ($(".dyp-detail-thumb>div.active").prev().length) {
                                         $(".dyp-detail-thumb>div.active").prev().click();
@@ -3188,21 +3126,21 @@
                                     }
                                     $("#dyp779946-waterfallDetail-now").html($(".dyp-detail-thumb>div.active img").data("newnum") + 1)
                                 });
-                                $("#dyp779946-detail-box").on("mouseenter", ".dyp779946-waterfallDetail-title", function () {
+                                $("#dyp779946-detail-box").on("mouseenter",".dyp779946-waterfallDetail-title",function () {
                                     $("#dypMjxAnimate").removeClass("dypAnimate");
-                                    $(this).css({"height": "auto"});
+                                    $(this).css({"height":"auto"});
                                     var height = $(this).css("height");
-                                    $(this).css({"height": "89px"}).stop().animate({
-                                        height: height
-                                    }, 500);
+                                    $(this).css({"height":"89px"}).stop().animate({
+                                        height:height
+                                    },500);
                                 });
-                                $("#dyp779946-detail-box").on("mouseleave", ".dyp779946-waterfallDetail-title", function () {
+                                $("#dyp779946-detail-box").on("mouseleave",".dyp779946-waterfallDetail-title",function () {
                                     $("#dypMjxAnimate").addClass("dypAnimate");
                                     $(this).stop().animate({
-                                        height: "89px"
-                                    }, 500);
+                                        height:"89px"
+                                    },500);
                                 });
-                                $("#dyp779946-fix-full").on("click", ".dyp779946-close-button", function () {
+                                $("#dyp779946-fix-full").on("click",".dyp779946-close-button",function () {
                                     if ($("#dyp779946-detail-box")[0].style.display == "block") {
                                         showKaiguan = 1;
                                         $("#dyp779946-container-box").show();
@@ -3212,12 +3150,12 @@
                                         $("body").removeClass("dyp779946-body-unScroll");
                                     }
                                 });
-                                $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.scroll", function () {
+                                $("#dyp779946-fix-full .dyp779946-scroll-top").on("click","p.scroll",function () {
                                     $("#dyp779946-fix-full").animate({
-                                        'scrollTop': '0px'
-                                    }, 300)
+                                        'scrollTop':'0px'
+                                    },300)
                                 });
-                                $("#dyp779946-fix-full .dyp779946-scroll-top").on("click", "p.qq", function () {
+                                $("#dyp779946-fix-full .dyp779946-scroll-top").on("click","p.qq",function () {
                                     window.open("//shang.qq.com/wpa/qunwpa?idkey=07df4060e4b8ca7215881d58e29bdaad66177f17a11a82484c3dfa9168ebc2d2");
                                 });
                                 $("#dyp779946-fix-full").click(function (event) {
@@ -3242,18 +3180,18 @@
                     function getJdCoupon(e) {
                         a();
                         function a() {
-                            $.getJSON(mainUrl.jdCoupon, {
-                                skuId: e.data.douyapuId,
-                                area: "1_72_2799_0",
-                                shopId: e.data.douyapuShopId,
-                                venderId: e.data.douyapuVenderId,
-                                cat: e.data.douyapuCat.toString()
-                            }, function (d) {
+                            $.getJSON(mainUrl.jdCoupon,{
+                                skuId:e.data.douyapuId,
+                                area:"1_72_2799_0",
+                                shopId:e.data.douyapuShopId,
+                                venderId:e.data.douyapuVenderId,
+                                cat:e.data.douyapuCat.toString()
+                            },function (d) {
                                 if (d.skuCoupon && d.skuCoupon.length) {
                                     var data = d.skuCoupon[0];
                                     if (!data.url) {
                                         data.url = "javascript:void(0);";
-                                        $("#dypMid9527 .dypMid9527-box-coupon").on("click", $("#dypButton"), function () {
+                                        $("#dypMid9527 .dypMid9527-box-coupon").on("click",$("#dypButton"),function () {
                                             $("div[data-name=coupon]").click();
                                         })
                                     } else {
@@ -3292,7 +3230,7 @@
                                 </a>
                                 <div class="fl dypMid9527-coupon-right">
                                     <p>
-                                        券后价 <span class="dypMid9527-coupon-price"> ${numSub(infoGroup.price, data.discount)}</span>
+                                        券后价 <span class="dypMid9527-coupon-price"> ${numSub(infoGroup.price,data.discount)}</span>
                                         <span class="font-color-ff0033"> 元</span>
                                     </p>
                                     <div class="dypClear">
@@ -3310,8 +3248,8 @@
                             $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-erweima-mask"></div>`);
                             $("#dypMid9527 .dypMid9527-coupon .dypMid9527-title span").fadeOut(function () {
                                 $(this).html(`领${data.discount}元劵`).css({
-                                    "color": "#ff0033",
-                                    "fontWeight": "bold"
+                                    "color":"#ff0033",
+                                    "fontWeight":"bold"
                                 }).fadeIn();
                             });
                             $("#dypMid9527-fnTimeCountDown").fnTimeCountDown(data.endTime.split(" ")[0] + " 23:59:59");
@@ -3326,7 +3264,7 @@
                     myScript.type = "text/javascript";
                     myScript.appendChild(document.createTextNode('window.postMessage({"douyapuPrice":sn},"*")'));
                     document.body.appendChild(myScript);
-                    window.addEventListener("message", function (event) {
+                    window.addEventListener("message",function (event) {
                         if (event.data.douyapuPrice) {
                             if (event.data.douyapuPrice.promotionPrice) {
                                 infoGroup.id = event.data.douyapuPrice.partNumber;
@@ -3339,7 +3277,7 @@
                                 });
                             }
                         }
-                    }, false);
+                    },false);
                     startSame(location.origin + location.pathname);
                     qtCoupon();
                     startVip();
@@ -3348,12 +3286,12 @@
                     if (infoGroup.plat != 'gm') {
                         return;
                     }
-                    $("#dypMid9527").css("z-index", 105);
+                    $("#dypMid9527").css("z-index",105);
                     var myScript = document.createElement("script");
                     myScript.type = "text/javascript";
                     myScript.appendChild(document.createTextNode('window.postMessage({"douyapuPrice":prdInfo},"*")'));
                     document.body.appendChild(myScript);
-                    window.addEventListener("message", function (event) {
+                    window.addEventListener("message",function (event) {
                         if (event.data.douyapuPrice) {
                             if (parseFloat(event.data.douyapuPrice.gomePrice)) {
                                 infoGroup.id = event.data.douyapuPrice.prdId + '_' + event.data.douyapuPrice.sku;
@@ -3366,7 +3304,7 @@
                                 });
                             }
                         }
-                    }, false);
+                    },false);
                     startSame(location.origin + location.pathname);
                     qtCoupon();
                     startVip();
@@ -3375,64 +3313,64 @@
                     if (infoGroup.plat != 'dd') {
                         return;
                     }
-                    $("#dypMid9527").css("z-index", 6667);
+                    $("#dypMid9527").css("z-index",6667);
                     var myScript = document.createElement("script");
                     myScript.type = "text/javascript";
                     myScript.appendChild(document.createTextNode('window.postMessage({"douyapuPrice":prodSpuInfo},"*")'));
                     document.body.appendChild(myScript);
-                    window.addEventListener("message", function (event) {
+                    window.addEventListener("message",function (event) {
                         if (event.data.douyapuPrice) {
                             var spuInfo = event.data.douyapuPrice;
-                            $.getJSON("http://product.dangdang.com/index.php", {
-                                r: 'callback/product-info',
-                                productId: spuInfo.isCatalog == '1' && spuInfo.mainProductId != '0' ? spuInfo.mainProductId : spuInfo.productId,
-                                isCatalog: spuInfo.isCatalog,
-                                shopId: spuInfo.shopId,
-                                productType: spuInfo.productType
-                            }, function (e) {
-                                infoGroup.id = location.pathname.replace(/[^0-9]/ig, "");
+                            $.getJSON("http://product.dangdang.com/index.php",{
+                                r:'callback/product-info',
+                                productId:spuInfo.isCatalog == '1' && spuInfo.mainProductId != '0' ? spuInfo.mainProductId : spuInfo.productId,
+                                isCatalog:spuInfo.isCatalog,
+                                shopId:spuInfo.shopId,
+                                productType:spuInfo.productType
+                            },function (e) {
+                                infoGroup.id = location.pathname.replace(/[^0-9]/ig,"");
                                 infoGroup.price = e.data.spu.price.salePrice;
                                 startPrice(location.origin + location.pathname);
                             })
                         }
-                    }, false);
+                    },false);
                     startSame(location.origin + location.pathname);
                     qtCoupon();
                     startVip();
                 }();    //当当页面
                 !function () {
-                    $(".dypTop9527-logo").on("click", "b", function () {
+                    $(".dypTop9527-logo").on("click","b",function () {
                         window.open(mainUrl.website);
                     }); // logo点击跳转官网
                     $(".dypTop9527-mall").hover(function () {
                         $(this).children(".dypTop9527-mallDrop").show();
-                    }, function () {
+                    },function () {
                         $(this).children(".dypTop9527-mallDrop").hide();
                     }); //商城导航移入移出事件
-                    $(".dypTop9527-search").on("click", "i", function () {
+                    $(".dypTop9527-search").on("click","i",function () {
                         if ($(this).data("type") == 1) {
                             $(".dypTop9527-search ul").show();
                             $(".dypTop9527-search u").show();
-                            $(this).data("type", 0);
+                            $(this).data("type",0);
                         } else {
                             $(".dypTop9527-search ul").hide();
                             $(".dypTop9527-search u").hide();
-                            $(this).data("type", 1);
+                            $(this).data("type",1);
                         }
-                        $(document).on("click", function (e) {
+                        $(document).on("click",function (e) {
                             var hos = $(e.target).closest('.dypTop9527-search i').length;
                             var hos1 = $(e.target).closest('.dypTop9527-search ul').length;
                             if (!hos && !hos1) {
-                                $(".dypTop9527-search i").data("type", 1);
+                                $(".dypTop9527-search i").data("type",1);
                                 $(".dypTop9527-search ul").hide();
                                 $(".dypTop9527-search u").hide();
                             }
                         });
                     }); // 搜索部分选择不同的电商平台
-                    $(".dypTop9527-search").on("click", "li", function () {
+                    $(".dypTop9527-search").on("click","li",function () {
                         $(".dypTop9527-search span em").html($(this).html());
-                        $(".dypTop9527-search span").data("id", $(this).data("id"));
-                        $(".dypTop9527-search i").data("type", 1);
+                        $(".dypTop9527-search span").data("id",$(this).data("id"));
+                        $(".dypTop9527-search i").data("type",1);
                         $(".dypTop9527-search ul").hide();
                         $(".dypTop9527-search u").hide();
                     });
@@ -3442,23 +3380,23 @@
                             var url = "";
                             q = encodeURIComponent(q);
                             var obj = {
-                                "dyp": mainUrl.website + "coupon/search?val=" + q,
-                                "tm": "https://list.tmall.com/search_product.htm?q=" + q,
-                                "jd": "https://search.jd.com/Search?enc=utf-8&keyword=" + q,
-                                "tb": "https://s.taobao.com/search?q=" + q,
-                                "wph": "https://category.vip.com/suggest.php?keyword=" + q,
-                                "mgj": "http://list.mogujie.com/s?q=" + q,
-                                "yoho": "https://search.yohobuy.com/?query=" + q,
-                                "sn": "https://search.suning.com/" + q + "/",
-                                "ymx": "https://www.amazon.cn/s/field-keywords=" + q,
-                                "dd": "http://search.dangdang.com/?key=" + q,
-                                "jm": "http://search.jumei.com/?search=" + q,
-                                "kl": "https://www.kaola.com/search.html?key=" + q,
-                                "yx": "http://you.163.com/search?keyword=" + q,
-                                "yhd": "http://search.yhd.com/c0-0/k" + q + "/",
-                                "gm": "http://search.gome.com.cn/search?question=" + q
+                                "dyp":mainUrl.website + "coupon/search?val=" + q,
+                                "tm":"https://list.tmall.com/search_product.htm?q=" + q,
+                                "jd":"https://search.jd.com/Search?enc=utf-8&keyword=" + q,
+                                "tb":"https://s.taobao.com/search?q=" + q,
+                                "wph":"https://category.vip.com/suggest.php?keyword=" + q,
+                                "mgj":"http://list.mogujie.com/s?q=" + q,
+                                "yoho":"https://search.yohobuy.com/?query=" + q,
+                                "sn":"https://search.suning.com/" + q + "/",
+                                "ymx":"https://www.amazon.cn/s/field-keywords=" + q,
+                                "dd":"http://search.dangdang.com/?key=" + q,
+                                "jm":"http://search.jumei.com/?search=" + q,
+                                "kl":"https://www.kaola.com/search.html?key=" + q,
+                                "yx":"http://you.163.com/search?keyword=" + q,
+                                "yhd":"http://search.yhd.com/c0-0/k" + q + "/",
+                                "gm":"http://search.gome.com.cn/search?question=" + q
                             };
-                            $.each(obj, function (v, k) {
+                            $.each(obj,function (v,k) {
                                 if ($(".dypTop9527-search span").data("id") == v) {
                                     url = k;
                                 }
@@ -3466,22 +3404,22 @@
                             window.open(url);
                         }
                     }); // 搜索按钮事件
-                    $("#dypTop9527-search").on("keyup", function () {
+                    $("#dypTop9527-search").on("keyup",function () {
                         if (event.keyCode == 13) {
                             $("#dypTop9527-searchBtn").click();
                         }
                     }); //搜索回车事件
                     $(".dypTop9527-set-box").hover(function () {
                         $(".dypTop9527-setDrop").show();
-                    }, function () {
+                    },function () {
                         $(".dypTop9527-setDrop").hide();
                     }); //右边第二个设置鼠标移入移出
-                    $(".dypTop9527-setDrop").on("click", "li", function () {
+                    $(".dypTop9527-setDrop").on("click","li",function () {
                         if ($(this).data("type") == "gb") {
                             $("#dypTop9527").fadeOut();
                             setting.dypTop = "hidden";
                             var type = setting.dypMid;
-                            chrome.storage.local.set({dypSetting: {dypTop: 'hidden', dypMid: type}});
+                            chrome.storage.local.set({dypSetting:{dypTop:'hidden',dypMid:type}});
                             showOrHideTop(0);
                         } else if ($(this).data("type") == "sc") {
                             window.open(mainUrl.website + "user/collist/");
@@ -3489,7 +3427,7 @@
                             window.open(mainUrl.website + "index/feedback/");
                         }
                     }); //右边第二个设置下拉列表点击事件
-                    $(".dypTop9527-set").on("click", "i", function () {
+                    $(".dypTop9527-set").on("click","i",function () {
                         showOrHideTop(0);
                     }); //最右边的缩小按钮点击事件
                     $(".dypTop9527-mini").click(function () {
@@ -3502,11 +3440,11 @@
                     var url1 = "http://min.douyapu.com/api/act14/plug-0.json";
                     var url2 = "http://min.douyapu.com/api/act15/plug-0.json";
                     if (kaiGuan == 1) {
-                        chrome.extension.sendMessage({name: "universal", url: url1, type: "get", dataType: "json"}, function (response) {
+                        chrome.extension.sendMessage({name:"universal",url:url1,type:"get",dataType:"json"},function (response) {
                             if (response && response.results && response.results.length > 0) {
                                 !function () {
                                     var html = "";
-                                    $.each(response.results, function (v, k) {
+                                    $.each(response.results,function (v,k) {
                                         html += `<li data-douyababapaopao="顶部+活动+ID${k.id}">
                                             <b class="icon${k.act_badge_label}"></b>                        
                                             <a href="${k.act_link}" target="_blank">${k.act_name}</a>
@@ -3522,11 +3460,11 @@
                                     var clickEndFlag = true;    //
                                     function tab() {
                                         $(".dypTop9527-font_inner").stop().animate({
-                                            top: -index * liHeight
-                                        }, 400, function () {
+                                            top:-index * liHeight
+                                        },400,function () {
                                             clickEndFlag = true;
                                             if (index == $(".dypTop9527-font_inner li").length - 1) {
-                                                $(".dypTop9527-font_inner").css({top: 0});
+                                                $(".dypTop9527-font_inner").css({top:0});
                                                 index = 0;
                                             }
                                         })
@@ -3538,22 +3476,22 @@
                                         }
                                         tab();
                                     }   //
-                                    autoTimer = setInterval(next, 2500);
+                                    autoTimer = setInterval(next,2500);
                                     $(".dypTop9527-font_inner a").hover(function () {
                                         clearInterval(autoTimer);
-                                    }, function () {
-                                        autoTimer = setInterval(next, 2500);
+                                    },function () {
+                                        autoTimer = setInterval(next,2500);
                                     });
                                 }();
                             }
                         });
                     }
                     if (kaiGuan1 == 1) {
-                        chrome.extension.sendMessage({name: "universal", url: url2, type: "get", dataType: "json"}, function (response) {
+                        chrome.extension.sendMessage({name:"universal",url:url2,type:"get",dataType:"json"},function (response) {
                             if (response && response.results && response.results.length > 0) {
                                 !function () {
                                     var html = "";
-                                    $.each(response.results, function (v, k) {
+                                    $.each(response.results,function (v,k) {
                                         html += `<li data-douyababapaopao="固定+活动+ID${k.id}">
                                             <i></i>
                                             <a href="${k.act_link}" target="_blank">${k.act_name}</a>
@@ -3570,11 +3508,11 @@
                                     var clickEndFlag = true;    //
                                     function tab() {
                                         $(".dypMid9527-font_inner1").stop().animate({
-                                            top: -index * liHeight
-                                        }, 400, function () {
+                                            top:-index * liHeight
+                                        },400,function () {
                                             clickEndFlag = true;
                                             if (index == $(".dypMid9527-font_inner1 li").length - 1) {
-                                                $(".dypMid9527-font_inner1").css({top: 0});
+                                                $(".dypMid9527-font_inner1").css({top:0});
                                                 index = 0;
                                             }
                                         })
@@ -3586,11 +3524,11 @@
                                         }
                                         tab();
                                     }   //
-                                    autoTimer = setInterval(next, 2500);
+                                    autoTimer = setInterval(next,2500);
                                     $(".dypMid9527-font_inner1 a").hover(function () {
                                         clearInterval(autoTimer);
-                                    }, function () {
-                                        autoTimer = setInterval(next, 2500);
+                                    },function () {
+                                        autoTimer = setInterval(next,2500);
                                     });
                                 }();
                             } else {
@@ -3607,23 +3545,23 @@
                         var page = 0;
                         var last = 1;
                         var url = "http://min.douyapu.com/api/act16/plug-";
-                        $(".dypMid9527-box-active").on("click", "button.l", function () {
+                        $(".dypMid9527-box-active").on("click","button.l",function () {
                             if (page > 0) {
                                 page -= 1;
                                 a(page);
                             }
                         });
-                        $(".dypMid9527-box-active").on("click", "button.r", function () {
+                        $(".dypMid9527-box-active").on("click","button.r",function () {
                             if (last) {
                                 page += 1;
                                 a(page);
                             }
                         });
                         function a(p) {
-                            chrome.extension.sendMessage({name: "universal", url: url + p + ".json", type: "get", dataType: "json"}, function (e) {
+                            chrome.extension.sendMessage({name:"universal",url:url + p + ".json",type:"get",dataType:"json"},function (e) {
                                 if (e && e.results && e.results.length > 0) {
                                     var html = "";
-                                    $.each(e.results, function (v, k) {
+                                    $.each(e.results,function (v,k) {
                                         html += `<li data-douyababapaopao="工具+活动+ID${k.id}"><a href="${k.act_link}" target="_blank"><b></b>${k.act_name}<i class="icon${k.act_badge_label}"></i></a></li>`;
                                     });
                                     $(".dypMid9527-box-active ul").html(html);
@@ -3640,61 +3578,61 @@
                     }
                 }();    //中间(限时活动)
                 !function () {
-                    $("#dypMid9527").on("mouseenter", ".dypMid9527-coupon,.dypMid9527-price-trend,.dypMid9527-setting,.dypMid9527-active,.dypMid9527-phone", function () {
-                        $(this).children(".dypMid9527-title").children(".dypMid9527-borderMask").css("borderColor", "#fff");
+                    $("#dypMid9527").on("mouseenter",".dypMid9527-coupon,.dypMid9527-price-trend,.dypMid9527-setting,.dypMid9527-active,.dypMid9527-phone",function () {
+                        $(this).children(".dypMid9527-title").children(".dypMid9527-borderMask").css("borderColor","#fff");
                         $(this).children(".dypMid9527-box").show();
                     });
-                    $("#dypMid9527").on("mouseenter", ".dypMid9527-phone", function () {
+                    $("#dypMid9527").on("mouseenter",".dypMid9527-phone",function () {
                         if (!$("#dypMid9527-phone-qr").children().length) {
-                            new QRCode(document.getElementById("dypMid9527-phone-qr"), {
-                                text: `http://m.douyapu.com/?type=2&refer=mid&douyapu_id=${infoGroup.id}`,
-                                width: 100,
-                                height: 100,
-                                colorDark: "#000000",
-                                colorLight: "#ffffff",
-                                correctLevel: QRCode.CorrectLevel.H
+                            new QRCode(document.getElementById("dypMid9527-phone-qr"),{
+                                text:`http://m.douyapu.com/?type=2&refer=mid&douyapu_id=${infoGroup.id}`,
+                                width:100,
+                                height:100,
+                                colorDark:"#000000",
+                                colorLight:"#ffffff",
+                                correctLevel:QRCode.CorrectLevel.H
                             });
                         }
                     });
-                    $("#dypMid9527").on("mouseleave", ".dypMid9527-coupon,.dypMid9527-price-trend,.dypMid9527-setting,.dypMid9527-active,.dypMid9527-phone", function () {
-                        $(this).children(".dypMid9527-title").children(".dypMid9527-borderMask").css("borderColor", "#FF0033");
+                    $("#dypMid9527").on("mouseleave",".dypMid9527-coupon,.dypMid9527-price-trend,.dypMid9527-setting,.dypMid9527-active,.dypMid9527-phone",function () {
+                        $(this).children(".dypMid9527-title").children(".dypMid9527-borderMask").css("borderColor","#FF0033");
                         $(this).children(".dypMid9527-box").hide();
                     });
-                    $("#dypMid9527 .dypMid9527-setting").on("click", "li", function () {
+                    $("#dypMid9527 .dypMid9527-setting").on("click","li",function () {
                         if ($(this).data("type") == 1) {
                             $("#dypMid9527").parent().fadeOut();
                             var type = setting.dypTop;
                             setting.dypMid = "hidden";
-                            chrome.storage.local.set({dypSetting: {dypTop: type, dypMid: 'hidden'}});
+                            chrome.storage.local.set({dypSetting:{dypTop:type,dypMid:'hidden'}});
                         } else {
                             window.open(mainUrl.website + "index/feedback/");
                         }
                     }); // 本次关闭,意见反馈
-                    $(".dypMid9527-coupon").on("mouseenter", function () {
-                        douyaTongji("coupon_step1", "悬浮移入", dypRandom);
+                    $(".dypMid9527-coupon").on("mouseenter",function () {
+                        douyaTongji("coupon_step1","悬浮移入",dypRandom);
                     })
                 }();    //中间事件绑定
-                $.extend($.fn, {
-                    fnTimeCountDown: function (d) {
+                $.extend($.fn,{
+                    fnTimeCountDown:function (d) {
                         this.each(function () {
                             var $this = $(this);
                             var o = {
-                                hm: $this.find(".hm"),
-                                sec: $this.find(".sec"),
-                                mini: $this.find(".mini"),
-                                hour: $this.find(".hour"),
-                                day: $this.find(".day"),
-                                month: $this.find(".month"),
-                                year: $this.find(".year")
+                                hm:$this.find(".hm"),
+                                sec:$this.find(".sec"),
+                                mini:$this.find(".mini"),
+                                hour:$this.find(".hour"),
+                                day:$this.find(".day"),
+                                month:$this.find(".month"),
+                                year:$this.find(".year")
                             };
                             var f = {
-                                haomiao: function (n) {
+                                haomiao:function (n) {
                                     if (n < 10) return "00" + n.toString();
                                     if (n < 100) return "0" + n.toString();
                                     return n.toString();
                                 },
-                                zero: function (n) {
-                                    var _n = parseInt(n, 10); //解析字符串,返回整数
+                                zero:function (n) {
+                                    var _n = parseInt(n,10); //解析字符串,返回整数
                                     if (_n > 0) {
                                         if (_n <= 9) {
                                             _n = "0" + _n
@@ -3704,13 +3642,13 @@
                                         return "00";
                                     }
                                 },
-                                dv: function () {
+                                dv:function () {
                                     var _d = $this.data("end") || d;
                                     var now = new Date(),
                                         endDate = new Date(_d);
                                     var dur = (endDate - now.getTime()) / 1000,
                                         mss = endDate - now.getTime(),
-                                        pms = {hm: "000", sec: "00", mini: "00", hour: "00", day: "00", month: "00", year: "0"};
+                                        pms = {hm:"000",sec:"00",mini:"00",hour:"00",day:"00",month:"00",year:"0"};
                                     if (mss > 0) {
                                         pms.hm = parseInt(f.haomiao(mss % 1000) / 100);
                                         pms.sec = f.zero(dur % 60);
@@ -3726,7 +3664,7 @@
                                     }
                                     return pms;
                                 },
-                                ui: function () {
+                                ui:function () {
                                     if (o.hm) {
                                         o.hm.html(f.dv().hm);
                                     }
@@ -3751,7 +3689,7 @@
                                     if (o.year) {
                                         o.year.html(f.dv().year);
                                     }
-                                    setTimeout(f.ui, 1);
+                                    setTimeout(f.ui,1);
                                 }
                             };
                             f.ui();
@@ -3768,14 +3706,14 @@
                         var AllDetail = [];
                         for (var i = 1; i < 26; i++) {
                             $.ajax({
-                                url: requestUrl + i,
-                                type: "get",
-                                dataType: "html",
-                                success: function (d) {
-                                    var res = d.replace('"rateDetail":', "");
+                                url:requestUrl + i,
+                                type:"get",
+                                dataType:"html",
+                                success:function (d) {
+                                    var res = d.replace('"rateDetail":',"");
                                     res = JSON.parse(res).rateList ? JSON.parse(res).rateList : [];
                                     if (res && res.length != 0) {
-                                        $.each(res, function (v, k) {
+                                        $.each(res,function (v,k) {
                                             AllDetail.push(k);
                                         });
                                     }
@@ -3786,7 +3724,7 @@
                         }
                         function start() {
                             if (currentPage == 25) {
-                                $.each(AllDetail, function (key, val) {       //为每条数据增加total权值
+                                $.each(AllDetail,function (key,val) {       //为每条数据增加total权值
                                     val.total = 0;
                                     if (val.appendComment) {   //追评 +5
                                         val.total += 5;
@@ -3798,13 +3736,13 @@
                                         val.total += 1;
                                     }
                                 });
-                                AllDetail.sort(function (a, b) {  //按total权值  大小降序
+                                AllDetail.sort(function (a,b) {  //按total权值  大小降序
                                     return b.total - a.total;
                                 });
                                 if (AllDetail.length > 30) {   //取前面30条
                                     AllDetail.length = 30;
                                 }
-                                creatBottom(AllDetail.length, 2);
+                                creatBottom(AllDetail.length,2);
                                 //填写必看评价后面评论数量
                                 if (window.innerWidth && window.innerWidth < 1200) {
                                     $("#dypMid9527 .dypMid9527-must-see .dypMid9527-title span").html('评价<span style="color:#ff0033;font-size: 12px;font-weight: bold;margin-left:2px; ">' + AllDetail.length + '</span>');
@@ -3813,7 +3751,7 @@
                                 }
                                 if (AllDetail.length != 0) {  //有数据=>渲染页面
                                     var content = "";
-                                    $.each(AllDetail, function (k, v) {
+                                    $.each(AllDetail,function (k,v) {
                                         content += '<div class="dypMid9527-comments-item">';
                                         content += '<div class="dypMid9527-comments-item-padding">';
                                         content += '<div class="dypMid9527-comments-item-top">';
@@ -3843,7 +3781,7 @@
                                         if (v.pics) {
                                             content += '<div class="dypMid9527-cip-comment">';
                                             content += '<div class="dypMid9527-cip-comment-items">';
-                                            $.each(v.pics, function (key, val) {
+                                            $.each(v.pics,function (key,val) {
                                                 content += '<div class="dypMid9527-cip-comment-item zoom-in">';
                                                 content += '<img src="' + val + '">';
                                                 content += '</div>';
@@ -3872,7 +3810,7 @@
                                             content += '</div>';
                                             if (v.appendComment.pics) {
                                                 content += '<div class="dypMid9527-cic-acomment-pics">';
-                                                $.each(v.appendComment.pics, function (keys, vals) {
+                                                $.each(v.appendComment.pics,function (keys,vals) {
                                                     content += '<div class="dypMid9527-cip-comment-item  zoom-in">';
                                                     content += '<img src="' + vals + '">';
                                                     content += '</div>';
@@ -3906,100 +3844,100 @@
                                             $("body").removeClass("dyp779946-body-unScroll");
                                         }
                                     }); //点击外面关闭
-                                    $(".dypMid9527-must-see").on("click", function () {
+                                    $(".dypMid9527-must-see").on("click",function () {
                                         $(".dypMid9527-must-see-modal").show();
                                         $("body").addClass("dyp779946-body-unScroll");
-                                        $(".dypMid9527-must-see-close-btn").css({"display": "block"});
+                                        $(".dypMid9527-must-see-close-btn").css({"display":"block"});
                                     });
                                     //点击关闭整个模态框
-                                    $(".dypMid9527-must-see-close-btn").on("click", function () {
+                                    $(".dypMid9527-must-see-close-btn").on("click",function () {
                                         $(".dypMid9527-must-see-modal").hide();
                                         $("body").removeClass("dyp779946-body-unScroll");
                                     });
-                                    $(".dypMid9527-must-see-GoTop").on("click", function () {
-                                        $('.dypMid9527-must-see-modal').animate({scrollTop: 0}, 'slow');
+                                    $(".dypMid9527-must-see-GoTop").on("click",function () {
+                                        $('.dypMid9527-must-see-modal').animate({scrollTop:0},'slow');
                                     });
                                     $(".dypMid9527-must-see-modal").scroll(function () {
                                         var tops = $(this).scrollTop();
-                                        tops > 800 ? $(".dypMid9527-must-see-GoTop").css("display", "block") : $(".dypMid9527-must-see-GoTop").css("display", "none");
+                                        tops > 800 ? $(".dypMid9527-must-see-GoTop").css("display","block") : $(".dypMid9527-must-see-GoTop").css("display","none");
                                     });
                                     //鼠标划过查看必看评价筛选规则
                                     $(".dypMid9527-must-see-head-total").hover(function () {
-                                        $(".dypMid9527-question-dialog").css({"display": "block"});
-                                        $(".dypMid9527-must-see-modal .arrow_1").css({"display": "block"});
-                                        $(".dypMid9527-must-see-modal .arrow_2").css({"display": "block"});
-                                    }, function () {
-                                        $(".dypMid9527-question-dialog").css({"display": "none"});
-                                        $(".dypMid9527-must-see-modal .arrow_1").css({"display": "none"});
-                                        $(".dypMid9527-must-see-modal .arrow_2").css({"display": "none"});
+                                        $(".dypMid9527-question-dialog").css({"display":"block"});
+                                        $(".dypMid9527-must-see-modal .arrow_1").css({"display":"block"});
+                                        $(".dypMid9527-must-see-modal .arrow_2").css({"display":"block"});
+                                    },function () {
+                                        $(".dypMid9527-question-dialog").css({"display":"none"});
+                                        $(".dypMid9527-must-see-modal .arrow_1").css({"display":"none"});
+                                        $(".dypMid9527-must-see-modal .arrow_2").css({"display":"none"});
                                     });
                                     //鼠标点击评论图片查看大图
-                                    $(".dypMid9527-cip-comment-item img").on("click", function () {
-                                        $(this).parent().css("border-color", "red");
-                                        $(this).parent().siblings().css("border-color", "rgb(255,255,255)");
+                                    $(".dypMid9527-cip-comment-item img").on("click",function () {
+                                        $(this).parent().css("border-color","red");
+                                        $(this).parent().siblings().css("border-color","rgb(255,255,255)");
                                         var imgsrc = $(this).attr("src");
-                                        $(this).parent().parent().next().css("display", "block");
-                                        $(this).parent().parent().next().children("img").attr("src", imgsrc);
+                                        $(this).parent().parent().next().css("display","block");
+                                        $(this).parent().parent().next().children("img").attr("src",imgsrc);
                                         if (locHost.indexOf("detail.tmall") !== -1) {
                                             var widths = $(this).parent().parent().next().children("img").width() - 60 + 'px';
-                                            $(this).parent().parent().next().children("img").next().next().css("left", widths);
+                                            $(this).parent().parent().next().children("img").next().next().css("left",widths);
                                         }
                                     });
                                     //大图左侧下一张触摸
                                     $(".dypMid9527-cip-comment-img-switch-btn-left").hover(function () {
-                                        FindImg($(this), ".dypMid9527-cip-comment-img-prev-btn", 0);
-                                    }, function () {
-                                        $(".dypMid9527-cip-comment-img-prev-btn").css({"display": "none"});
+                                        FindImg($(this),".dypMid9527-cip-comment-img-prev-btn",0);
+                                    },function () {
+                                        $(".dypMid9527-cip-comment-img-prev-btn").css({"display":"none"});
                                     });
                                     //大图右侧下一张触摸
                                     $(".dypMid9527-cip-comment-img-switch-btn-right").hover(function () {
-                                        FindImg($(this), ".dypMid9527-cip-comment-img-next-btn", 1);
-                                    }, function () {
-                                        $(".dypMid9527-cip-comment-img-next-btn").css({"display": "none"});
+                                        FindImg($(this),".dypMid9527-cip-comment-img-next-btn",1);
+                                    },function () {
+                                        $(".dypMid9527-cip-comment-img-next-btn").css({"display":"none"});
                                     });
                                     //判断当前是第几张图
-                                    function FindImg(e, n, t) {
+                                    function FindImg(e,n,t) {
                                         var nowimg = e.siblings("img").attr("src");
                                         var imgs = e.parent().prev().find("img");
                                         t == 0 ? t = 0 : t = imgs.length - 1;
-                                        $.each(imgs, function (k, v) {
+                                        $.each(imgs,function (k,v) {
                                             if (v.getAttribute("src") == nowimg) {
                                                 if (k == t) {
-                                                    e.find(n).css({"display": "none"});
+                                                    e.find(n).css({"display":"none"});
                                                 } else {
-                                                    e.find(n).css({"display": "block"});
+                                                    e.find(n).css({"display":"block"});
                                                 }
                                             }
                                         });
                                     }   //
                                     //上一张大图
-                                    $(".dypMid9527-cip-comment-img-prev-btn").on("click", function () {
-                                        FindNowImg($(this), 1);
+                                    $(".dypMid9527-cip-comment-img-prev-btn").on("click",function () {
+                                        FindNowImg($(this),1);
                                     });
                                     //下一张大图
-                                    $(".dypMid9527-cip-comment-img-next-btn").on("click", function () {
-                                        FindNowImg($(this), 2);
+                                    $(".dypMid9527-cip-comment-img-next-btn").on("click",function () {
+                                        FindNowImg($(this),2);
                                     });
                                     //判断当前图片
-                                    function FindNowImg(e, n) {
+                                    function FindNowImg(e,n) {
                                         var imgEle = e.parent().siblings("img");
                                         var nowimg = imgEle.attr("src");
                                         var imgs = e.parent().parent().prev().find("img");
                                         n == 1 ? n = -1 : n = 1;
-                                        $.each(imgs, function (k, v) {
+                                        $.each(imgs,function (k,v) {
                                             if (v.getAttribute("src") == nowimg) {
                                                 //获取下一张或上一张图片;并设置当前选中样式
                                                 var nm = imgs[k + n];
                                                 var $nm = $(nm);
-                                                $nm.parent().attr("style", "border-color:red");
-                                                $nm.parent().siblings().attr("style", "border-color:rgb(255,255,255)");
-                                                imgEle.attr("src", imgs[k + n].getAttribute("src"));
+                                                $nm.parent().attr("style","border-color:red");
+                                                $nm.parent().siblings().attr("style","border-color:rgb(255,255,255)");
+                                                imgEle.attr("src",imgs[k + n].getAttribute("src"));
                                                 //最后一张或第一张;隐藏点击箭头
                                                 if (k == 1) {
-                                                    $(".dypMid9527-cip-comment-img-prev-btn").css({"display": "none"});
+                                                    $(".dypMid9527-cip-comment-img-prev-btn").css({"display":"none"});
                                                 }
                                                 if (k == imgs.length - 2) {
-                                                    $(".dypMid9527-cip-comment-img-next-btn").css({"display": "none"});
+                                                    $(".dypMid9527-cip-comment-img-next-btn").css({"display":"none"});
                                                 }
                                             }
                                         });
@@ -4007,10 +3945,10 @@
                                 }
                             }
                         }
-                    }, 2500)
+                    },2500)
                 }();    //中间(必看评价);
                 var creatBottomSign = 0;    //下面代码的标记
-                function creatBottom(e, t) {
+                function creatBottom(e,t) {
                     $(function () {
                         setTimeout(function () {
                             if (locHost == "detail.tmall.com" || locHost == "item.taobao.com" || locHost == "detail.ju.taobao.com") {
@@ -4025,11 +3963,11 @@
                                     }
                                     creatBottomSign = 1;
                                     if (locHost == "item.taobao.com") {
-                                        $(document).on("scroll", function () {
+                                        $(document).on("scroll",function () {
                                             if (($("#J_TabBarWrap").css("position") == "fixed")) {
-                                                $("#dypBot9527").css({"float": "right", "marginTop": 50, "marginRight": 188 - $("#dypBot9527").width()});
+                                                $("#dypBot9527").css({"float":"right","marginTop":50,"marginRight":188 - $("#dypBot9527").width()});
                                             } else {
-                                                $("#dypBot9527").css({"float": "left", "marginTop": 0, "marginRight": 0});
+                                                $("#dypBot9527").css({"float":"left","marginTop":0,"marginRight":0});
                                             }
                                         })
                                     }
@@ -4043,12 +3981,12 @@
                                 }
                                 if (t == 2) {
                                     $("#dypBot9527").append(`<div class="dypBot9527-buyerShow"><a data-douyababapaopao="底部-必看评价">必看评价<span> ${e}</span></a></div>`);
-                                    $(".dypBot9527-buyerShow").on("click", function () {
+                                    $(".dypBot9527-buyerShow").on("click",function () {
                                         $(".dypMid9527-must-see").click();
                                     });
                                 }
                             }
-                        }, 5000);
+                        },5000);
                     });
                 }   //加入购物车旁边的优惠券和买家秀
             }
@@ -4057,24 +3995,24 @@
     //列表页
     !function () {
         var listAdaptationArr = {
-            's.taobao.com': ['.J_PicBox', 'mainsrp-itemlist', '淘宝'],
-            'list.tmall.com': ['.productImg-wrap', 'J_ItemList', '天猫'],
-            'search.jd.com': ['.gl-i-wrap', 'J_goodsList', '京东'],
-            'search.suning.com': ['.res-img', 'filter-results', '苏宁'],
-            'list.suning.com': ['.res-img', 'filter-results', '苏宁']
+            's.taobao.com':['.J_PicBox','mainsrp-itemlist','淘宝'],
+            'list.tmall.com':['.productImg-wrap','J_ItemList','天猫'],
+            'search.jd.com':['.gl-i-wrap','J_goodsList','京东'],
+            'search.suning.com':['.res-img','filter-results','苏宁'],
+            'list.suning.com':['.res-img','filter-results','苏宁']
         };
-        $.each(listAdaptationArr, function (v, k) {
+        $.each(listAdaptationArr,function (v,k) {
             if (locHost == v) {
-                chrome.storage.local.get(null, function (e) {
+                chrome.storage.local.get(null,function (e) {
                     setting = e.dypListSetting;
                     if (setting == "show") {
-                        list(v, k);
+                        list(v,k);
                     }
                 });
                 return false;
             }
         });
-        function list(v, k) {
+        function list(v,k) {
             var oHead = document.getElementsByTagName('HEAD').item(0);
             var cssStyle = '.douyapulist-price-item{font-family:"Microsoft Yahei",serif;position:absolute;right:0;bottom:50%;margin-bottom:-24px;width:54px;height:42px}.douyapulist-price-item.left{left:0}.douyapulist-price-item.left .douyapulist-price-drop-arrow{left:auto;transform:rotate(180deg);right:1px}.douyapulist-price-item.left .douyapulist-price-dropBox{left:auto;right:calc(100% - 1px);padding:0 11px 0 0}.douyapulist-price-box{width:54px;height:42px;color:#fff;font-size:12px;text-align:center;position:absolute;background:#000;opacity:0;cursor:pointer}.douyapulist-price-box.active{opacity:.5;background:#FD2550}.douyapulist-price-dropBox{width:282px;padding:0 0 0 11px;position:absolute;left:calc(100% - 1px);top:-66px;height:216px;z-index:99999999}.douyapulist-price-icon{margin:3px auto 0 auto;width:18px;height:18px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAMAAABhEH5lAAAAY1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////+aRQ2gAAAAIHRSTlMA0fzj1Abyw7BKRfTctqWcl29mLisY7JCNioBdJhoVAjDv64MAAACESURBVBjTfY7nDsNACIMJl5vZq3v4/Z+ylEg9pZHiH7b1IRC0UQfRFlm/Q9T+UN8smgnGr+gKmFnS1oi2/5IRdYBLRDe0pErs5vcZPD6q00vJ5DhKDAyDu5LFYNASKzQSRUEeHa2aLk9xgEKwUspSqaJc9kjP/KFseZaN+RjlRX1CmtoHD5gKrq48aAkAAAAASUVORK5CYII=)}.douyapulist-price-drop{width:282px;height:216px;opacity:1;box-shadow:2px 2px 2px 0 rgba(0,0,0,.1)}.douyapulist-price-drop-linear{background:linear-gradient(to left,#FF634C 0,#FD2550 100%);height:28px;clear:both;border-radius:5px 5px 0 0}.douyapulist-price-drop-logo{float:left;width:130px;height:28px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAAAQCAMAAADArbp4AAAC2VBMVEUAAAAAAAAGBgYBAQEAAAAAAAD///8AAAAAAAABAQH9/f3+/v4DAwMCAgICAgIAAAD7+/v+/v4AAAD9/f3+/v7+/v78/PwAAAD////5+fnc3Nz+/v7+/v74+Pj////+/v79/f3g4OCLi4v9+/wDAwP7+/v6+vr39/f39/f5+fn6+vrc3Nz////8/Pz9/f36+vr19fXv7+8WFhb////+/v7+/v78/Pz39/fi4uLp6enq6uq0tLSpqan////////+/v75+fnz8/Pu7u7r6+vi4uLj4+Pm5ubc3NzX19fh4eFISEi0tLRxcXFhYWFqamoAAAD////x8fHu7u7x8fHv7+/l5eXo6Ojv7+/z8/Pr6+v39/fU1NS7u7umpqadnZ2EhITl5eWfn59ZWVkAAABTU1Nra2snJyckJCTw8PDp6enq6url5eXa2trm5ubT09PExMT4+PjLy8vz8/Pf39+rq6uUlJSqqqqioqKtra16enpZWVm8vLxQUFAzMzPZ2dmWlpa2trbh4eGnp6f8+vv+/v78/Pz5+fn8/Pz7+/v39/f4+Pj4+Pj9/f3z8/P8/Pzm5ub09PTj4+P29vbOzs75+fn19fXT09PQ0NC0tLTJycl5eXnT09Ourq66urrGxsZQUFCLi4tiYmLR0dE2NjaMjIxDQ0MAAACzs7Pe3t6WlpZVVVX//f7+/P37+/v9/f37+/v8/Pz7+/v39/f09PT39/fw8PD7+/vY2Njt7e3i4uLy8vLJycn8/Pzn5+fr6+va2trT09Pa2trg4ODp6enn5+fKysrX19e6urrt7e3g4ODGxsbx8fHn5+ehoaHHx8e7u7vBwcHZ2dmVlZXu7u7g4OCAgIDGxsYAAADn5+cyMjL9/f3q6urs7Ozj4+P8/Pzw8PDf39/8/Pz9/f3Pz8+/v7/AwMDt7e309PTk5OSjo6PPz8+xsbFzc3NNTU0oKCg7OzszMzOAgID////F1b2IAAAA8nRSTlMBEQMUDQT9CQ8M5vIWFRgX2+8a6fTsxgv2bGf37sH16uJ1G/IH0c/KurONVfzl39m0hhT659rWt3l3bDwj+OTRsa2Vj3p0bW1pZjUvJh8XBvCemZOOhW9rZWFeRkA/Ny4tLCMiGhQSD6eHf3tbWVNOSUI5NjMyLy4qKionHRwaFxYTD+vp3czLxMS7qJmUj312b2hfVlJQTUA/Pzw4NzYwKCclJCMeHhIKCQb+8dTCwLizr6ejmZaVgX9+cGxnZmViX15dVFROTUxLSEdDPDs0MSgnJCEgHx0aGeS5sK6poo+Mh4V4cW9tX15aSDUuLQ0KBmYM6BAAAAWQSURBVDjLlZVVVxtBFIB3spvsblbihJKEJECwFrfiBQoUChRosVJoKVYvDsWh7u7u7u7u7u7uLb+gN6Hl9KEv/c7JZG42O9+9d1YwDGuZ9sgWsLZVndmZHLav2UEowP4g6AD7BwLs/9nwKllkwWfcKZlIxEwtJHsJLAeOdOrgSKtQINhXJgTKpsAgaCwpudwsnDEApgAmmFYm2NR30++0yubMfSAUDni5sT1PGDa2tjTeud0IwYMxora2NlEXkSbtoAYm+mqKtNTXss2qgwnNF1xdk7u5Aju1rq5XbmpVvkx4ue20zMy+oJzSKayvw4Xk8vXr14O/k22YNmzVvVm+A262CoUl48P9wsJ8VYy19bNe2M85tu22Nuawsw9MlbEPCdKSpGBVZkZQUHp6+tGeFHHaxcV2vAsw3tbFpXOWtqlwmWaqOyBWXvnhninOIraH6vV63x1NDlau3wsNQVtDRRrr8FUO5TPeZ2YdSu68+EZdE4ltmBLa1talC3yc3tqL4Dv0yWpcbS5PcEdrkFpQqPIQQRcHzPfmvL1HeHI4ihNnS5cog/H0eQhZeYXY+mp8J8/ba+ismqqIoU0zCOQfvSbQUH197BCaJEk1ka1dgxAi1FiLnwhKg6o0+19rzFWK3L5ICAezrq++CHGshGUbFHEIZYk7OM7GieepgpU5De7RHO7c5+7ROP3es2yULkE20ikQOZp27WKiua4mjtN5USF1dTU1p7TBlZXVNTQ2lxG1WTbP/s1j6CUEysNyRArNOgMBOg5wi8XRjZQ4mx5AmtKYK7ERj9DnKHMWKJewoEMIF9vwvGdqribXqSvrqEtNVRj5wTqJROdVMMYa0IjMIxOC7QAHIGKefhwNWsDHaZ2lm4I5Y0IK6uvrCwpWaG0QWsjkcbyc5xcw/eWgG6a4qsw5KOXrH/7WSXip8ZNipVNX3nGohPcwyp8PYlmdF8rrCQyTLcjNragiMNWWLZvt7e1H74+PfzEaJhCo1nFEL9A1+skUFmRjbyHqnSIwsDsQpUnrATobt0plji5VMnG6WYfE0TajmJHdPeTtOjnoJg7mcNBZuKQdJedZRGHNdtVui+Lj47/l56+urV2+CILl93EadJjwXlBnCzG3YJsPhZtUjMlkkvqYImDvBrtdVZ5XzZaMG+IchaOlesZgo0oYFGHRiT08lEbePRYHXXY3wHOCtbMnkI0J1XcNtfn5X1ffl68dyMtrDcvz1/EImgm6Tv5FkBlV5B8IOppeI46WsFw/pr+ECw7UaQal9fCJiAg97hwV7MKERiamOUo8hvJOXSWOEUajm7E/0w9HOq/S3kDkbmVqZGRk74WYkLQzJMgHBnSvqAgMSMQTDCvlEpwgLXfCAOaaWXeNWYooWm233SqR5XDQsRxaykyXxc5OSUmZzgdE9fOcD3s3Mao/M9KiG8pDM0+IE0H3dzM5RGACYZN/lTdXusfff8/iYqrKH/5ksYHOIXwIAg6YvKG6xeF+VTiOoxGyFTgqmjSJNco+y6EjKz0GszhcKgmysycUAxuk0azjkMrz7hGDAlgcbT1gzpdCw/QJPIQ0LNo6+VgSVZRkZ5dUTCQdm5xE0O0PzRI/Pz0jBRitVHpumaxbCJy6W6qaBPIs3+uITZktYcfptUwwhyOxzUm3gX2cIxXK4JlKRiMTj1XEsgEG61JEEdl+UlUAy0GHSNBtumw1PMTOQshwq4vFNNn+Trg9a1ZGUMzMmCAY0nsWX6RpgiLOZJxOghUKy2kKeeMIlZ6bD8UiNLzGuwJPzFt4Mg/vFztiyagGfuRabljMMooi6LqMjA8FUKSa7IWBb+PcbSqZBdWE4YU02d5KaDMJa/6BUMPDSE0CNJQPqGmCoAGCAj1tjigAtYObgd8JOEI6OJDmTNVQxS80ZY8wEr84qwAAAABJRU5ErkJggg==) center no-repeat}.douyapulist-price-drop-set{float:right;height:28px;width:16px;margin-right:12px;position:relative;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAOCAMAAADHVLbdAAAAdVBMVEUAAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////li2ZAAAAAJnRSTlMA+tiOCe7nvxH2mWdhVBvr4c7GpqSdd3M0LxcE08KIhH5OSDwoIFj7YNcAAACHSURBVAjXNc1XDsQgDEXRByGB1Emv08vb/xLHgHJ+rCuEjSAhU5zqT2z3DLnmqvT91bxL7i3JC6lSmTVgBkoMo5bRbhAzWQFNRuuk3g+reoiSuqgctP8eb4oVE+Oexj/kBypeR7KfFG82t4BxWBh0OHYIk5FZQfKFYJNeGkU1IzJlZ5AUP4g/vx8NSWsd+mIAAAAASUVORK5CYII=) center no-repeat;cursor:pointer}.douyapulist-price-drop-set:hover ul{display:block}.douyapulist-price-drop-set ul{display:none;position:absolute;background:#FFF;border:1px solid #D5D5D5;border-radius:2px;width:60px;top:24px;left:-24px;z-index:10}.douyapulist-price-drop-set li{height:24px;line-height:24px;color:#999;text-align:center;cursor:pointer;padding:0;width:58px}.douyapulist-price-drop-set li:hover{color:#FD2550}.douyapulist-price-drop-arrow{position:absolute;top:75px;left:1px;width:15px;height:29px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAdBAMAAACH5ivpAAAAJFBMVEUAAAD////////h4eHm5uba2tr////////////5+fnh4eHg4OAed86SAAAACHRSTlMAIiDcmf6hXuCx7NUAAABiSURBVBjTNc9BDYAwEERREppyRQIyCJxJkAAOkICElYAEZHb6O53Tyz/tDm3TYryzQxinkS7j+BrSHQIBEASCQAAKoAZAAHsY4w90xmaQgBIgASVAAiRA8jtrR65gT0cGrACTMDNec4Eb3gAAAABJRU5ErkJggg==)}.douyapulist-price-drop-zhide{padding-left:20px;height:30px;color:#444;line-height:32px;border-right:1px solid #D5D5D5;border-left:1px solid #D5D5D5;background:#fff;position:relative;text-align:left}.douyapulist-price-drop-zhideMin{color:#FD2550}.douyapulist-price-drop-zhideBack{position:absolute;top:3px;right:5px;width:78px;height:46px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAAAuCAMAAACxgN91AAAAk1BMVEUAAABFjeFJkeJGjeBIj+JJkeRJkOJJkONKkeRJkOJJkOJJkOJJj+FKkONJkOJJkONKkeNJkOJJkOJJkONJkONKkeNKkORKkONJkOBKkeRKkORIkuFKkOJJkOJKkONJj+RKkONKkeRKkONKkOJJkOJKkeRLkeVJkONIj+FKkOJKkONJkOFMlepLk+dKkONKkeRMlelq4GsdAAAAMXRSTlMABhALIhgriE88eEkyXVeaN61ovtm44ZId6tEVxKJjQW/I1c2BffSzRY1yp+6v8f3egvI7WAAABQBJREFUSMfVVteS1DAQtHKyJOecvQ4b7o7//zpkOPYWigwPMA9TZcvq6uluy/b+jyooQeCvoYFztU4L/luIIJHK2GTWEHh/ARLGvodw0FPo94IA8IeQPiMfWQJYY1HnYY/+YHAw7OjtAoHeJut4wb8NuJOjQ1W8ImLRm3y0C0W/BVd/6OomXCcfIZDvB4rJIMC/DInQ0cm1PBEPRQO838eY0GjYMQS/Il1/ANDTfFriOd6S4jPTKS58Y3xH+icNBxy6xkpZc8XD56yxPjpuB/QTJCHQN7kV9c8gQgcHdPbcQ7bI+Fny6MliD3VjBO/bAcZ7FFap/KE7YPcR6seXUdCsYjbJpVYBoOyWByy0/M4IQCp6xQx2UoLvzwptvA5UToxHy7l9EsBstxbCMo5YGzJ63w3c2JBGSSXxtyARB65FKydNFodMm7BRsEtzrQPHtuM8TaGHyaM7vYmTa+DMcVVoRR7hisMJ1K09zlLiD2GzWredtxNjScysbacJAL0MndtP4CuiLygheGAYIR1eB4M+KeIZgY6YVIHKyimWvng+e15gV4nHmckTCzPpFfaWjE8GnQ14UKkWxrDYzU12rPzi45LGrvHygsNp8U04J9kCVLOWtR/P7CRlXGJPNxGW2aLmtP5MduQCZMNrKpAzCh6RAtEBZ144rLLNOanG677H5Zri4aLNwM5jCbxLFc7NLKdS+rhAHsLwTXpc4Eh1Ch20KMZBfThRnvLnxuihTdccYtOWRly2ZmOaD6EHT1OazVmSXeIkYQIJJp2Ub5AQ66sXHeyQ9oFj7Z9P+XVbpOyG8uTgWamfzlyoZbrFAxbXKs6q55tdRMCrkqAorZpWRpyAV4q+hubIEdDFx4PTsR5Yztj1OUcuh2UdJFna6nxlrI7mOJkm26Wx8uiWuWDUdmnHKmZS++hIRyd2cbBEe43QG2t1OltG0d4whNNJCJu8pAbKJE7GucgTiT05MgihvzUU+Fs8ju0xXSHh2fdcOl2C9l4E+AGyJ16UUQDbRnm9nVneR2M1No1fskuLbEK9faAizoM86YCuckeWdMBA54SPgBM2na3pxcNpjttjMTr3QxIRBHCYpCy1mbqsQVtBr27mnYc826h8l3InnTohcjApSL/w2sNyWjOrhA8/2X80sdlqFU7YPLtte7yW21N2CkM3q6iSnuLVIhYe2uETJa/jAcpPW9hB2KfJlEY8IG8kic458orwNrP1xLXp3jVhpXQo/T7nUJUXR+h42s+RgA+vrbrY2QYQiq2cIgIxAY8nTpMraN8RD0CZxgkOOjsm46KfUvH6RNAi5X1e1CznQRJQCHM6R1wEdykRhG5HFNBcEzqN0ENUcd2ULzMv3NJhhKz9r5x82LAw1AQQfh1DTfHDAAh6PG/T27sFfbhU4UvG0mp+oo7Jgjn+xjdSdBq7VMOA5VIRADF4TGWEIeHR3qVVUpZPnGsrnRPG0/V3zuePHaAiEJGhPoWPS33WVGXoPLOpOr6dh07A9R8XAIAEcmoVprS4s8SBpgg6ydrKoIO0UU7Cny1HUsjhrJXA4Av34pfogB1qeF/5SZa0bWKJ6WOEjvjm5JDUu1P/BUhIVRieBX0IOnTmA0x/8x8TIHxp260LAv9NLGK+yNwvzu1HyxZ3XLwajp0ff1agFuHUsE4cJIvd+/MCoNZxFnNCOf9jsLuUgZJd4f21AgDVwPuX687uPfqoXY5OQeREAAAAAElFTkSuQmCC);display:none;z-index:9}.douyapulist-price-drop-echat{height:130px;border-right:1px solid #D5D5D5;border-left:1px solid #D5D5D5;background:#fff;position:relative}.douyapulist-price-drop-border{height:0;border:2px solid transparent;border-top:2px solid #FD2550}.douyapulist-price-drop-ad{border-right:1px solid #D5D5D5;border-left:1px solid #D5D5D5;line-height:26px;text-align:center;height:26px;background:#fff;overflow:hidden}.douyapulist-price-drop-adAll{position:relative}.douyapulist-price-drop-adItem{height:26px}.douyapulist-price-drop-adItem>div{display:inline-block}.douyapulist-price-drop-adItem a{font-size:12px;color:#999;display:inline!important}.douyapulist-price-drop-icon{width:10px;height:26px;vertical-align:-8px;margin-right:10px}.douyapulist-price-drop-icon.icon3{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAOCAMAAAAhfX2ZAAAAS1BMVEUAAAD+JVD+JVH+JVD+JVD/OWj+JVD+JlD+JlH9JVH9JlD/JlH/JlH/J1P/KVb+JVH+JVD+JlH+JVH9JlH/JVL/J1H/JlH/KVL9JVCMSujqAAAAGHRSTlMA+fDnuAn07cSmoF9ZJh/j276xmmdPPBljJ7kxAAAAUElEQVQI1z3ISRKAIBAEwQZEdty1//9ScQKsU0ahZTP+TBp6qErnRAaB3UlqWHlfmCqSyN2M2IRmpoFjT0ENLvCDB84uXYAgmi+0stdrrMALsskHFRGVfW4AAAAASUVORK5CYII=) center no-repeat}.douyapulist-price-ErrorContent{position:absolute;top:50%;left:50%;margin-top:-50px;margin-left:-84px;width:168px;height:86px}.douyapulist-price-ErrorContent p{font-size:12px;color:#999;line-height:18px;text-align:center}.douyapulist-price-ErrorImg{padding-top:10px;width:106px;height:40px;margin:0 auto;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGoAAAAoCAMAAAAhb5/CAAAAq1BMVEUAAADQ0NDPz8/Ozs7m5ubV1dXNzc3MzMzNzc3Ozs7Ozs7o6OjMzMzOzs7Pz8/n5+fOzs7Nzc3Nzc3Nzc3MzMzOzs7MzMzt7e3c3NzS0tLOzs7Pz8/Q0NDMzMzR0dHe3t7+/v7Pz8/Nzc3Nzc3Nzc3Nzc3Ozs7////////MzMz19fX6+vrZ2dnp6enU1NTR0dH4+Pjk5OTv7+/9/f3T09Pj4+Pg4ODx8fHe3t4NSebVAAAAKHRSTlMA9e5XBRC+goDrN/vTIxv+nnVyKOKqjP79lGBLQDz56+Xls7KJadskjx/jKAAAAbZJREFUWMPN12tvmzAUgOFjc0sIoeR+79bbdo4hsUeXJv//l83NkBx1dKotoH0/IFnCesSR+WD4YOmM09tG0EYpH+T4piN7ghaaDfCfSDGvQSJ+CuA1ntdQQrFNY9KaLfsx6AjrKCHYtiHJZwpLtv4PJXgM103msaN1d0JUPKinZKmpE5+AKaaMJm7UjinE7z/rqfNR6Mr+0Lw/zyCbg1vj21/aWq3rqFweS20t7lIzP8rIdYLD20JbOSOss86SdMsfVxOc28zPH40Cs1h9+/1qyT2+H4FbASUP5Ju199c67JunxvcAyQhM2Y2xGqYSgIdratg3VrOUT/cJBWBjETgWjMc+QL1lS622jxsrXFsFqYtlSW1ZElgfy3PxfLHsqMekvwPLCF8qy4raBLvUnqosWVpQThFWlpCqfaqyFofnDig8HpR+LLugcCFPiEXZBYVC7rEsOqFQFfJGii4onXgp8tYp01ehvMgDi3o9ZyqkaBpaSGHYc6S8qQ8+eV1QUXR5dDFAj/RXTb1OjkU4jSj8mifwE/8rnr8v5bzlC6ppMGv12m3KBzyFj0WmamUy79h02VCz6Q+Hgc1uN15SewAAAABJRU5ErkJggg==) center center no-repeat}.douyapulist-coupon{position:absolute;width:83px;height:27px;top:0;left:0;line-height:27px;color:#fff;text-align:center;text-decoration:none!important;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFMAAAAbBAMAAADyl64yAAAAJFBMVEUAAADyIkzyIkzyIkzyIkzyIkzyIkzyIkzyIkzyIkzyIkz///8bKFtmAAAACnRSTlMAC/TSzo18TUYtbkswzwAAAGdJREFUOMtjWLVq9SpCAKxmAa2UEgdASpuJVLm4gYGTSKUrGRgYiXTrQgYGNiKVLmNg8CI2BBxICAFSlAYRqXJRAAM7kW5dTkpgkWAqCW6lTWCREFvEpwFSAouE9EpCLiAhBAa8HAAAxwThKRaQdkgAAAAASUVORK5CYII=)}.douyapulist-coupon:hover{opacity:0.8}';
             var oStyle = document.createElement("style");
@@ -4083,18 +4021,18 @@
             document.onreadystatechange = loadingChange;
             function loadingChange() {
                 if (document.readyState == "complete") {
-                    function get(url, price, that) {
+                    function get(url,price,that) {
                         $.ajax({
-                            url: "https://zhushou.huihui.cn/productSense",
-                            data: {phu: url, type: "canvas"},
-                            type: 'GET',
-                            timeout: 5000,
-                            dataType: 'json',
-                            success: function (response) {
+                            url:"https://zhushou.huihui.cn/productSense",
+                            data:{phu:url,type:"canvas"},
+                            type:'GET',
+                            timeout:5000,
+                            dataType:'json',
+                            success:function (response) {
                                 var data = response.priceHistoryData.list;
                                 var time = new Date();
                                 var nowTime = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
-                                var valueList = [], dateList = [], newData = [], t = 0;
+                                var valueList = [],dateList = [],newData = [],t = 0;
                                 for (var i = 0; i < data.length; i++) {
                                     var beforPrice = 0;
                                     if (i > 0) {
@@ -4107,86 +4045,86 @@
                                 }
                                 var trueObj = newData[newData.length - 1];
                                 if (newData[newData.length - 1].price == price) {
-                                    newData[newData.length - 1] = {price: price * 1, time: nowTime};
+                                    newData[newData.length - 1] = {price:price * 1,time:nowTime};
                                 } else {
-                                    newData[newData.length] = {price: price * 1, time: nowTime};
+                                    newData[newData.length] = {price:price * 1,time:nowTime};
                                 }
                                 var isOne = true;
                                 if (newData.length == 1) {
                                     var obj = newData[0];
-                                    newData = [obj, obj, obj];
+                                    newData = [obj,obj,obj];
                                     isOne = false;
                                 }
                                 var arrSlice = newData.slice(-7);
-                                $.each(arrSlice, function (v, k) {
+                                $.each(arrSlice,function (v,k) {
                                     valueList.push(k.price * 1);
                                     var res1 = [];
-                                    res1[0] = k.time.split('-')[1].replace(/^[0]/, '');
-                                    res1[1] = k.time.split('-')[2].replace(/^[0]/, '');
+                                    res1[0] = k.time.split('-')[1].replace(/^[0]/,'');
+                                    res1[1] = k.time.split('-')[2].replace(/^[0]/,'');
                                     res1 = res1.join('/');
                                     dateList.push(res1);
                                 });
                                 if (isOne == false) {
                                     dateList[0] = "";
                                     var res2 = [];
-                                    res2[0] = trueObj.time.split('-')[1].replace(/^[0]/, '');
-                                    res2[1] = trueObj.time.split('-')[2].replace(/^[0]/, '');
+                                    res2[0] = trueObj.time.split('-')[1].replace(/^[0]/,'');
+                                    res2[1] = trueObj.time.split('-')[2].replace(/^[0]/,'');
                                     res2 = res2.join('/');
                                     dateList[1] = res2;
                                 }
-                                var minAndMax = {min: [], max: []};
-                                var min = Math.min.apply(null, valueList);
-                                var max = Math.max.apply(null, valueList);
+                                var minAndMax = {min:[],max:[]};
+                                var min = Math.min.apply(null,valueList);
+                                var max = Math.max.apply(null,valueList);
                                 if (min != max) {
-                                    $.each(valueList, function (v, k) {
+                                    $.each(valueList,function (v,k) {
                                         if (k == min) {
-                                            minAndMax.min = [dateList[v], k];
+                                            minAndMax.min = [dateList[v],k];
                                             return false;
                                         }
                                     });
-                                    $.each(valueList, function (v, k) {
+                                    $.each(valueList,function (v,k) {
                                         if (k == max) {
-                                            minAndMax.max = [dateList[v], k];
+                                            minAndMax.max = [dateList[v],k];
                                             return false;
                                         }
                                     });
                                 }
                                 var optionSet = {
-                                    "grid": {"x": 10, "x2": 10, "y": 18, "y2": 26, "borderWidth": 0, "width": 260, "height": 86},
-                                    "animation": true,
-                                    "backgroundColor": "#fff",
-                                    "tooltip": {
-                                        "show": true, "name": "", "alwaysShowContent": false, "trigger": "axis", "padding": 10,
-                                        "textStyle": {"fontWeight": "normal", "color": "#fff", "align": "left", "fontSize": 12},
-                                        "axisPointer": {"type": "line", "lineStyle": {"color": "#cdcdcd", "type": "dashed"}}
+                                    "grid":{"x":10,"x2":10,"y":18,"y2":26,"borderWidth":0,"width":260,"height":86},
+                                    "animation":true,
+                                    "backgroundColor":"#fff",
+                                    "tooltip":{
+                                        "show":true,"name":"","alwaysShowContent":false,"trigger":"axis","padding":10,
+                                        "textStyle":{"fontWeight":"normal","color":"#fff","align":"left","fontSize":12},
+                                        "axisPointer":{"type":"line","lineStyle":{"color":"#cdcdcd","type":"dashed"}}
                                     },
-                                    "xAxis": [{
-                                        "data": dateList,
-                                        "axisLine": {"lineStyle": {"color": "#ddd", "width": 2,}},
-                                        "axisTick": {"show": false},
-                                        "axisLabel": {"textStyle": {"color": '#999'},}
+                                    "xAxis":[{
+                                        "data":dateList,
+                                        "axisLine":{"lineStyle":{"color":"#ddd","width":2,}},
+                                        "axisTick":{"show":false},
+                                        "axisLabel":{"textStyle":{"color":'#999'},}
                                     }],
-                                    "yAxis": [{
-                                        "type": "value", "splitNumber": 2, "scale": true, "minInterval": 1,
-                                        "axisLabel": {"show": false},
-                                        "axisTick": {"show": false},
-                                        "axisLine": {"show": false},
-                                        "splitLine": {"lineStyle": {"color": ["#ececec"], "width": 1, "type": "dashed"}}
+                                    "yAxis":[{
+                                        "type":"value","splitNumber":2,"scale":true,"minInterval":1,
+                                        "axisLabel":{"show":false},
+                                        "axisTick":{"show":false},
+                                        "axisLine":{"show":false},
+                                        "splitLine":{"lineStyle":{"color":["#ececec"],"width":1,"type":"dashed"}}
                                     }],
-                                    "series": [
+                                    "series":[
                                         {
-                                            type: "line", data: valueList, symbol: "circle", smooth: true, showAllSymbol: true,
-                                            label: {
-                                                normal: {
-                                                    show: !0, textStyle: {color: "#FD2550", fontWeight: "bold", textAlign: "center"},
-                                                    formatter: function (e) {
+                                            type:"line",data:valueList,symbol:"circle",smooth:true,showAllSymbol:true,
+                                            label:{
+                                                normal:{
+                                                    show:!0,textStyle:{color:"#FD2550",fontWeight:"bold",textAlign:"center"},
+                                                    formatter:function (e) {
                                                         return e.name == minAndMax.min[0] && e.value == minAndMax.min[1] ? (minAndMax.min[1] == minAndMax.max[1] ? "" : "最低") + e.value : e.name == minAndMax.max[0] && e.value == minAndMax.max[1] ? (minAndMax.min[1] == minAndMax.max[1] ? "" : "最高") + e.value : e.value
                                                     }
                                                 },
-                                                emphasis: {show: !0, textStyle: {color: "#FD2550", fontWeight: "bold", textAlign: "center"}}
+                                                emphasis:{show:!0,textStyle:{color:"#FD2550",fontWeight:"bold",textAlign:"center"}}
                                             },
-                                            lineStyle: {normal: {color: "#FD2550", type: "solid", width: 1}},
-                                            itemStyle: {normal: {color: "#FD2550"}, emphasis: {color: "#FD2550"}}
+                                            lineStyle:{normal:{color:"#FD2550",type:"solid",width:1}},
+                                            itemStyle:{normal:{color:"#FD2550"},emphasis:{color:"#FD2550"}}
                                         }
                                     ]
                                 };
@@ -4199,7 +4137,7 @@
                                     that.parent().parent().find(".douyapulist-price-drop-zhideBack").show();
                                 }
                             },
-                            error: function () {
+                            error:function () {
                                 var html = `<div class="douyapulist-price-ErrorContent">
                                     <div class="douyapulist-price-ErrorTitle">
                                         <p>小豆芽正在努力完善商品价格库，敬请期待哦~</p>
@@ -4210,7 +4148,7 @@
                             }
                         });
                     }   //请求惠惠助手接口拿取商品历史价格数据
-                    $.each($(k[0]), function () {
+                    $.each($(k[0]),function () {
                         $(this).append(`<div class="douyapulist-price-item" data-type="0" data-douyamovepaopao="列表+查看+${k[2]}">
                             <div class="douyapulist-price-box" >
                                 <div class="douyapulist-price-icon"></div>
@@ -4221,19 +4159,19 @@
                             $(this).children(".douyapulist-price-item").addClass("left");
                         }
                         if (v == 'search.jd.com') {
-                            $(".douyapulist-price-item").css("marginBottom", 65)
+                            $(".douyapulist-price-item").css("marginBottom",65)
                         } else if (v == 'search.suning.com' || v == 'list.suning.com') {
-                            $(".douyapulist-price-item").css({"top": 106})
+                            $(".douyapulist-price-item").css({"top":106})
                         }
                     });
                     if (v == 'list.tmall.com' || v == 's.taobao.com') {
                         var time;
                         var sign = 1;
-                        $(document).on("scroll", function () {
+                        $(document).on("scroll",function () {
                             clearTimeout(time);
                             time = setTimeout(function () {
                                 post();
-                            }, 1500)
+                            },1500)
                         });
                         post();
                         function post() {
@@ -4241,27 +4179,27 @@
                                 sign = 0;
                                 var arr = {};
                                 var dom = [];
-                                $.each($(k[0]).find("img:not([data-ks-lazyload]):not([douyapuHasCoupon])"), function (v, k) {
-                                    arr[v] = getParam($(this).parent().attr("href"), "id");
+                                $.each($(k[0]).find("img:not([data-ks-lazyload]):not([douyapuHasCoupon])"),function (v,k) {
+                                    arr[v] = getParam($(this).parent().attr("href"),"id");
                                     dom.push(k);
                                 });
                                 if (dom.length) {
                                     $.ajax({
-                                        url: "https://storage.douyapu.com/coupon/share.php",
-                                        type: "post",
-                                        dataType: "json",
-                                        data: {items: JSON.stringify(arr)},
-                                        success: function (d) {
+                                        url:"https://storage.douyapu.com/coupon/share.php",
+                                        type:"post",
+                                        dataType:"json",
+                                        data:{items:JSON.stringify(arr)},
+                                        success:function (d) {
                                             d = d.results;
-                                            $.each(dom, function (v) {
+                                            $.each(dom,function (v) {
                                                 if (d[arr[v]] && d[arr[v]].amount) {
                                                     $(this).parent().after(`<a class="douyapulist-coupon" href="${d[arr[v]].shareUrl}" target="_blank" data-douyababapaopao="列表+优惠券">¥领${d[arr[v]].amount}券</a>`);
                                                 }
-                                                $(this).attr("douyapuHasCoupon", 1)
+                                                $(this).attr("douyapuHasCoupon",1)
                                             });
                                             sign = 1;
                                         },
-                                        error: function () {
+                                        error:function () {
                                             sign = 1;
                                         }
                                     });
@@ -4274,21 +4212,21 @@
                     cnzzAppend();    //打点统计代码
                     var timeDouya;
                     var activeData;
-                    chrome.extension.sendMessage({name: "universal", url: "http://min.douyapu.com/api/act17/plug-0.json", type: "get", dataType: "json"}, function (response) {
+                    chrome.extension.sendMessage({name:"universal",url:"http://min.douyapu.com/api/act17/plug-0.json",type:"get",dataType:"json"},function (response) {
                         if (response && response.results && response.results.length > 0) {
                             activeData = response.results;
                         }
                     });
-                    $(document).on("mouseenter", k[0], function () {
-                        $(this).find(".douyapulist-price-box").css("opacity", 0.3);
+                    $(document).on("mouseenter",k[0],function () {
+                        $(this).find(".douyapulist-price-box").css("opacity",0.3);
                     });
-                    $(document).on("mouseleave", k[0], function () {
-                        $(this).find(".douyapulist-price-box").css("opacity", 0);
+                    $(document).on("mouseleave",k[0],function () {
+                        $(this).find(".douyapulist-price-box").css("opacity",0);
                     });
-                    $(document).on("mouseenter", ".douyapulist-price-item", function (e) {
+                    $(document).on("mouseenter",".douyapulist-price-item",function (e) {
                         e.stopPropagation();
                         var that = $(this);
-                        var url, price;
+                        var url,price;
                         if (v == 's.taobao.com') {
                             url = that.parent().children(".pic-box-inner").children(".pic").children("a").attr("href");
                             price = that.parent().parent().find(".g_price").children("strong").html();
@@ -4305,7 +4243,7 @@
                             url = that.parent().children("a").attr("href");
                             price = that.parent().parent().find(".price").text().split("¥")[1];
                         }
-                        $(this).children(".douyapulist-price-box").css({"opacity": 1, "background": "#FD2550"});
+                        $(this).children(".douyapulist-price-box").css({"opacity":1,"background":"#FD2550"});
                         timeDouya = setTimeout(function () {
                             if (that.data("type") == 0) {
                                 that.append(`<div class="douyapulist-price-dropBox">
@@ -4333,7 +4271,7 @@
                                 </div>`);
                                 if (activeData) {
                                     var html = "";
-                                    $.each(activeData, function (v, k) {
+                                    $.each(activeData,function (v,k) {
                                         html += `<div data-douyababapaopao="列表+活动+ID${k.id}" class="douyapulist-price-drop-adItem">
                                             <div class="douyapulist-price-drop-icon icon${k.act_badge_label}"></div>
                                             <div><a href="${k.act_link}" target="_blank">${k.act_name}</a></div>
@@ -4349,11 +4287,11 @@
                                     var clickEndFlag = true;    //
                                     function tab() {
                                         that.find(".douyapulist-price-drop-adAll").stop().animate({
-                                            top: -index * liHeight
-                                        }, 400, function () {
+                                            top:-index * liHeight
+                                        },400,function () {
                                             clickEndFlag = true;
                                             if (index == that.find(".douyapulist-price-drop-adItem").length - 1) {
-                                                that.find(".douyapulist-price-drop-adAll").css({top: 0});
+                                                that.find(".douyapulist-price-drop-adAll").css({top:0});
                                                 index = 0;
                                             }
                                         })
@@ -4365,33 +4303,33 @@
                                         }
                                         tab();
                                     }   //
-                                    autoTimer = setInterval(next, 2500);
+                                    autoTimer = setInterval(next,2500);
                                     that.children(".douyapulist-price-drop-adItem").hover(function () {
                                         clearInterval(autoTimer);
-                                    }, function () {
-                                        autoTimer = setInterval(next, 2500);
+                                    },function () {
+                                        autoTimer = setInterval(next,2500);
                                     });
                                 }
-                                $(that).on("click", "li.dypLi", function () {
+                                $(that).on("click","li.dypLi",function () {
                                     if ($(this).html() == "意见反馈") {
                                         window.open("https://www.douyapu.com/index/feedback/");
                                     } else {
-                                        chrome.storage.local.set({dypListSetting: "hide"});
+                                        chrome.storage.local.set({dypListSetting:"hide"});
                                         $(".douyapulist-price-item").remove();
                                     }
                                 });
-                                get(url, price, that);
-                                that.data("type", 1);
+                                get(url,price,that);
+                                that.data("type",1);
                             } else {
-                                that.children(".douyapulist-price-dropBox").css("top", "-66px");
+                                that.children(".douyapulist-price-dropBox").css("top","-66px");
                             }
-                        }, 500);
+                        },500);
                     });
-                    $(document).on("mouseleave", ".douyapulist-price-item", function () {
+                    $(document).on("mouseleave",".douyapulist-price-item",function () {
                         var that = $(this);
-                        $(this).children(".douyapulist-price-box").css({"opacity": 0.3, "background": "#000"});
+                        $(this).children(".douyapulist-price-box").css({"opacity":0.3,"background":"#000"});
                         clearTimeout(timeDouya);
-                        that.children(".douyapulist-price-dropBox").css("top", "-9999px");
+                        that.children(".douyapulist-price-dropBox").css("top","-9999px");
                     });
                 }
             }
@@ -4399,21 +4337,21 @@
     }();
     //主会场
     !function () {
-        chrome.storage.local.get(null, function (e) {
+        chrome.storage.local.get(null,function (e) {
             var dypAlert = e.dypAlert20180226;
             var n = 0;
             dypAlert = JSON.parse(dypAlert).results;
-            $.each(dypAlert, function (v, k) {
+            $.each(dypAlert,function (v,k) {
                 if (k.position.match('2')) {
                     n++;
-                    start1(k, n);
+                    start1(k,n);
                 }
             });
         });
-        function start1(k, n) {
+        function start1(k,n) {
             var urlOk = 0;
             var urlArr = k.plant.split('|');
-            $.each(urlArr, function (v, k) {
+            $.each(urlArr,function (v,k) {
                 if (locHost == k) {
                     urlOk = 1;
                     return false;
@@ -4439,11 +4377,11 @@
                                 <a><img src='${typeimg}'></a>
                                 <div id="douyapu-alert1-close"></div>
                             </div>`);
-                            cnzzEvent(`${k.name}`, "弹出");
-                            $("#douyapu-alert1-close").on("click", function () {
-                                cnzzEvent(`${k.name}关闭`, "点击");
+                            cnzzEvent(`${k.name}`,"弹出");
+                            $("#douyapu-alert1-close").on("click",function () {
+                                cnzzEvent(`${k.name}关闭`,"点击");
                                 var that = $(this);
-                                that.parent().fadeOut(1000, function () {
+                                that.parent().fadeOut(1000,function () {
                                     that.parent().remove();
                                 });
                             });
@@ -4453,37 +4391,37 @@
                         $(document).ready(function () {
                             setTimeout(function () {
                                 if ($("#douyapu-alert1-close").length) {
-                                    $("#douyapu-alert1-close").on("click", function () {
+                                    $("#douyapu-alert1-close").on("click",function () {
                                         setTimeout(function () {
                                             $("body").after(`<div id="douyapu-alert2" class="dypslideInLeft dypanimated">
                                                 <a><img src='${typeimg}'></a>
                                                 <div id="douyapu-alert2-close"></div>
                                             </div>`);
-                                            cnzzEvent(`${k.name}`, "弹出");
+                                            cnzzEvent(`${k.name}`,"弹出");
                                             $("#douyapu-alert2-close").click(function () {
-                                                cnzzEvent(`${k.name}关闭`, "点击");
+                                                cnzzEvent(`${k.name}关闭`,"点击");
                                                 var that = $(this);
-                                                that.parent().fadeOut(1000, function () {
+                                                that.parent().fadeOut(1000,function () {
                                                     that.parent().remove();
                                                 });
                                             });
-                                        }, 2500)
+                                        },2500)
                                     });
                                 } else {
                                     $("body").after(`<div id="douyapu-alert2" class="dypslideInLeft dypanimated">
                                         <a><img src='${typeimg}'></a>
                                         <div id="douyapu-alert2-close"></div>
                                     </div>`);
-                                    cnzzEvent(`${k.name}`, "弹出");
+                                    cnzzEvent(`${k.name}`,"弹出");
                                     $("#douyapu-alert2-close").click(function () {
-                                        cnzzEvent(`${k.name}关闭`, "点击");
+                                        cnzzEvent(`${k.name}关闭`,"点击");
                                         var that = $(this);
-                                        that.parent().fadeOut(1000, function () {
+                                        that.parent().fadeOut(1000,function () {
                                             that.parent().remove();
                                         });
                                     });
                                 }
-                            }, 1000)
+                            },1000)
                         });
                     }
                 }
@@ -4493,20 +4431,20 @@
     //优惠券页面
     !function () {
         if (locHost == 'uland.taobao.com' && refer.match("www.douyapu.com/coupon/chain/?") && refer.charAt(36) == "/") {
-            chrome.storage.local.get(null, function (e) {
+            chrome.storage.local.get(null,function (e) {
                 if (e.dypSign20180323 == "coupon_step2") {
                     $(document).ready(function () {
                         var hasSame = 0;
                         var couponArr = e.dypCoupon20180323;
                         var id = md5($(".item-content .title span").html() + $(".shop-title").html());
-                        $.each(couponArr, function (v, k) {
+                        $.each(couponArr,function (v,k) {
                             if (k == id) {
                                 hasSame = 1;
                                 return false
                             }
                         });
-                        $(".coupons-container").on("click", function () {
-                            douyaTongji("coupon_step3", "优惠券点击", e.dypRandom);
+                        $(".coupons-container").on("click",function () {
+                            douyaTongji("coupon_step3","优惠券点击",e.dypRandom);
                             if (!hasSame) {
                                 couponArr.push(id);
                                 douyaTongjiCoupon(couponArr);
@@ -4517,22 +4455,22 @@
             });
         }
         if ((locHost == 'buy.tmall.com' || locHost == "buy.taobao.com")) {
-            chrome.storage.local.get(null, function (e) {
+            chrome.storage.local.get(null,function (e) {
                 $(document).ready(function () {
                     var hasSame = 0;
                     var couponArr = e.dypCoupon20180323;
                     var id = md5($(".info-title").html() + $(".shop-url").html());
-                    $.each(couponArr, function (v, k) {
+                    $.each(couponArr,function (v,k) {
                         if (k == id) {
                             hasSame = 1;
-                            couponArr.splice(v, 1);
+                            couponArr.splice(v,1);
                             return false
                         }
                     });
-                    $(".go-btn").on("click", function () {
+                    $(".go-btn").on("click",function () {
                         if (hasSame) {
                             douyaTongjiCoupon(couponArr);
-                            douyaTongji("coupon_step4", "点击下单", e.dypRandom);
+                            douyaTongji("coupon_step4","点击下单",e.dypRandom);
                         }
                     })
                 });
