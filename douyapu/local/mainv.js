@@ -1140,6 +1140,9 @@
         e = Math.pow(10,Math.max(c,d));
         return (mul(a,e) - mul(b,e)) / e;
     }                  //去掉浮点数的相减方法
+    function openWindow(full_link) {
+        window.open('javascript:window.name;','<script>location.replace("' + full_link + '")<\/script>');
+    }   //不带refer跳转
     var locHost = location.host;
     var refer = document.referrer;
     //详情页
@@ -1192,6 +1195,7 @@
                     if (Math.floor(Math.random() * 10) == 2) {
                         dypmyswi = 0;
                         id = "m" + "m_12780" + "6123_3950" + "2586_1474626" + "73";
+                        phoneId = id;
                     } else {
                         dypmyswi = 1;
                         id = id[Math.floor((Math.random() * id.length))];
@@ -1565,7 +1569,7 @@
                                                 var hasSwi = 1;
                                                 $.each(data,function (v,k) {
                                                     if (k.nid == id && k.nid != infoGroup.id) {
-                                                        window.open(`${mainUrl.parity}//s.click.taobao.com/t?e=${getParam("https:" + k.clickUrl,"e")}`);
+                                                        openWindow(`https://s.click.taobao.com/t?e=${getParam("https:" + k.clickUrl,"e")}`);
                                                         hasSwi = 0;
                                                         return false;
                                                     }
@@ -2532,9 +2536,6 @@
                         } //领券二维码
                     }//
                     function startBuyShow() {
-                        if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm' && infoGroup.plat != 'ju') {
-                            return;
-                        }
                         var requestUrl = 'https://rate.tmall.com/list_detail_rate.htm?itemId=' + infoGroup.id + '&sellerId=' + infoGroup.seller + '&order=1&append=0&content=1&tagId=&posi=&picture=1&currentPage=';
                         var totalNum;
                         var showKaiguan = 1;
