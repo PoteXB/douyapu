@@ -3219,6 +3219,8 @@
                     if (infoGroup.plat != 'jd') {
                         return;
                     }
+                    $(".dypMid9527-must-see").hide();
+                    $(".dypMid9527-buyers-show").show();
                     changeColor("#B61D1D","京　东","jd");
                     $("#dypMid9527").css("z-index",5);
                     var myScript = document.createElement("script");
@@ -4434,63 +4436,36 @@
                     leftTime.setTime(leftTamp + curTamp);
                     document.cookie = `dypAlert${n}=1;expires=` + leftTime;
                     var typeimg = '',toUrl = '';
-                    $("<style></style>").html(`#douyapu-alert1,#douyapu-alert2{z-index:999999999999;position:fixed;bottom:20px;right:40px}#douyapu-alert1 img,#douyapu-alert2 img{display:block;max-width:300px;max-height:400px}#douyapu-alert1-close,#douyapu-alert2-close{width:30px;height:30px;position:absolute;right:0;top:0;cursor:pointer;opacity:1;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAM1BMVEUAAAAAAABlZWUAAAD19fWioqIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9IKCr6AAAAEHRSTlOAAJ919bt9Y0AsJghKSVdLz5TIOAAAAKNJREFUKM+F01kOwyAMBNBJpuyQ9P6nLVULiRUw8xXxZIXFxtYTi6O1dCVea42TJ3rok+RAiDDc+cQj58UHBjkaZwyTfxwwSfhy4oyZKntM4yu3YrOjZTf/8g2xr732x1dEgXChyHAQLrQiIVxoRQvh5q6wkmHeBoKpVRNO+7dD0XaeEbVzR2yc3xrbk4zv3K8fVG8HvZn0VtQbWR+D9RAtRvAD7KoEY4+OgCAAAAAASUVORK5CYII=)}#douyapu-alert1-close:hover,#douyapu-alert2-close:hover{opacity:.5}@keyframes dypslideInLeft{from{transform:translate3d(100%,0,0);visibility:visible}to{transform:translate3d(0,0,0)}}.dypslideInLeft{animation-name:dypslideInLeft}.dypanimated{animation-duration:1s;animation-fill-mode:both}`).appendTo("head");
-                    if (n == 1) {
-                        typeimg = k.img_src;
-                        toUrl = k.link ? k.link : 'javascript:void(0);';
-                        $(document).ready(function () {
-                            $("body").after(`<div id="douyapu-alert1" class="dypslideInLeft dypanimated">
-                                <a href="${toUrl}" target="_blank"><img src='${typeimg}'></a>
-                                <div id="douyapu-alert1-close"></div>
-                            </div>`);
-                            cnzzEvent(`${k.name}`,"弹出");
-                            $("#douyapu-alert1-close").on("click",function () {
+                    $("<style></style>").html(`#douyapu-alert${n}{z-index:999999999999;position:fixed;bottom:20px;right:40px;display:none}#douyapu-alert${n} img{display:block;max-width:300px;max-height:400px}#douyapu-alert${n}-close{width:30px;height:30px;position:absolute;right:0;top:0;cursor:pointer;opacity:1;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAM1BMVEUAAAAAAABlZWUAAAD19fWioqIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9IKCr6AAAAEHRSTlOAAJ919bt9Y0AsJghKSVdLz5TIOAAAAKNJREFUKM+F01kOwyAMBNBJpuyQ9P6nLVULiRUw8xXxZIXFxtYTi6O1dCVea42TJ3rok+RAiDDc+cQj58UHBjkaZwyTfxwwSfhy4oyZKntM4yu3YrOjZTf/8g2xr732x1dEgXChyHAQLrQiIVxoRQvh5q6wkmHeBoKpVRNO+7dD0XaeEbVzR2yc3xrbk4zv3K8fVG8HvZn0VtQbWR+D9RAtRvAD7KoEY4+OgCAAAAAASUVORK5CYII=)}#douyapu-alert${n}-close:hover{opacity:.5}@keyframes dypslideInLeft{from{transform:translate3d(100%,0,0);visibility:visible}to{transform:translate3d(0,0,0)}}.dypslideInLeft{animation-name:dypslideInLeft}.dypanimated{animation-duration:1s;animation-fill-mode:both}`).appendTo("head");
+                    typeimg = k.img_src;
+                    toUrl = k.link ? k.link : 'javascript:void(0);';
+                    $(document).ready(function () {
+                        $("body").after(`<div id="douyapu-alert${n}" class="dypanimated dypslideInLeft" data-name="${k.name}">
+                            <a href="${toUrl}" target="_blank"><img src='${typeimg}'></a>
+                            <div id="douyapu-alert${n}-close"></div>
+                        </div>`);
+                        setTimeout(function () {
+                            if (!$(`#douyapu-alert${n - 1}`).length) {
+                                $(`#douyapu-alert${n}`).show();
+                                cnzzEvent(`${k.name}`,"弹出");
+                            }
+                            $(`#douyapu-alert${n}-close`).click(function () {
                                 cnzzEvent(`${k.name}关闭`,"点击");
                                 var that = $(this);
                                 that.parent().fadeOut(1000,function () {
                                     that.parent().remove();
                                 });
                             });
-                        });
-                    } else if (n == 2) {
-                        typeimg = k.img_src;
-                        toUrl = k.link ? k.link : 'javascript:void(0);';
-                        $(document).ready(function () {
-                            setTimeout(function () {
-                                if ($("#douyapu-alert1-close").length) {
-                                    $("#douyapu-alert1-close").on("click",function () {
-                                        setTimeout(function () {
-                                            $("body").after(`<div id="douyapu-alert2" class="dypslideInLeft dypanimated">
-                                                <a href="${toUrl}" target="_blank"><img src='${typeimg}'></a>
-                                                <div id="douyapu-alert2-close"></div>
-                                            </div>`);
-                                            cnzzEvent(`${k.name}`,"弹出");
-                                            $("#douyapu-alert2-close").click(function () {
-                                                cnzzEvent(`${k.name}关闭`,"点击");
-                                                var that = $(this);
-                                                that.parent().fadeOut(1000,function () {
-                                                    that.parent().remove();
-                                                });
-                                            });
-                                        },2500)
-                                    });
-                                } else {
-                                    $("body").after(`<div id="douyapu-alert2" class="dypslideInLeft dypanimated">
-                                        <a href="${toUrl}" target="_blank"><img src='${typeimg}'></a>
-                                        <div id="douyapu-alert2-close"></div>
-                                    </div>`);
-                                    cnzzEvent(`${k.name}`,"弹出");
-                                    $("#douyapu-alert2-close").click(function () {
-                                        cnzzEvent(`${k.name}关闭`,"点击");
-                                        var that = $(this);
-                                        that.parent().fadeOut(1000,function () {
-                                            that.parent().remove();
-                                        });
-                                    });
-                                }
-                            },1000)
-                        });
-                    }
+                            if ($(`#douyapu-alert${n + 1}`).length) {
+                                $(`#douyapu-alert${n}-close`).click(function () {
+                                    setTimeout(function () {
+                                        $(`#douyapu-alert${n + 1}`).show();
+                                        cnzzEvent(`${$(`#douyapu-alert${n + 1}`).data("name")}`,"弹出");
+                                    },2500);
+                                });
+                            }
+                        },1000 * n);
+                    });
                 }
             }
         } //右下角弹窗
