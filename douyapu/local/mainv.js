@@ -982,21 +982,22 @@
     })();
     function cnzzAppend() {
         if (!$('html').html().match(`1264352198`)) {
-            $("<script></script>").html(`var _czc = _czc || [];_czc.push(["_setAccount", "1264352198"]);`).appendTo($("head"));
             $.getScript("https://s13.cnzz.com/z_stat.php?id=1264352198&web_id=1264352198",function () {
                 $(document).on("click","[data-douyababapaopao]",function () {
+                    $("<script></script>").html(`var _czc = [];_czc.push(["_setAccount","1264352198"]);`).appendTo($("head"));
                     var name = $(this).attr("data-douyababapaopao");
                     var myScript = document.createElement("script");
-                    myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent", "${name}", "点击"]);`));
+                    myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent","${name}","点击"]);`));
                     document.head.appendChild(myScript);
                 });
                 var clock;
                 $(document).on("mouseenter","[data-douyamovepaopao]",function () {
                     var that = $(this);
                     clock = setTimeout(function () {
+                        $("<script></script>").html(`var _czc = [];_czc.push(["_setAccount","1264352198"]);`).appendTo($("head"));
                         var name = that.attr("data-douyamovepaopao");
                         var myScript = document.createElement("script");
-                        myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent", "${name}", "移入"]);`));
+                        myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent","${name}","移入"]);`));
                         document.head.appendChild(myScript);
                     },500);
                 });
@@ -1007,8 +1008,9 @@
         }
     }                  //CNZZ统计
     function cnzzEvent(n,e) {
+        $("<script></script>").html(`var _czc = [];_czc.push(["_setAccount","1264352198"]);`).appendTo($("head"));
         var myScript = document.createElement("script");
-        myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent", "${n}", "${e}"]);`));
+        myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent","${n}","${e}"]);`));
         document.head.appendChild(myScript);
     }               //CNZZ统计
     function douyaTongji(id,name,uniq) {
@@ -1177,7 +1179,7 @@
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
             var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,dypRandom;
-            var phoneId = 'mm_45748077_42608113_404702196';
+            var phoneId = 'mm_131471980_43206863_310944158';
             infoGroup = {
                 id:'',plat:nowPlat,title:"",price:"",sameNew:{},pid:"",seller:"",rCat:"",shop:"",
                 pic:"",sale:"",amount:"",amountReq:"",amountT:0,amountL:0,tkCom:0,startT:"",endT:""
@@ -1194,7 +1196,7 @@
                 } else {
                     if (Math.floor(Math.random() * 10) == 2) {
                         dypmyswi = 0;
-                        id = "m" + "m_12780" + "6123_3950" + "2586_1474626" + "73";
+                        id = "mm_127806123_44362140_449358126";
                         phoneId = id;
                     } else {
                         dypmyswi = 1;
@@ -1226,7 +1228,7 @@
                 $("body").after(`<div id="dypTop9527"><div class="dypTop9527-box dypClear"><div class="dypTop9527-logo fl" title="豆芽购物助手" data-douyababapaopao="顶部+logo"><b></b></div><div class="dypTop9527-mall fl" data-douyamovepaopao="顶部+导航+查看"><div class="dypTop9527-topMask"></div><b></b><span>购物导航</span><div class="dypTop9527-rMask"></div><div class="dypTop9527-mask"></div><div class="dypTop9527-mallDrop" style="display:none"><ul class="dypClear"></ul></div></div><div class="dypTop9527-vipCoupon fl" data-douyamovepaopao="顶部+值得买+查看"><div class="dypTop9527-topMask"></div><b></b><span>值得买</span><div class="dypTop9527-rMask"></div><div class="dypTop9527-mask"></div><div class="dypTop9527-vipCouponDrop"><ul class="dypClear"></ul></div></div><div class="dypTop9527-bijia fl"><b></b><span>全网比价</span><div class="dypTop9527-bijia-rMask"></div></div><div class="dypTop9527-sameStyle fl"></div><div class="dypTop9527-set fr" data-douyamovepaopao="顶部+设置+查看"><div class="dypTop9527-set-box"><div class="dypTop9527-set-lMask"></div><b></b><div class="dypTop9527-mask"></div><div class="dypTop9527-setDrop"><ul><li data-type="gb" data-douyababapaopao="顶部+设置+本次关闭">本次关闭</li><li data-type="fk" data-douyababapaopao="顶部+设置+意见反馈">意见反馈</li></ul></div></div><i data-douyababapaopao="顶部+展开"></i></div><div class="dypTop9527-search-box fr"><div class="dypTop9527-search"><input type="text" id="dypTop9527-search" maxlength="10" placeholder="搜索全网优惠"> <span data-id="dyp"><em id="dypTop9527-searchBtn" data-douyababapaopao="顶部+搜索+点击搜索">豆芽铺</em><i data-type="1"></i></span><ul style="display:none"><li data-id="dyp" data-douyababapaopao="顶部+搜索+豆芽铺">豆芽铺</li><li data-id="tm" data-douyababapaopao="顶部+搜索+天猫">天　猫</li><li data-id="jd" data-douyababapaopao="顶部+搜索+京东">京　东</li><li data-id="tb" data-douyababapaopao="顶部+搜索+淘宝">淘　宝</li><li data-id="wph" data-douyababapaopao="顶部+搜索+唯品会">唯品会</li><li data-id="mgj" data-douyababapaopao="顶部+搜索+蘑菇街">蘑菇街</li><li data-id="yoho" data-douyababapaopao="顶部+搜索+YOHO!">YOHO</li><li data-id="sn" data-douyababapaopao="顶部+搜索+苏宁">苏　宁</li><li data-id="ymx" data-douyababapaopao="顶部+搜索+亚马逊">亚马逊</li><li data-id="dd" data-douyababapaopao="顶部+搜索+当当">当　当</li><li data-id="jm" data-douyababapaopao="顶部+搜索+聚美">聚　美</li><li data-id="kl" data-douyababapaopao="顶部+搜索+考拉">考　拉</li><li data-id="yx" data-douyababapaopao="顶部+搜索+严选">严　选</li><li data-id="yhd" data-douyababapaopao="顶部+搜索+一号店">一号店</li><li data-id="gm" data-douyababapaopao="顶部+搜索+国美">国　美</li><p class="p1"></p><p class="p2"></p><p class="p3"></p></ul><u class="u1" style="display:none"></u> <u class="u2" style="display:none"></u></div></div><div class="dypTop9527-qq-online fr"><a href="${qqOnline}" target="_blank" data-douyababapaopao="顶部+QQ在线"></a></div><div class="dypTop9527-activity fr dypTop9527-swiper_wrap"><ul class="dypTop9527-font_inner"></ul></div></div><div class="dypTop9527-mini" data-douyababapaopao="顶部+展开"></div></div>`);   //上面区域插入代码块
                 var picArr = JSON.parse(dypNav).results;
                 $.each(picArr,function (v,k) {
-                    $(".dypTop9527-mallDrop ul").append(`<li data-douyababapaopao="顶部+导航+${k.name}"><a href="${k.link}" target="_blank"><img src="${k.img_src}"><h5>${k.name}</h5></a></li>`)
+                    $(".dypTop9527-mallDrop ul").append(`<li data-douyababapaopao="顶部+导航+${k.name}"><a href="${k.link}" target="_blank" rel="noreferrer"><img src="${k.img_src}"><h5>${k.name}</h5></a></li>`)
                 });
                 !function () {
                     var ymove = [];
@@ -1308,7 +1310,7 @@
                     //     $("#dai360Pop").css("display", "block");
                     // });
                     $("body").on("click","#dai360_link",function () {
-                        window.open("https://temai.taobao.com/event2549927.htm?q=zIZJi72DTCHzX1yJ4zwwtqtujjtJViRVKKPwiwsBZjTrHEPWRherKw35rLQv0%2BddsBnxIH1nzuATT7r2KojiYg%3D%3D")
+                        openWindow("https://temai.taobao.com/event2549927.htm?q=zIZJi72DTCHzX1yJ4zwwtqtujjtJViRVKKPwiwsBZjTrHEPWRherKw35rLQv0%2BddsBnxIH1nzuATT7r2KojiYg%3D%3D")
                     });
                     // $("body").on("click", "#dai360Pop>.shadow", function () {
                     //     $("#dai360Pop").css("display", "none");
@@ -1575,13 +1577,13 @@
                                                     }
                                                 });
                                                 if (hasSwi) {
-                                                    window.open(errorUrl);
+                                                    openWindow(errorUrl);
                                                 }
                                             } else {
-                                                window.open(errorUrl);
+                                                openWindow(errorUrl);
                                             }
                                         } else {
-                                            window.open(errorUrl);
+                                            openWindow(errorUrl);
                                         }
                                     }
                                 });
@@ -1590,7 +1592,7 @@
                                 setTimeout(function () {
                                     $("#douya-yangxue9527").remove();
                                 },3000);
-                                window.open(errorUrl);
+                                openWindow(errorUrl);
                             }
                         });
                     }   //
@@ -1751,7 +1753,7 @@
                                         var commentnum = k.sitename ? k.commentnum : k.comment_count;
                                         var cutprice = k.sitename ? k.cutprice : k.view_price;
                                         list += `<li data-douyababapaopao="顶部+比价+${icon}">
-                                            <a href="${mainUrl.parity}${url.url}" target="_blank" class="dypClear" data-title="${url.title}" data-id="${url.url}">
+                                            <a href="${url.url}" target="_blank" class="dypClear" data-title="${url.title}" data-id="${url.url}" rel="noreferrer">
                                                 <div class="fl"><img src="${img}"></div>
                                                 <div class="fl dypTop9527-sameStyleDrop-itemR">
                                                     <div class="${icon} dypTop9527-sameStyleDrop-icon"></div>
@@ -1771,7 +1773,7 @@
                                             var that = $(this);
                                             var title = that.data("title");
                                             var id = that.data("id");
-                                            var errorUrl = mainUrl.parity + "https://item.taobao.com/item.htm?id=" + id;
+                                            var errorUrl = "https://item.taobao.com/item.htm?id=" + id;
                                             tmAjax(errorUrl,title,id);
                                         });
                                     }
@@ -2004,7 +2006,7 @@
                                     a = "tm";
                                 }
                                 list += `<li data-douyababapaopao="顶部+值得买">
-                                    <a data-url="${mainUrl.chain}${item.item.shareUrl}" class="dypClear">
+                                    <a data-url="https:${item.item.shareUrl}" class="dypClear">
                                         <div class="fl"><img src="${item.item.picUrl}_140x140.jpg" alt=""></div>
                                         <div class="fl dypTop9527-vipCouponDrop-itemR">
                                             <div class="${a} dypTop9527-vipCouponDrop-icon"></div>
@@ -2027,7 +2029,7 @@
                         $('.dypTop9527-vipCouponDrop ul').append(list);
                     }   //
                     $('.dypTop9527-vipCouponDrop ul').on("click","a",function () {
-                        window.open($(this).data("url"));
+                        openWindow($(this).data("url"));
                     });
                 }                //顶部(值得买)
                 function qtCoupon() {
@@ -2430,12 +2432,12 @@
                                     </div>`);
                                     $(".dypMid9527-coupon-priceCut").css("padding-bottom",0);
                                     $.each(e.result.couponList,function (v,k) {
-                                        var clickUrl = mainUrl.chain + k.item.clickUrl;
+                                        var clickUrl = "https:" + k.item.clickUrl;
                                         html += `<li>
                                             <div>
                                                 <div class="dypClear">
                                                     <div class="fl dypMid9527-mcoupon-itemImg">
-                                                        <a href="${clickUrl}" target="_blank" data-douyababapaopao="工具+优惠券+相关领取">
+                                                        <a href="${clickUrl}" target="_blank" data-douyababapaopao="工具+优惠券+相关领取" rel="noreferrer">
                                                             <img src="${k.item.picUrl}_100x100.jpg" alt="" width="100px" height="100px">
                                                         </a>
                                                     </div>
@@ -2444,14 +2446,14 @@
                                                             <div>原价 <s>${k.item.discountPrice}</s></div>
                                                             <div>现价 <span>${numSub(k.item.discountPrice,k.amount)}</span></div>
                                                         </div>
-                                                        <a href="${clickUrl}" target="_blank" class="dypMid9527-mcoupon-itemDraw" data-douyababapaopao="工具+优惠券+相关领取">
+                                                        <a href="${clickUrl}" target="_blank" class="dypMid9527-mcoupon-itemDraw" data-douyababapaopao="工具+优惠券+相关领取" rel="noreferrer">
                                                             <div>点击领券</div>
                                                             <div>¥${k.amount}</div>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <div class="dypMid9527-mcoupon-itemTitle">
-                                                    <a href="${clickUrl}" target="_blank" data-douyababapaopao="工具+优惠券+相关领取">${k.item.title}</a>
+                                                    <a href="${clickUrl}" target="_blank" data-douyababapaopao="工具+优惠券+相关领取" rel="noreferrer">${k.item.title}</a>
                                                 </div>
                                             </div>
                                         </li>`;
@@ -3144,7 +3146,7 @@
                                     }
                                 }
                                 if (t == 1) {
-                                    var urls = mainUrl.chain + '//uland.taobao.com/coupon/edetail?e=' + getParam(e.clickUrl,"e");
+                                    var urls = 'https://uland.taobao.com/coupon/edetail?e=' + getParam(e.clickUrl,"e");
                                     var qrUrls = 'https://uland.taobao.com/coupon/edetail?e=' + getParam(phoneUrl.clickUrl,"e");
                                     $("#dypBot9527").append(`<div class="dypBot9527-coupon">
                                         <a data-douyababapaopao="底部-优惠券">领券<span> ${e.couponAmount / 100}元</span></a>
@@ -3162,7 +3164,7 @@
                                         correctLevel:QRCode.CorrectLevel.L
                                     });
                                     $('.dypBot9527-coupon').click(function () {
-                                        window.open(urls)
+                                        openWindow(urls)
                                     });
                                     $('.dypBot9527-coupon').hover(function () {
                                         $(".dypBot9527-coupon-qr").show()
@@ -3183,7 +3185,7 @@
                         douyaTongji("coupon_step1","优惠券展示",dypRandom);
                         var amount = infoGroup.amount;
                         var amountReq = infoGroup.amountReq;
-                        var urls = `https://www.douyapu.com/coupon/chain/?urls=//uland.taobao.com/coupon/edetail?e=${getParam(e.clickUrl,"e")}`;
+                        var urls = `https://uland.taobao.com/coupon/edetail?e=${getParam(e.clickUrl,"e")}`;
                         $("#dypAbs9527").css("height",64);
                         $('#dypAbs9527').append(`<div class="dypAbs9527-coupon">
                             <div class="dypAbs9527-coupon-back" data-douyababapaopao="工具+优惠券+外部领取">
@@ -3204,9 +3206,10 @@
                             </div>
                         </div>`);
                         $(".dypAbs9527-coupon-back").click(function () {
-                            douyaTongjiSet("coupon_step2");
+                            var signId = md5(infoGroup.title + infoGroup.shop);
+                            douyaTongjiSet(signId);
                             douyaTongji("coupon_step2","优惠券MID点击",dypRandom);
-                            window.open(urls);
+                            openWindow(urls);
                         });
                         try {
                             $("#dypAbs9527-coupon-time").fnTimeCountDown(infoGroup.endT);
@@ -3703,7 +3706,7 @@
                 }();    //当当页面
                 !function () {
                     $(".dypTop9527-logo").on("click","b",function () {
-                        window.open(mainUrl.website);
+                        openWindow(mainUrl.website);
                     }); // logo点击跳转官网
                     $(".dypTop9527-mall").hover(function () {
                         $(this).children(".dypTop9527-mallDrop").show();
@@ -3764,7 +3767,7 @@
                                     url = k;
                                 }
                             });
-                            window.open(url);
+                            openWindow(url);
                         }
                     }); // 搜索按钮事件
                     $("#dypTop9527-search").on("keyup",function () {
@@ -3785,9 +3788,9 @@
                             chrome.storage.local.set({dypSetting:{dypTop:'hidden',dypMid:type}});
                             showOrHideTop(0);
                         } else if ($(this).data("type") == "sc") {
-                            window.open(mainUrl.website + "user/collist/");
+                            openWindow(mainUrl.website + "user/collist/");
                         } else if ($(this).data("type") == "fk") {
-                            window.open(mainUrl.website + "index/feedback/");
+                            openWindow(mainUrl.website + "index/feedback/");
                         }
                     }); //右边第二个设置下拉列表点击事件
                     $(".dypTop9527-set").on("click","i",function () {
@@ -3810,7 +3813,7 @@
                                     $.each(response.results,function (v,k) {
                                         html += `<li data-douyababapaopao="顶部+活动+ID${k.id}">
                                             <b class="icon${k.act_badge_label}"></b>                        
-                                            <a href="${k.act_link}" target="_blank">${k.act_name}</a>
+                                            <a href="${k.act_link}" target="_blank" rel="noreferrer">${k.act_name}</a>
                                         </li>`;
                                     });
                                     $(".dypTop9527-swiper_wrap ul").append(html);
@@ -3857,7 +3860,7 @@
                                     $.each(response.results,function (v,k) {
                                         html += `<li data-douyababapaopao="固定+活动+ID${k.id}">
                                             <i></i>
-                                            <a href="${k.act_link}" target="_blank">${k.act_name}</a>
+                                            <a href="${k.act_link}" target="_blank" rel="noreferrer">${k.act_name}</a>
                                             <b class="icon${k.act_badge_label}"></b>
                                         </li>`;
                                     });
@@ -3925,7 +3928,7 @@
                                 if (e && e.results && e.results.length > 0) {
                                     var html = "";
                                     $.each(e.results,function (v,k) {
-                                        html += `<li data-douyababapaopao="工具+活动+ID${k.id}"><a href="${k.act_link}" target="_blank"><b></b>${k.act_name}<i class="icon${k.act_badge_label}"></i></a></li>`;
+                                        html += `<li data-douyababapaopao="工具+活动+ID${k.id}"><a href="${k.act_link}" target="_blank" rel="noreferrer"><b></b>${k.act_name}<i class="icon${k.act_badge_label}"></i></a></li>`;
                                     });
                                     $(".dypMid9527-box-active ul").html(html);
                                     last = 1;
@@ -3947,8 +3950,14 @@
                     });
                     $("#dypMid9527").on("mouseenter",".dypMid9527-phone",function () {
                         if (!$("#dypMid9527-phone-qr").children().length) {
+                            var postPlat = "";
+                            if (infoGroup.plat == "tm") {
+                                postPlat = 1
+                            } else if (infoGroup.plat == "tb") {
+                                postPlat = 0
+                            }
                             new QRCode(document.getElementById("dypMid9527-phone-qr"),{
-                                text:`http://m.douyapu.com/?type=2&refer=mid&douyapu_id=${infoGroup.id}`,
+                                text:`http://m.douyapu.com/?type=2&plat=${postPlat}&refer=mid&douyapu_id=${infoGroup.id}`,
                                 width:100,
                                 height:100,
                                 colorDark:"#000000",
@@ -3968,7 +3977,7 @@
                             setting.dypMid = "hidden";
                             chrome.storage.local.set({dypSetting:{dypTop:type,dypMid:'hidden'}});
                         } else {
-                            window.open(mainUrl.website + "index/feedback/");
+                            openWindow(mainUrl.website + "index/feedback/");
                         }
                     }); // 本次关闭,意见反馈
                 }();    //中间事件绑定
@@ -4341,7 +4350,7 @@
                                     $.each(activeData,function (v,k) {
                                         html += `<div data-douyababapaopao="列表+活动+ID${k.id}" class="douyapulist-price-drop-adItem">
                                             <div class="douyapulist-price-drop-icon icon${k.act_badge_label}"></div>
-                                            <div><a href="${k.act_link}" target="_blank">${k.act_name}</a></div>
+                                            <div><a href="${k.act_link}" target="_blank" rel="noreferrer">${k.act_name}</a></div>
                                         </div>`
                                     });
                                     that.find(".douyapulist-price-drop-adAll").append(html);
@@ -4379,7 +4388,7 @@
                                 }
                                 $(that).on("click","li.dypLi",function () {
                                     if ($(this).html() == "意见反馈") {
-                                        window.open("https://www.douyapu.com/index/feedback/");
+                                        openWindow("https://www.douyapu.com/index/feedback/");
                                     } else {
                                         chrome.storage.local.set({dypListSetting:"hide"});
                                         $(".douyapulist-price-item").remove();
@@ -4441,7 +4450,7 @@
                     toUrl = k.link ? k.link : 'javascript:void(0);';
                     $(document).ready(function () {
                         $("body").after(`<div id="douyapu-alert${n}" class="dypanimated dypslideInLeft" data-name="${k.name}">
-                            <a href="${toUrl}" target="_blank"><img src='${typeimg}'></a>
+                            <a href="${toUrl}" target="_blank" rel="noreferrer"><img src='${typeimg}'></a>
                             <div id="douyapu-alert${n}-close"></div>
                         </div>`);
                         setTimeout(function () {
@@ -4472,13 +4481,13 @@
     }();
     //优惠券页面
     !function () {
-        if (locHost == 'uland.taobao.com' && refer.match("www.douyapu.com/coupon/chain/?") && refer.charAt(36) == "/") {
+        if (locHost == 'uland.taobao.com' && !refer) {
             chrome.storage.local.get(null,function (e) {
-                if (e.dypSign20180323 == "coupon_step2") {
-                    $(document).ready(function () {
+                $(document).ready(function () {
+                    var id = md5($(".item-content .title span").html() + $(".shop-title").html());
+                    if (e.dypSign20180323 == id) {
                         var hasSame = 0;
                         var couponArr = e.dypCoupon20180323;
-                        var id = md5($(".item-content .title span").html() + $(".shop-title").html());
                         $.each(couponArr,function (v,k) {
                             if (k == id) {
                                 hasSame = 1;
@@ -4492,8 +4501,8 @@
                                 douyaTongjiCoupon(couponArr);
                             }
                         })
-                    });
-                }
+                    }
+                });
             });
         }
         if ((locHost == 'buy.tmall.com' || locHost == "buy.taobao.com")) {
