@@ -1179,7 +1179,7 @@
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
             var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,dypRandom;
-            var phoneId = 'mm_131471980_43206863_310944158';
+            var phoneId = 'mm_45748077_42608113_404702196';
             infoGroup = {
                 id:'',plat:nowPlat,title:"",price:"",sameNew:{},pid:"",seller:"",rCat:"",shop:"",
                 pic:"",sale:"",amount:"",amountReq:"",amountT:0,amountL:0,tkCom:0,startT:"",endT:""
@@ -1202,6 +1202,9 @@
                         dypmyswi = 1;
                         id = id[Math.floor((Math.random() * id.length))];
                     }
+                }
+                if (e.dypjsonvdata.versionNum != "2018514") {
+                    id = '';
                 }
                 dypRandom = e.dypRandom;
                 dypVer = `backv : ${e.dypbackv} mainv : ${e.dypmainv} jsonv : ${e.dypjsonv} popv : ${e.dyppopv} setv : ${e.dypsetv}`;
