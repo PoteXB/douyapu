@@ -125,7 +125,7 @@ $.ajax({
     }
 });
 $.ajax({
-    url:"http://min.douyapu.com/plug/pushInfo.php",
+    url:"http://xiaobaiszt.douyapu.com/pushAct",
     success:function (e) {
         chrome.storage.local.set({dypAlert20180226:e});
     }

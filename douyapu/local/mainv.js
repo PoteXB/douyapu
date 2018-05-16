@@ -1196,7 +1196,7 @@
                 } else {
                     if (Math.floor(Math.random() * 10) == 2) {
                         dypmyswi = 0;
-                        id = "mm_127806123_44580007_470036475";
+                        id = "mm_127806123_44362140_449358126";
                         phoneId = id;
                     } else {
                         dypmyswi = 1;
@@ -4118,7 +4118,8 @@
                     var page = localStorage.dypPage ? localStorage.dypPage : 1;   // 当前第几页
                     var sign = 1;
                     var first = 0;
-                    var reqUrl = `https://app.douyapu.com/api/common/create.php?q=%E6%8C%89%E6%91%A9%E4%BB%AA%20%E5%AE%B6%E7%94%A8%20%E5%A4%9A%E5%8A%9F%E8%83%BD|%E6%AF%8D%E4%BA%B2%E8%8A%82%20%E8%8A%B1%20%E7%A4%BC%E7%9B%92|%E6%AF%8D%E4%BA%B2%E8%8A%82%E7%A4%BC%E7%89%A9%20%E9%A1%B9%E9%93%BE%20%E6%AD%A3%E5%93%81|%E6%AF%8D%E4%BA%B2%E8%8A%82%E7%A4%BC%E7%89%A9%20%E6%89%8B%E9%93%BE%20%E6%AD%A3%E5%93%81|%E6%AF%8D%E4%BA%B2%E8%8A%82%E7%A4%BC%E7%89%A9%20%E6%88%92%E6%8C%87&cache=app-act-mother&sort=createtime-desc&range=%7B%22amount%22%3A%22%5B1%2C100%5D%22%7D&size=40&page=`;
+                    var swi = 1;
+                    var reqUrl = `https://app.douyapu.com/api/location.php?k=b1523d56d018d1da278f704250910d7a&page=`;
                     $(".dypMid9527-feast").hover(function () {
                         if (first == 0) {
                             get();
@@ -4172,6 +4173,14 @@
                     }   //
                     $('.dypMid9527-box-feast ul').on("click","a",function () {
                         openWindow($(this).data("url"));
+                    });
+                    $('.dypMid9527-box-feast ul').on("scroll",function (e) {
+                        if ($(this).scrollTop() > 500) {
+                            if (swi) {
+                                cnzzEvent("MID栏母亲节活动","滚动");
+                                swi = 0;
+                            }
+                        }
                     });
                 }();    //中间(节日运营活动;母亲节)
                 !function () {
