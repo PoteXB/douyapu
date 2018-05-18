@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/popup.css">
+	</head>
+	<body>
+		<div id="weather">
+			<div class="contnet clear">
+				<div class="msg_left">
+					<div class="flex topbox">
+						<div class="top">
+							<div class="top_t">
+								<p class="now_temp row_hidden"></p>
+								<p class="temps"></p>
+							</div>
+							<div class="top_b flex">
+								<a class="goSet">
+									<i class="icon"></i>
+									<span class="city"></span>
+								</a>
+							</div>
+							<div class="top_lunar">
+								<span class="lunar row_hidden"></span>
+							</div>
+						</div>
+
+						<div class="middle">
+							<div class="middle_t">
+								<p class="wind">
+									<span class="wind_force row_hidden"></span>
+								</p>
+								<p class="conditionbox">
+									<span class="condition"></span>
+								</p>
+								<p>
+									<span class="air_font"></span>
+									<span class="air_q"></span>
+									<span class="air_v"></span>
+								</p>
+							</div>
+							<div class="middle_b">
+								<span class="date"></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="bottom">
+						<p class="hint"></p>
+					</div>
+
+				</div>
+				<div class="img_right">
+					<span></span>
+					<button class="refresh"></button>
+				</div>
+			</div>
+
+		</div>
+		<div id="zezhao">
+			<span>加载中...</span>
+		</div>
+		<div id="errorMsg">
+			<span></span>
+		</div>
+		<div id="setBox" class="hidden">
+			<div class=settingHead>
+				<div class=settingTitle>
+					<label for="cityName">城市 :</label>
+					<input type="text" id="cityName" />
+				</div>
+				<div id="settingBox" class="clear">
+					<button type="button" id="refreshBtn" class="blueStyle">取消</button>
+					<button type="button" id="searchBtn" class="writeStyle">保存</button>
+				</div>
+				<div class="listbox">
+					<p class="error hidden">请输入正确的城市名称！</p>
+					<ul class="list">
+
+					</ul>
+				</div>
+			</div>
+			<div class="hotCityList clear">
+				<ul>
+					<li>
+						<a href="">深圳</a>
+					</li>
+					<li>
+						<a href="">上海 </a>
+					</li>
+					<li>
+						<a href="">天津</a>
+					</li>
+					<li>
+						<a href="">重庆</a>
+					</li>
+					<li>
+						<a href="">石家庄</a>
+					</li>
+					<li>
+						<a href="">太原</a>
+					</li>
+					<li>
+						<a href="">郑州</a>
+					</li>
+					<li>
+						<a href="">沈阳</a>
+					</li>
+					<li>
+						<a href="">长春</a>
+					</li>
+					<li>
+						<a href="">哈尔滨</a>
+					</li>
+					<li>
+						<a href="">呼和浩特</a>
+					</li>
+					<li>
+						<a href="">南京</a>
+					</li>
+					<li>
+						<a href="">济南</a>
+					</li>
+					<li>
+						<a href="">合肥</a>
+					</li>
+					<li>
+						<a href="">杭州</a>
+					</li>
+					<li>
+						<a href="">福州</a>
+					</li>
+					<li>
+						<a href="">武汉</a>
+					</li>
+					<li>
+						<a href="">长沙</a>
+					</li>
+					<li>
+						<a href="">广州</a>
+					</li>
+					<li>
+						<a href="">南宁</a>
+					</li>
+					<li>
+						<a href="">南昌</a>
+					</li>
+					<li>
+						<a href="">成都</a>
+					</li>
+					<li>
+						<a href="">海口</a>
+					</li>
+					<li>
+						<a href="">贵阳</a>
+					</li>
+					<li>
+						<a href="">昆明</a>
+					</li>
+				</ul>
+			</div>
+			<div id="sure" class="hidden">
+				<div class="_box">
+					<p class="missText"></p>
+					<button class="okbtn">确定</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+	<script type="text/javascript" src="js/citylist.js"></script>
+	<script type="text/javascript" src="js/popup.js"></script>
+</html>
