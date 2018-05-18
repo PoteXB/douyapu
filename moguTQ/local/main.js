@@ -2621,49 +2621,43 @@
 
     //活动数据加载
     !function () {
-        var html = "";
-        var results = [
-            {url:"https://www.baidu.com",title:"百度"},
-            {url:"https://www.baidu.com",title:"谷歌"},
-            {url:"https://www.baidu.com",title:"360"},
-            {url:"https://www.baidu.com",title:"奇虎"}
-        ];
-        $.each(results,function (v,k) {
-            html += `<li>
-            <b class=""></b><a href="${k.url}" target="_blank" rel="noreferrer">${k.title}</a>
+        var html = `<li data-mgclick="520活动" class="duLiDe-ad-item2">
+            <b class="duLiDe-ad-logo b2"></b><span>520玩这个游戏 , 敢吗 ? 有红包 !</span>
+        </li>
+        <li data-mgclick="答题活动" class="duLiDe-ad-item1">
+            <b class="duLiDe-ad-logo b1"></b><span>趣味答题，赢100元红包</span>
         </li>`;
-        });
-        $(".duLiDe-ad-right ul").append(html);
-        $(".duLiDe-ad-right li:eq(0)").clone(true).appendTo($(".duLiDe-ad-right ul"));
-        var liHeight = $(".duLiDe-ad-right").height();
-        var totalHeight = ($(".duLiDe-ad-right li").length * $(".duLiDe-ad-right li").eq(0).height()) - liHeight;
-        $(".duLiDe-ad-right ul").height(totalHeight);
+        $(".duLiDe-ad ul").html(html);
+        $(".duLiDe-ad li:eq(0)").clone(true).appendTo($(".duLiDe-ad ul"));
+        var liHeight = $(".duLiDe-ad").height();
+        var totalHeight = ($(".duLiDe-ad li").length * $(".duLiDe-ad li").eq(0).height()) - liHeight;
+        $(".duLiDe-ad ul").height(totalHeight);
         var index = 0;
         var autoTimer = 0;
         var clickEndFlag = true;    //
         function tab() {
-            $(".duLiDe-ad-right ul").stop().animate({
+            $(".duLiDe-ad ul").stop().animate({
                 top:-index * liHeight
             },400,function () {
                 clickEndFlag = true;
-                if (index == $(".duLiDe-ad-right li").length - 1) {
-                    $(".duLiDe-ad-right ul").css({top:0});
+                if (index == $(".duLiDe-ad li").length - 1) {
+                    $(".duLiDe-ad ul").css({top:0});
                     index = 0;
                 }
             })
         }   //
         function next() {
             index++;
-            if (index > $(".duLiDe-ad-right li").length - 1) {
+            if (index > $(".duLiDe-ad li").length - 1) {
                 index = 0;
             }
             tab();
         }   //
-        autoTimer = setInterval(next,2500);
-        $(".duLiDe-ad-right ul a").hover(function () {
+        autoTimer = setInterval(next,2000);
+        $(".duLiDe-ad ul li").hover(function () {
             clearInterval(autoTimer);
         },function () {
-            autoTimer = setInterval(next,2500);
+            autoTimer = setInterval(next,2000);
         });
     }();
     !function () {
@@ -2675,7 +2669,14 @@
             </div>
         </div>`;
         $('body').append(Ol_Dai360_pop);
-        $("body").on("click",".duLiDe-ad_title",function () {
+        $("body").on("click",".duLiDe-ad-item1",function () {
+            $("#mgDaiFix a").attr("data-mgClick","答题活动关闭");
+            $("#mgDaiFix img").attr("src","http://file.douyapu.com/douyapu/dai360/dati423.png");
+            $("#mgDaiFix").css("display","block");
+        });
+        $("body").on("click",".duLiDe-ad-item2",function () {
+            $("#mgDaiFix a").attr("data-mgClick","520活动关闭");
+            $("#mgDaiFix img").attr("src","http://file.douyapu.com/douyapu/dai360/520MID.png");
             $("#mgDaiFix").css("display","block");
         });
         // $("body").on("click","#dai360_link",function () {
@@ -2688,4 +2689,106 @@
             $("#mgDaiFix").css("display","none");
         });
     }();    //中间红包二维码
+    !function () {
+        var total;
+        var locHost = location.host;
+        chrome.storage.local.get(null,function (e) {
+            // var dypAlert = e.dypAlert20180226;
+            var n = 0;
+            var dypAlert = [
+                {
+                    "id":5,
+                    "name":"520表白活动",
+                    "desc":"520表白活动",
+                    "link":"",
+                    "img_src":"http://file.douyapu.com/douyapu/dai360/520ALERT.png",
+                    "frequency":5,
+                    "position":"2",
+                    "begin_time":"2018-04-19T16:04:09.000Z",
+                    "end_time":"2018-06-20T15:06:00.000Z",
+                    "plant":"www.taobao.com|s.taobao.com|item.taobao.com|www.jd.com|item.jd.com|www.tmall.com|detail.tmall.com|www.suning.com|product.suning.com",
+                    "unqiue":"e76ff4375159de551eedbf1c8454400e",
+                    "status":1,
+                    "sort":20
+                }
+            ];
+            total = dypAlert.length;
+            $.each(dypAlert,function (v,k) {
+                n++;
+                if (k.position.match('2')) {
+                    start1(k,n);
+                }
+            });
+        });
+        function start1(k,n) {
+            var urlOk = 0;
+            var urlArr = k.plant.split('|');
+            $.each(urlArr,function (v,k) {
+                if (locHost == k) {
+                    urlOk = 1;
+                    return false;
+                }
+            });
+            if (urlOk) {
+                cnzzAppend(function () {});
+                if (document.cookie.indexOf(`mgTqAlert${n}=1`) == -1) {
+                    var curDate = new Date();
+                    var curTamp = curDate.getTime();
+                    var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;
+                    var passedTamp = curTamp - curWeeHours;
+                    var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;
+                    var leftTime = new Date();
+                    leftTime.setTime(leftTamp + curTamp);
+                    document.cookie = `mgTqAlert${n}=1;expires=` + leftTime;
+                    var typeimg = '',toUrl = '';
+                    $("<style></style>").html(`#moguTq-alert${n}{z-index:999999999999;position:fixed;bottom:20px;right:40px;display:none}#moguTq-alert${n} img{display:block;max-width:300px;max-height:400px}#moguTq-alert${n}-close{width:30px;height:30px;position:absolute;right:0;top:0;cursor:pointer;opacity:1;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAM1BMVEUAAAAAAABlZWUAAAD19fWioqIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9IKCr6AAAAEHRSTlOAAJ919bt9Y0AsJghKSVdLz5TIOAAAAKNJREFUKM+F01kOwyAMBNBJpuyQ9P6nLVULiRUw8xXxZIXFxtYTi6O1dCVea42TJ3rok+RAiDDc+cQj58UHBjkaZwyTfxwwSfhy4oyZKntM4yu3YrOjZTf/8g2xr732x1dEgXChyHAQLrQiIVxoRQvh5q6wkmHeBoKpVRNO+7dD0XaeEbVzR2yc3xrbk4zv3K8fVG8HvZn0VtQbWR+D9RAtRvAD7KoEY4+OgCAAAAAASUVORK5CYII=)}#moguTq-alert${n}-close:hover{opacity:.5}@keyframes mgslideInLeft{from{transform:translate3d(100%,0,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInLeft{animation-name:mgslideInLeft}.mganimated{animation-duration:1s;animation-fill-mode:both}`).appendTo("head");
+                    typeimg = k.img_src;
+                    toUrl = k.link ? k.link : 'javascript:void(0);';
+                    $(document).ready(function () {
+                        $("body").after(`<div id="moguTq-alert${n}" class="mganimated mgslideInLeft" data-name="${k.name}">
+                            <a href="${toUrl}" target="_blank" rel="noreferrer"><img src='${typeimg}'></a>
+                            <div id="moguTq-alert${n}-close"></div>
+                        </div>`);
+                        setTimeout(function () {
+                            var swi = 0;
+                            for (var i = 1; i < n; i++) {
+                                if ($(`#moguTq-alert${i}`).length) {
+                                    swi = 1;
+                                    break;
+                                }
+                            }
+                            if (!swi) {
+                                $(`#moguTq-alert${n}`).show();
+                                cnzzEvent(`${k.name}`,"弹出");
+                            }
+                            $(`#moguTq-alert${n}-close`).click(function () {
+                                cnzzEvent(`${k.name}关闭`,"点击");
+                                var that = $(this);
+                                that.parent().fadeOut(1000,function () {
+                                    that.parent().remove();
+                                });
+                            });
+                            var swi1 = 0;
+                            var nextNum = "";
+                            for (var j = n + 1; j < total + 1; j++) {
+                                if ($(`#moguTq-alert${j}`).length) {
+                                    swi1 = 1;
+                                    nextNum = j;
+                                    break;
+                                }
+                            }
+                            if (swi1) {
+                                $(`#moguTq-alert${n}-close`).click(function () {
+                                    setTimeout(function () {
+                                        $(`#moguTq-alert${nextNum}`).show();
+                                        cnzzEvent(`${$(`#moguTq-alert${nextNum}`).data("name")}`,"弹出");
+                                    },2500);
+                                });
+                            }
+                        },1000 * n);
+                    });
+                }
+            }
+        } //右下角弹窗
+    }();    //右下角弹窗
 }();
