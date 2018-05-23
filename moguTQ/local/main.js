@@ -2408,7 +2408,6 @@
         startDelay:1000,
         loop:true,
     });
-    console.log(1);
     //设置项此次关闭
     $("#sj2018kj .closethisone").click(function () {
         $("#sj2018kj").addClass("hidden");
