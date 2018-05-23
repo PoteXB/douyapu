@@ -1415,7 +1415,7 @@
                         <div class="dypAbs9527-ad">
                             <div id="dai360_link" class="fl" title="精选">
                                 <div class="dai360_title" data-douyababapaopao="520活动点击">
-                                    <b class="dai360_logo"></b><span>10</span><span>人</span><span>玩</span><span>了</span><span>9</span><span>人</span><span>会</span><span>爱</span><span>上</span><span>的</span><span>游</span><span>戏</span><span>&nbsp;,&nbsp;</span><span>听</span><span>说</span><span>还</span><span>有</span><span>红</span><span>包</span><span>~</span>
+                                    <b class="dai360_logo"></b><span>测</span><span>试</span><span>小</span><span>游</span><span>戏</span><span>&nbsp;:&nbsp;</span><span>有</span><span>3</span><span>8</span><span>0</span><span>元</span><span>大</span><span>礼</span><span>包</span>
                                 </div>
                             </div>
                         </div>
