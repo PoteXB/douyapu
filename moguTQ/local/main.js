@@ -2246,7 +2246,7 @@
     var sj_id = getUrlParam("id"),//获取当前商品id
         consult = [//500人的群占数组一份值，1000人的群占两份，以此类推
             // "//shang.qq.com/wpa/qunwpa?idkey=ba86913a1b9b1573c7064d9c936ff46adfe324d257f2a0400c42988328a7b3d2",//1群已满暂时下线
-            "//shang.qq.com/wpa/qunwpa?idkey=e153b0b08d183927d691402e22ee8a42d0ffa6a022e35b4ec61da5bb4ffccd61",
+            // "//shang.qq.com/wpa/qunwpa?idkey=e153b0b08d183927d691402e22ee8a42d0ffa6a022e35b4ec61da5bb4ffccd61",
             "//shang.qq.com/wpa/qunwpa?idkey=03fadcbef6b546b8024c1038f5a5f9908aad1f44cadef00cd5099812136bae9d",//2000容量群占比4
             "//shang.qq.com/wpa/qunwpa?idkey=03fadcbef6b546b8024c1038f5a5f9908aad1f44cadef00cd5099812136bae9d",
             "//shang.qq.com/wpa/qunwpa?idkey=03fadcbef6b546b8024c1038f5a5f9908aad1f44cadef00cd5099812136bae9d",
@@ -2401,7 +2401,7 @@
 
     //打字机
     new Typed("#midTq-qiPao",{
-        strings:['领现金大礼包'],
+        strings:['拆千万红包'],
         typeSpeed:100,
         backSpeed:0,
         backDelay:500,
@@ -2566,7 +2566,8 @@
     //领券二维码生成
     !function () {
         new QRCode(document.getElementById("midTq-phone-qr"),{
-            text:`https://m.douyapu.com/?type=2&plat=${sj_plat}&refer=moGu&douyapu_id=${sj_id}`,
+            // text:`https://m.douyapu.com/?type=2&plat=${sj_plat}&refer=moGu&douyapu_id=${sj_id}`,
+            text:`http://share.douyapu.com/redBag/?k=0e0c3c54a6439efe675babd515948fc7`,
             width:100,
             height:100,
             colorDark:"#000000",
@@ -2621,8 +2622,9 @@
 
     //活动数据加载
     !function () {
-        var html = `<li data-mgclick="520活动" class="duLiDe-ad-item2">
-            <b class="duLiDe-ad-logo b2"></b><span>520玩这个游戏 , 敢吗 ? 有红包 !</span>
+        var html = `
+        <li data-mgclick="拆红包活动" class="duLiDe-ad-item3">
+            <b class="duLiDe-ad-logo b3 douyapuyaohuang"></b><span>千万红包等你拆，最高可拆300元</span>
         </li>
         <li data-mgclick="答题活动" class="duLiDe-ad-item1">
             <b class="duLiDe-ad-logo b1"></b><span>趣味答题，赢100元红包</span>
@@ -2679,6 +2681,11 @@
             $("#mgDaiFix img").attr("src","http://file.douyapu.com/douyapu/dai360/520MID.png");
             $("#mgDaiFix").css("display","block");
         });
+        $("body").on("click",".duLiDe-ad-item3",function () {
+            $("#mgDaiFix a").attr("data-mgClick","拆红包活动关闭");
+            $("#mgDaiFix img").attr("src","http://file.douyapu.com/douyapu/dai360/redBagMidMG.png");
+            $("#mgDaiFix").css("display","block");
+        });
         // $("body").on("click","#dai360_link",function () {
         //     openWindow("https://temai.taobao.com/event2549927.htm?q=zIZJi72DTCHzX1yJ4zwwtqtujjtJViRVKKPwiwsBZjTrHEPWRherKw35rLQv0%2BddsBnxIH1nzuATT7r2KojiYg%3D%3D")
         // });
@@ -2692,16 +2699,16 @@
     !function () {
         var total;
         var locHost = location.host;
-        chrome.storage.local.get(null,function (e) {
+        chrome.storage.local.get(null,function () {
             // var dypAlert = e.dypAlert20180226;
             var n = 0;
             var dypAlert = [
                 {
                     "id":5,
-                    "name":"520表白活动",
-                    "desc":"520表白活动",
+                    "name":"拆红包活动",
+                    "desc":"拆红包活动",
                     "link":"",
-                    "img_src":"http://file.douyapu.com/douyapu/dai360/520ALERT.png",
+                    "img_src":"http://file.douyapu.com/douyapu/dai360/redBagAlertMG.png",
                     "frequency":5,
                     "position":"2",
                     "begin_time":"2018-04-19T16:04:09.000Z",

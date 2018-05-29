@@ -322,7 +322,7 @@
     cursor:pointer;
 }
 .duLiDe-ad b{
-    width:40px;
+    width:48px;
     height:40px;
     display:inline-block;
     margin-left:44px;
@@ -333,6 +333,29 @@
 }
 .duLiDe-ad b.b2{
     background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAaCAMAAADG6y/lAAABtlBMVEUAAADzTGPlQljmQljaJDzlQljlQljlQljlQljlQljlQljlQljlQljlQlj0TGPlQljpRFvlQljlQljlQljlQljlQljbJj7mQljlQljlQljlQljlQljqRVzlQljlQljfMkndLEPlQVflQljlQljzTGPlQljlQljmQljlQljlQljzTGPXN0zlQljlQljlQljzTGPlQljlQljlQljzTGPiO1LzTGPzTGPYOE7PMUfgP1XzTGPlQljzTGP1TWTvSWDjQFbzTGPlQljlQljlQljlQljlQljlQljlQljzTGPmQ1n64V3zRmT2yTzkQFb41U387W7kPlT0TWT77V7jPFjgN1X77FTcN1L2TmXfPlPVMEr510DHKkDFKj763Db51TL0vS32R2fzSGX1b17mRFr75FfYMFDYNk7WMkz62kn4sEnZQknXO0jRMUjOL0XZSkP2xj3xvDnspDnrnDnxtjf0vi70uyjxsB31ZGH75l/tSF72dF32glr2jVTeQlL3p0341Uz4uUb4v0P3v0PyqkL55EHkeUH40T7MRT7DJD763D3qmD3dYT3vrzzkgTv3zzX2yCb1wiPztSFW9F66AAAAR3RSTlMA7b6U7f741ZAD6Lvaxb2xPDEZD/zx7eTfmnRfNiUg7e3s0MrArKeknpWUkoVvZGJZLRT07erRvb28ubaWlJSQjX1WT0MXCcol53cAAAHzSURBVDjLpdD3UxpBFMDxFwlXEEILSBNLrLFETe897y54IUcHBdTYjb2k996T/zjvdlVkZG7G8fPD3tzM+97uHhySq+3skWrnToGJyGllP7PihlLDJZPgSq2gDaoFnSE3bLtWKzhWmfV4aBERrY6wFwwnzYLGPocvQM9BH5JAn3c3iMX0GNHHY3sCd4dAY/VAXDY02MMAV7M6zU/MvZubePL6/dsX44qiZ40g4jyORPTwveqQsUBP7pk+9ryQTqQLn9OJxMeXY1lFOw93gwIaHFEw3Iu6eN8APSOji1Mf0vF4/OkkLYnlV49HRi9AJxoECbheFGwssMnXMzSwMnl/R+HL18Xpi3ACibV9IOzm1wkg1yJLqOVmfs4+4N7MDs9ncnRRkQVWxE5gPF0C8iNJtKY+FYe55W/fMyqygLs8BNsGLcafaqWATK8Wy+WNjfJmaWU+iRTwIwmOARl29Df4aMMusCBJLqwVN7e2/pXWl1IqvddBh3HB9ghUNNqRuHigJmd+/f7zt7S2QPMs6EeDBHsMBUUxBBSwQptaWl3/kU+qyAOv8T2nF6rIMrCAJ6l8PoM0zwOI9nbfhhp4wDfR2DgPGPOgwjzoPmggIadyyNSbBHesqD5SUXvIaOwFQ2DiVmtLU7Pff5TzNzedsd+U4VD+A9d1t9kzMTGzAAAAAElFTkSuQmCC) center no-repeat;
+}
+.duLiDe-ad b.b3{
+    background:url(data:image/png;base64,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) center no-repeat;
+}
+.douyapuyaohuang{
+    animation:douyapuCircle .3s infinite linear
+}
+@-webkit-keyframes douyapuCircle{
+    0%{
+        transform:rotate(0)
+    }
+    25%{
+        transform:rotate(10deg)
+    }
+    50%{
+        transform:rotate(0)
+    }
+    75%{
+        transform:rotate(-10deg)
+    }
+    100%{
+        transform:rotate(0)
+    }
 }
 #mgDaiFix{
     text-align:center;
@@ -366,7 +389,7 @@
 #mgDaiFix > .content > ._close{
     position:absolute;
     right:167px;
-    bottom:-30px;
+    bottom:-10%;
     width:30px;
     height:30px;
     cursor:pointer;
