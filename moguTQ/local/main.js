@@ -2623,13 +2623,11 @@
     //活动数据加载
     !function () {
         var html = `
-        <li data-mgclick="拆红包活动" class="duLiDe-ad-item3">
-            <b class="duLiDe-ad-logo b3 douyapuyaohuang"></b><span>千万红包等你拆，最高可拆300元</span>
-        </li>
-        <li data-mgclick="答题活动" class="duLiDe-ad-item1">
-            <b class="duLiDe-ad-logo b1"></b><span>趣味答题，赢100元红包</span>
+        <li data-mgclick="618活动" class="duLiDe-ad-item1">
+            <b class="duLiDe-ad-logo b1"></b><span>618狂欢：品牌尖货直降1000元</span>
         </li>`;
         $(".duLiDe-ad ul").html(html);
+        return;
         $(".duLiDe-ad li:eq(0)").clone(true).appendTo($(".duLiDe-ad ul"));
         var liHeight = $(".duLiDe-ad").height();
         var totalHeight = ($(".duLiDe-ad li").length * $(".duLiDe-ad li").eq(0).height()) - liHeight;
@@ -2667,13 +2665,13 @@
             <div class="shadow"></div>
             <div class="content">
                 <img src="http://file.douyapu.com/douyapu/dai360/dati423.png" alt="">
-                <a class="_close" data-mgClick="答题活动关闭"></a>
+                <a class="_close" data-mgClick="618活动关闭"></a>
             </div>
         </div>`;
         $('body').append(Ol_Dai360_pop);
         $("body").on("click",".duLiDe-ad-item1",function () {
-            $("#mgDaiFix a").attr("data-mgClick","答题活动关闭");
-            $("#mgDaiFix img").attr("src","http://file.douyapu.com/douyapu/dai360/dati423.png");
+            $("#mgDaiFix a").attr("data-mgClick","618活动关闭");
+            $("#mgDaiFix img").attr("src","http://file.douyapu.com/douyapu/dai360/2018618.png");
             $("#mgDaiFix").css("display","block");
         });
         $("body").on("click",".duLiDe-ad-item2",function () {
@@ -2705,10 +2703,10 @@
             var dypAlert = [
                 {
                     "id":5,
-                    "name":"拆红包活动",
-                    "desc":"拆红包活动",
+                    "name":"618活动",
+                    "desc":"618活动",
                     "link":"",
-                    "img_src":"http://file.douyapu.com/douyapu/dai360/redBagAlertMG.png",
+                    "img_src":"http://file.douyapu.com/douyapu/dai360/2018618MgAlert.png",
                     "frequency":5,
                     "position":"2",
                     "begin_time":"2018-04-19T16:04:09.000Z",
