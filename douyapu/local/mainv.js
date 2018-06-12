@@ -1189,7 +1189,7 @@
                 } else {
                     if (Math.floor(Math.random() * 10) == 2) {
                         dypmyswi = 0;
-                        id = "mm_127806123_44362140_449358126";
+                        id = "mm_127806123_44580007_470036475";
                         phoneId = id;
                     } else {
                         dypmyswi = 1;
@@ -4111,6 +4111,9 @@
                             var a = "tb";
                             if (k.type == 1) {
                                 a = "tm";
+                            }
+                            if (!k.shareUrl) {
+                                return
                             }
                             list += `<li>
                                 <a class="dypClear" data-url="https:${k.shareUrl}" data-douyababapaopao="工具栏+母亲节">

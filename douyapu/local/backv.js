@@ -135,7 +135,7 @@ chrome.storage.local.set({dypSetting:{dypTop:'show',dypMid:'show'}});
 chrome.storage.local.get(null,function (e) {
     if (!e.dypIp20180308) {
         $.ajax({
-            url:"http://2017.ip138.com/ic.asp",
+            url:"http://2018.ip138.com/ic.asp",
             dataType:"html",
             success:function (d) {
                 chrome.storage.local.set({dypIp20180308:d});
