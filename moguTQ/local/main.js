@@ -2256,14 +2256,7 @@
             "//shang.qq.com/wpa/qunwpa?idkey=f39f47defe3af4c5f8d51097757a4a8a2117cde3122d24d209edd1247a50b7fd",
             "//shang.qq.com/wpa/qunwpa?idkey=7fd3b630aefe61709b871b882eeaa589e27e7602981384d1d90abf5e2bca2eab",
             "//shang.qq.com/wpa/qunwpa?idkey=2a33f551c1c50c803ab643f76a7bdb109f4f7f781ed407ec87ba5479247e4816",
-            "//shang.qq.com/wpa/qunwpa?idkey=7a7d503e5a1a5cac589fa293034513c7d6f09da5873072b2161bb3096246ade9",
-            "//shang.qq.com/wpa/qunwpa?idkey=980181d924f9a287d8c2689bb3db1d7d655e8a84a85b6c4a9711d2c15362b166",
-            "//shang.qq.com/wpa/qunwpa?idkey=4d8535a8712b54fa162e2c09738c8a1549fd88d972c2595e2ab50e6b4483a3f1",
-            "//shang.qq.com/wpa/qunwpa?idkey=980181d924f9a287d8c2689bb3db1d7d655e8a84a85b6c4a9711d2c15362b166",
-            "//shang.qq.com/wpa/qunwpa?idkey=4d8535a8712b54fa162e2c09738c8a1549fd88d972c2595e2ab50e6b4483a3f1",
-            "//shang.qq.com/wpa/qunwpa?idkey=fef703ddaa3811ac07e36de6d64cd4e711f02ca4649e24d2368ac5aa52ace7f1",
-            "//shang.qq.com/wpa/qunwpa?idkey=f7f4492d8bc03ea0bec0f421a841840ea170e0bd84599ac050fc236e1b249a5a",
-            "//shang.qq.com/wpa/qunwpa?idkey=683ace9ebf6d41b3fabad4eb92af473f6280bfa0a7e8dd660d3584cff2b60fa4"
+            "//shang.qq.com/wpa/qunwpa?idkey=7a7d503e5a1a5cac589fa293034513c7d6f09da5873072b2161bb3096246ade9"
         ],//咨询群
         myMmId = [
             "mm_131503013_42952277_448750515",
@@ -2346,6 +2339,32 @@
     showBox("#sj2018kj .atte-link");
     showBox("#sj2018kj .set");
     showBox("#sj2018kj .midTq-phone");
+    function sub(a,b) {
+        var c,d,e;
+        try {
+            c = a.toString().split(".")[1].length;
+        } catch (f) {
+            c = 0;
+        }
+        try {
+            d = b.toString().split(".")[1].length;
+        } catch (f) {
+            d = 0;
+        }
+        return e = Math.pow(10,Math.max(c,d)), (mul(a,e) - mul(b,e)) / e;
+    }   //消除浮点数减法
+    function mul(a,b) {
+        var c = 0,
+            d = a.toString(),
+            e = b.toString();
+        try {
+            c += d.split(".")[1].length;
+        } catch (f) {}
+        try {
+            c += e.split(".")[1].length;
+        } catch (f) {}
+        return Number(d.replace(".","")) * Number(e.replace(".","")) / Math.pow(10,c);
+    }//消除浮点数减法
     function cnzzAppend(callBack) {
         if (!$('html').html().match(`1273525106`)) {
             $.getScript("https://s19.cnzz.com/z_stat.php?id=1273525106&web_id=1273525106",function () {
@@ -2516,7 +2535,7 @@
             qrcodeText = "https://uland.taobao.com/coupon/edetail" + "?e=" + getParam(list["clickUrl"],"e");
             var ola = `<a href="" class="clearfix" data-mgClick="领取优惠券">
 					<div class="fl rbox">
-						<p class="price_">券后价 : <em>¥${list["discountPrice"] - (list["couponAmount"] / 100)}</em>元</p>
+						<p class="price_">券后价 : <em>¥${sub(list["discountPrice"],(list["couponAmount"] / 100))}</em>元</p>
 						<p class="remaining" data-endtime="${list["endtime"]}">有效期</p>
 					</div>
 					<div class="fr lbox">
