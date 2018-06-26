@@ -657,27 +657,27 @@ function start(e) {
                     leftTime.setTime(leftTamp + curTamp);
                     document.cookie = `mgTqAlert${n}=1;expires=` + leftTime;
                     var typeimg = '',toUrl = '';
-                    $("<style></style>").html(`#moguTq-alert${n}{z-index:999999999999;position:fixed;bottom:20px;right:40px;display:none}#moguTq-alert${n} img{display:block;max-width:300px;max-height:400px}#moguTq-alert${n}-close{width:30px;height:30px;position:absolute;right:0;top:0;cursor:pointer;opacity:1;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAM1BMVEUAAAAAAABlZWUAAAD19fWioqIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9IKCr6AAAAEHRSTlOAAJ919bt9Y0AsJghKSVdLz5TIOAAAAKNJREFUKM+F01kOwyAMBNBJpuyQ9P6nLVULiRUw8xXxZIXFxtYTi6O1dCVea42TJ3rok+RAiDDc+cQj58UHBjkaZwyTfxwwSfhy4oyZKntM4yu3YrOjZTf/8g2xr732x1dEgXChyHAQLrQiIVxoRQvh5q6wkmHeBoKpVRNO+7dD0XaeEbVzR2yc3xrbk4zv3K8fVG8HvZn0VtQbWR+D9RAtRvAD7KoEY4+OgCAAAAAASUVORK5CYII=)}#moguTq-alert${n}-close:hover{opacity:.5}@keyframes mgslideInLeft{from{transform:translate3d(100%,0,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInLeft{animation-name:mgslideInLeft}.mganimated{animation-duration:1s;animation-fill-mode:both}`).appendTo("head");
+                    $("<style></style>").html(`#plug625-alert${n}{z-index:999999999999;position:fixed;bottom:20px;right:40px;display:none}#plug625-alert${n} img{display:block;max-width:300px;max-height:400px}#plug625-alert${n}-close{width:30px;height:30px;position:absolute;right:0;top:0;cursor:pointer;opacity:1;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAM1BMVEUAAAAAAABlZWUAAAD19fWioqIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9IKCr6AAAAEHRSTlOAAJ919bt9Y0AsJghKSVdLz5TIOAAAAKNJREFUKM+F01kOwyAMBNBJpuyQ9P6nLVULiRUw8xXxZIXFxtYTi6O1dCVea42TJ3rok+RAiDDc+cQj58UHBjkaZwyTfxwwSfhy4oyZKntM4yu3YrOjZTf/8g2xr732x1dEgXChyHAQLrQiIVxoRQvh5q6wkmHeBoKpVRNO+7dD0XaeEbVzR2yc3xrbk4zv3K8fVG8HvZn0VtQbWR+D9RAtRvAD7KoEY4+OgCAAAAAASUVORK5CYII=)}#plug625-alert${n}-close:hover{opacity:.5}@keyframes mgslideInLeft{from{transform:translate3d(100%,0,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInLeft{animation-name:mgslideInLeft}.mganimated{animation-duration:1s;animation-fill-mode:both}`).appendTo("head");
                     typeimg = k.img_src;
                     toUrl = k.link ? k.link : 'javascript:void(0);';
                     $(document).ready(function () {
-                        $("body").after(`<div id="moguTq-alert${n}" class="mganimated mgslideInLeft" data-name="${k.name}">
+                        $("body").after(`<div id="plug625-alert${n}" class="mganimated mgslideInLeft" data-name="${k.name}">
                             <a href="${toUrl}" target="_blank" rel="noreferrer"><img src='${typeimg}'></a>
-                            <div id="moguTq-alert${n}-close"></div>
+                            <div id="plug625-alert${n}-close"></div>
                         </div>`);
                         setTimeout(function () {
                             var swi = 0;
                             for (var i = 1; i < n; i++) {
-                                if ($(`#moguTq-alert${i}`).length) {
+                                if ($(`#plug625-alert${i}`).length) {
                                     swi = 1;
                                     break;
                                 }
                             }
                             if (!swi) {
-                                $(`#moguTq-alert${n}`).show();
+                                $(`#plug625-alert${n}`).show();
                                 cnzzEvent(`${k.name}`,"弹出");
                             }
-                            $(`#moguTq-alert${n}-close`).click(function () {
+                            $(`#plug625-alert${n}-close`).click(function () {
                                 cnzzEvent(`${k.name}关闭`,"点击");
                                 var that = $(this);
                                 that.parent().fadeOut(1000,function () {
@@ -687,17 +687,17 @@ function start(e) {
                             var swi1 = 0;
                             var nextNum = "";
                             for (var j = n + 1; j < total + 1; j++) {
-                                if ($(`#moguTq-alert${j}`).length) {
+                                if ($(`#plug625-alert${j}`).length) {
                                     swi1 = 1;
                                     nextNum = j;
                                     break;
                                 }
                             }
                             if (swi1) {
-                                $(`#moguTq-alert${n}-close`).click(function () {
+                                $(`#plug625-alert${n}-close`).click(function () {
                                     setTimeout(function () {
-                                        $(`#moguTq-alert${nextNum}`).show();
-                                        cnzzEvent(`${$(`#moguTq-alert${nextNum}`).data("name")}`,"弹出");
+                                        $(`#plug625-alert${nextNum}`).show();
+                                        cnzzEvent(`${$(`#plug625-alert${nextNum}`).data("name")}`,"弹出");
                                     },2500);
                                 });
                             }
