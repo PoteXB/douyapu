@@ -1172,7 +1172,6 @@
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
             var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,dypRandom;
-            var phoneId = 'mm_45748077_42608113_404702196';
             infoGroup = {
                 id:'',plat:nowPlat,title:"",price:"",sameNew:{},pid:"",seller:"",rCat:"",shop:"",
                 pic:"",sale:"",amount:"",amountReq:"",amountT:0,amountL:0,tkCom:0,startT:"",endT:""
@@ -1181,7 +1180,9 @@
                 // var id = e.dypjsonvdata.myMmId;
                 // dypmyswi = 1;
                 // id = id[Math.floor((Math.random() * id.length))];
+                // var phoneId = e.dypjsonvdata.phoneId[0];
                 var id = e.dypjsonvdata.myMmId;
+                var phoneId = e.dypjsonvdata.phoneId[0];
                 var ip = e.dypIp20180308;
                 if (ip && ip.match('深圳')) {
                     dypmyswi = 1;
@@ -1196,8 +1197,9 @@
                         id = id[Math.floor((Math.random() * id.length))];
                     }
                 }
-                if (e.dypjsonvdata.versionNum != "2018522") {
+                if (e.dypjsonvdata.versionNum != "2018626") {
                     id = '';
+                    phoneId = '';
                 }
                 dypRandom = e.dypRandom;
                 dypVer = `backv : ${e.dypbackv} mainv : ${e.dypmainv} jsonv : ${e.dypjsonv} popv : ${e.dyppopv} setv : ${e.dypsetv}`;
@@ -1206,6 +1208,7 @@
                     jdCoupon:e.dypjsonvdata.mainUrlJdCoupon,
                     storage:e.dypjsonvdata.mainUrlStorage,
                     myMmId:id,
+                    phoneId:phoneId,
                     website:e.dypjsonvdata.website,
                     parity:e.dypjsonvdata.website + 'coupon/parity?urls=',
                     chain:e.dypjsonvdata.website + 'coupon/chain?urls='
@@ -2427,7 +2430,7 @@
                         function getQrDan() {
                             var time = Date.now();
                             var title = infoGroup.title;
-                            var s = `{"q":"${title}","pid":"${phoneId}","page":${page1},"useItemCouponPage":"1","lunaUrlParam": "{'algo_sort':'mixcoupon','rank':'rank_profile:FirstRankScorer_atbh5','PS':'tk_item_score_atbh5','appBucket':'h'}"}`;
+                            var s = `{"q":"${title}","pid":"${mainUrl.phoneId}","page":${page1},"useItemCouponPage":"1","lunaUrlParam": "{'algo_sort':'mixcoupon','rank':'rank_profile:FirstRankScorer_atbh5','PS':'tk_item_score_atbh5','appBucket':'h'}"}`;
                             $.ajax({
                                 url:"https://acs.m.taobao.com/h5/mtop.aitaobao.item.search/7.0/",type:"get",dataType:"json",
                                 data:{

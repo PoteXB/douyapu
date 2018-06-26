@@ -10,7 +10,10 @@
     "mm_112599953_15986703_240314880",
     "mm_112599953_15986703_240342232"
   ],
-  "versionNum": "2018522",
+  "phoneId": [
+    "mm_130510017_42932909_740326106"
+  ],
+  "versionNum": "2018626",
   "popUrlNew": "http://min.douyapu.com/plug/refreshsss.php",
   "popUrlZhe": "http://min.douyapu.com/plug/discountsss.php",
   "popUrlHot": "http://min.douyapu.com/plug/hotssss.php",
