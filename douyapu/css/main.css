@@ -1010,23 +1010,23 @@
 .dypMid9527-box-phone{
     width:172px;
     right:32px;
-    height:228px;
+    height:230px;
     text-align:center;
     padding-top:12px;
     border:1px solid #ddd;
     border-top:none;
 }
 .dypMid9527-phone-qr{
-    width:110px;
-    height:110px;
-    border:1px solid #999;
-    border-radius:6px;
-    margin:8px auto 10px auto
+    width:130px;
+    height:130px;
+    margin:0 auto 10px auto
+}
+.dypMid9527-phone-qr img{
+    width:130px;
+    height:130px;
 }
 #dypMid9527-phone-qr{
-    width:100px;
-    height:100px;
-    margin:5px auto
+    margin:3px auto
 }
 .dypMid9527-box-phoner{
     color:#FD2550;

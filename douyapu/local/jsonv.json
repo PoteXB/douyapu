@@ -13,13 +13,13 @@
   "phoneId": [
     "mm_130510017_42932909_740326106"
   ],
+  "postId": "mm_133078964_46586405_1416646851",
   "versionNum": "2018626",
-  "popUrlNew": "http://min.douyapu.com/plug/refreshsss.php",
-  "popUrlZhe": "http://min.douyapu.com/plug/discountsss.php",
-  "popUrlHot": "http://min.douyapu.com/plug/hotssss.php",
-  "mainUrlMin": "http://storage.douyapu.com/api/vip/plug-vip-",
+  "popUrlNew": "http://data.douyapu.com/api/coupon?action=query&page_size=20&sorts=comment:true",
+  "popUrlZhe": "http://data.douyapu.com/api/coupon?action=query&page_size=20&sorts=discountRate:true",
+  "popUrlHot": "http://data.douyapu.com/api/coupon?action=query&page_size=20&sorts=biz30Day:true",
+  "mainUrlMin": "http://data.douyapu.com/api/coupon?action=query",
   "mainUrlQQ": "//shang.qq.com/wpa/qunwpa?idkey=8eb0a7c32f79b01c34ac3fba9d052fad41db3c1f653aad22de241cd1725e934a",
-  "mainUrlCoupon": "https://uland.taobao.com/cp/coupon",
   "mainUrlJdCoupon": "https://cd.jd.com/promotion/v2",
-  "mainUrlStorage": "http://db.douyapu.com/coupon"
+  "mainUrlStorage": "http://report.douyapu.com/api/cp"
 }

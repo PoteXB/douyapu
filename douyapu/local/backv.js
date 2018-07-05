@@ -54,7 +54,7 @@ browserObj().extension.onMessage.addListener(function (request,sender,sendRespon
     return true;
 });
 var unis_url = 'http://www.douyapu.com/uninstall.php';
-var statis_post_api1 = "http://apicrx.douyapu.com/statistics.php";
+var statis_post_api1 = "https://ext.statis.xixixihaha.com/index/Commoninterface/statisticsPlug";
 //判断当前浏览器类型
 if (browserType.indexOf("QQBrowser") != -1) {
     plusUpdateUrl = "3";
@@ -142,16 +142,37 @@ chrome.storage.local.get(null,function (e) {
             }
         });
     }
-    if (!e.dypRandom) {
-        for (var r = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",n = "",o = 0; o < 32; o++) {
-            n += r.charAt(Math.round(61 * Math.random()))
+    var keepKey = [
+        'dypAlert20180226',
+        'dypIp20180308',
+        'dypListSetting',
+        'dypNav201815',
+        'dypSetNew',
+        'dypSetting',
+        'dypSwitch',
+        'dypbackvdata',
+        'dypjsonvdata',
+        'dypmainvdata',
+        'dyppopvdata',
+        'dypsetvdata',
+        'dypbackv',
+        'dypjsonv',
+        'dypmainv',
+        'dyppopv',
+        'dypsetv'
+    ];
+    var needClearArr = [];
+    $.each(e,function (v) {
+        var needClear = 1;
+        $.each(keepKey,function (m,n) {
+            if (n == v) {
+                needClear = 0;
+                return false;
+            }
+        });
+        if (needClear) {
+            needClearArr.push(v);
         }
-        chrome.storage.local.set({dypRandom:n});
-    }
-    if (!e.dypSign20180323) {
-        chrome.storage.local.set({dypSign20180323:""});
-    }
-    if (!e.dypCoupon20180323) {
-        chrome.storage.local.set({dypCoupon20180323:[]});
-    }
+    });
+    chrome.storage.local.remove(needClearArr);
 });
