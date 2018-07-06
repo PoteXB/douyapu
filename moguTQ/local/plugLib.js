@@ -2698,6 +2698,77 @@ if (document.body.getAttribute('libSign2018625') != 1) {
         }(t), v = 1732584193, y = 4023233417, b = 2562383102, k = 271733878, f = 0; f < x.length; f += 16) d = v, h = y, g = b, m = k, v = s(v,y,b,k,x[f + 0],7,3614090360), k = s(k,v,y,b,x[f + 1],12,3905402710), b = s(b,k,v,y,x[f + 2],17,606105819), y = s(y,b,k,v,x[f + 3],22,3250441966), v = s(v,y,b,k,x[f + 4],7,4118548399), k = s(k,v,y,b,x[f + 5],12,1200080426), b = s(b,k,v,y,x[f + 6],17,2821735955), y = s(y,b,k,v,x[f + 7],22,4249261313), v = s(v,y,b,k,x[f + 8],7,1770035416), k = s(k,v,y,b,x[f + 9],12,2336552879), b = s(b,k,v,y,x[f + 10],17,4294925233), y = s(y,b,k,v,x[f + 11],22,2304563134), v = s(v,y,b,k,x[f + 12],7,1804603682), k = s(k,v,y,b,x[f + 13],12,4254626195), b = s(b,k,v,y,x[f + 14],17,2792965006), y = s(y,b,k,v,x[f + 15],22,1236535329), v = u(v,y,b,k,x[f + 1],5,4129170786), k = u(k,v,y,b,x[f + 6],9,3225465664), b = u(b,k,v,y,x[f + 11],14,643717713), y = u(y,b,k,v,x[f + 0],20,3921069994), v = u(v,y,b,k,x[f + 5],5,3593408605), k = u(k,v,y,b,x[f + 10],9,38016083), b = u(b,k,v,y,x[f + 15],14,3634488961), y = u(y,b,k,v,x[f + 4],20,3889429448), v = u(v,y,b,k,x[f + 9],5,568446438), k = u(k,v,y,b,x[f + 14],9,3275163606), b = u(b,k,v,y,x[f + 3],14,4107603335), y = u(y,b,k,v,x[f + 8],20,1163531501), v = u(v,y,b,k,x[f + 13],5,2850285829), k = u(k,v,y,b,x[f + 2],9,4243563512), b = u(b,k,v,y,x[f + 7],14,1735328473), y = u(y,b,k,v,x[f + 12],20,2368359562), v = l(v,y,b,k,x[f + 5],4,4294588738), k = l(k,v,y,b,x[f + 8],11,2272392833), b = l(b,k,v,y,x[f + 11],16,1839030562), y = l(y,b,k,v,x[f + 14],23,4259657740), v = l(v,y,b,k,x[f + 1],4,2763975236), k = l(k,v,y,b,x[f + 4],11,1272893353), b = l(b,k,v,y,x[f + 7],16,4139469664), y = l(y,b,k,v,x[f + 10],23,3200236656), v = l(v,y,b,k,x[f + 13],4,681279174), k = l(k,v,y,b,x[f + 0],11,3936430074), b = l(b,k,v,y,x[f + 3],16,3572445317), y = l(y,b,k,v,x[f + 6],23,76029189), v = l(v,y,b,k,x[f + 9],4,3654602809), k = l(k,v,y,b,x[f + 12],11,3873151461), b = l(b,k,v,y,x[f + 15],16,530742520), y = l(y,b,k,v,x[f + 2],23,3299628645), v = c(v,y,b,k,x[f + 0],6,4096336452), k = c(k,v,y,b,x[f + 7],10,1126891415), b = c(b,k,v,y,x[f + 14],15,2878612391), y = c(y,b,k,v,x[f + 5],21,4237533241), v = c(v,y,b,k,x[f + 12],6,1700485571), k = c(k,v,y,b,x[f + 3],10,2399980690), b = c(b,k,v,y,x[f + 10],15,4293915773), y = c(y,b,k,v,x[f + 1],21,2240044497), v = c(v,y,b,k,x[f + 8],6,1873313359), k = c(k,v,y,b,x[f + 15],10,4264355552), b = c(b,k,v,y,x[f + 6],15,2734768916), y = c(y,b,k,v,x[f + 13],21,1309151649), v = c(v,y,b,k,x[f + 4],6,4149444226), k = c(k,v,y,b,x[f + 11],10,3174756917), b = c(b,k,v,y,x[f + 2],15,718787259), y = c(y,b,k,v,x[f + 9],21,3951481745), v = n(v,d), y = n(y,h), b = n(b,g), k = n(k,m);
         return (p(v) + p(y) + p(b) + p(k)).toLowerCase()
     }                        // md5
+    (function (global,factory) {typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(global) : typeof define === "function" && define.amd ? define(factory) : factory(global)})(typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : this,function (global) {
+        "use strict";
+        var _Base64 = global.Base64;
+        var version = "2.4.5";
+        var buffer;
+        if (typeof module !== "undefined" && module.exports) {try {buffer = require("buffer").Buffer} catch (err) {}}
+        var b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var b64tab = function (bin) {
+            var t = {};
+            for (var i = 0,l = bin.length; i < l; i++)t[bin.charAt(i)] = i;
+            return t
+        }(b64chars);
+        var fromCharCode = String.fromCharCode;
+        var cb_utob = function (c) {
+            if (c.length < 2) {
+                var cc = c.charCodeAt(0);
+                return cc < 128 ? c : cc < 2048 ? fromCharCode(192 | cc >>> 6) + fromCharCode(128 | cc & 63) : fromCharCode(224 | cc >>> 12 & 15) + fromCharCode(128 | cc >>> 6 & 63) + fromCharCode(128 | cc & 63)
+            } else {
+                var cc = 65536 + (c.charCodeAt(0) - 55296) * 1024 + (c.charCodeAt(1) - 56320);
+                return fromCharCode(240 | cc >>> 18 & 7) + fromCharCode(128 | cc >>> 12 & 63) + fromCharCode(128 | cc >>> 6 & 63) + fromCharCode(128 | cc & 63)
+            }
+        };
+        var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
+        var utob = function (u) {return u.replace(re_utob,cb_utob)};
+        var cb_encode = function (ccc) {
+            var padlen = [0,2,1][ccc.length % 3],ord = ccc.charCodeAt(0) << 16 | (ccc.length > 1 ? ccc.charCodeAt(1) : 0) << 8 | (ccc.length > 2 ? ccc.charCodeAt(2) : 0),chars = [b64chars.charAt(ord >>> 18),b64chars.charAt(ord >>> 12 & 63),padlen >= 2 ? "=" : b64chars.charAt(ord >>> 6 & 63),padlen >= 1 ? "=" : b64chars.charAt(ord & 63)];
+            return chars.join("")
+        };
+        var btoa = global.btoa ? function (b) {return global.btoa(b)} : function (b) {return b.replace(/[\s\S]{1,3}/g,cb_encode)};
+        var _encode = buffer ? buffer.from && Uint8Array && buffer.from !== Uint8Array.from ? function (u) {return (u.constructor === buffer.constructor ? u : buffer.from(u)).toString("base64")} : function (u) {return (u.constructor === buffer.constructor ? u : new buffer(u)).toString("base64")} : function (u) {return btoa(utob(u))};
+        var encode = function (u,urisafe) {return !urisafe ? _encode(String(u)) : _encode(String(u)).replace(/[+\/]/g,function (m0) {return m0 == "+" ? "-" : "_"}).replace(/=/g,"")};
+        var encodeURI = function (u) {return encode(u,true)};
+        var re_btou = new RegExp(["[À-ß][-¿]","[à-ï][-¿]{2}","[ð-÷][-¿]{3}"].join("|"),"g");
+        var cb_btou = function (cccc) {
+            switch (cccc.length) {
+                case 4:
+                    var cp = (7 & cccc.charCodeAt(0)) << 18 | (63 & cccc.charCodeAt(1)) << 12 | (63 & cccc.charCodeAt(2)) << 6 | 63 & cccc.charCodeAt(3),offset = cp - 65536;
+                    return fromCharCode((offset >>> 10) + 55296) + fromCharCode((offset & 1023) + 56320);
+                case 3:
+                    return fromCharCode((15 & cccc.charCodeAt(0)) << 12 | (63 & cccc.charCodeAt(1)) << 6 | 63 & cccc.charCodeAt(2));
+                default:
+                    return fromCharCode((31 & cccc.charCodeAt(0)) << 6 | 63 & cccc.charCodeAt(1))
+            }
+        };
+        var btou = function (b) {return b.replace(re_btou,cb_btou)};
+        var cb_decode = function (cccc) {
+            var len = cccc.length,padlen = len % 4,n = (len > 0 ? b64tab[cccc.charAt(0)] << 18 : 0) | (len > 1 ? b64tab[cccc.charAt(1)] << 12 : 0) | (len > 2 ? b64tab[cccc.charAt(2)] << 6 : 0) | (len > 3 ? b64tab[cccc.charAt(3)] : 0),chars = [fromCharCode(n >>> 16),fromCharCode(n >>> 8 & 255),fromCharCode(n & 255)];
+            chars.length -= [0,0,2,1][padlen];
+            return chars.join("")
+        };
+        var atob = global.atob ? function (a) {return global.atob(a)} : function (a) {return a.replace(/[\s\S]{1,4}/g,cb_decode)};
+        var _decode = buffer ? buffer.from && Uint8Array && buffer.from !== Uint8Array.from ? function (a) {return (a.constructor === buffer.constructor ? a : buffer.from(a,"base64")).toString()} : function (a) {return (a.constructor === buffer.constructor ? a : new buffer(a,"base64")).toString()} : function (a) {return btou(atob(a))};
+        var decode = function (a) {return _decode(String(a).replace(/[-_]/g,function (m0) {return m0 == "-" ? "+" : "/"}).replace(/[^A-Za-z0-9\+\/]/g,""))};
+        var noConflict = function () {
+            var Base64 = global.Base64;
+            global.Base64 = _Base64;
+            return Base64
+        };
+        global.Base64 = {VERSION:version,atob:atob,btoa:btoa,fromBase64:decode,toBase64:encode,utob:utob,encode:encode,encodeURI:encodeURI,btou:btou,decode:decode,noConflict:noConflict};
+        if (typeof Object.defineProperty === "function") {
+            var noEnum = function (v) {return {value:v,enumerable:false,writable:true,configurable:true}};
+            global.Base64.extendString = function () {
+                Object.defineProperty(String.prototype,"fromBase64",noEnum(function () {return decode(this)}));
+                Object.defineProperty(String.prototype,"toBase64",noEnum(function (urisafe) {return encode(this,urisafe)}));
+                Object.defineProperty(String.prototype,"toBase64URI",noEnum(function () {return encode(this,true)}))
+            }
+        }
+        if (global["Meteor"]) {Base64 = global.Base64}
+        if (typeof module !== "undefined" && module.exports) {module.exports.Base64 = global.Base64} else if (typeof define === "function" && define.amd) {define([],function () {return global.Base64})}
+        return {Base64:global.Base64}
+    });
     (function (t,e) {"object" == typeof exports && "object" == typeof module ? module.exports = e() : "function" == typeof define && define.amd ? define([],e) : "object" == typeof exports ? exports.Typed = e() : t.Typed = e()})(this,function () {
         return function (t) {
             function e(n) {
