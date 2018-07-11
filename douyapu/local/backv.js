@@ -6,6 +6,7 @@ if (!localStorage.channelId1013) {
     }
 }
 var cid = localStorage.channelId1013;
+chrome.storage.local.set({dypCanalId20180709:cid});
 //中转页面
 var browserType = window.navigator.userAgent;
 var plusUpdateUrl;
@@ -159,7 +160,10 @@ chrome.storage.local.get(null,function (e) {
         'dypjsonv',
         'dypmainv',
         'dyppopv',
-        'dypsetv'
+        'dypsetv',
+        'dypPostCou20180709',
+        'dypCanalId20180709',
+        'dypUseInfo18711'
     ];
     var needClearArr = [];
     $.each(e,function (v) {

