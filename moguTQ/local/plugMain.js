@@ -223,6 +223,7 @@ setTimeout(function () {
                 "mm_130652011_42936815_500820201",
                 "mm_130652011_42936815_500810666"
             ],//扫码推广mmid
+            myPostMmId = "mm_133078964_46586405_1416646851",//上报mmid
             sj_title = $("head>title")[0].innerHTML.replace(/-淘宝网|-tmall.com天猫$/,""),//详情页标题
             tblmUrl = "http://pub.alimama.com/items/search.json";//淘宝联盟搜索接口
         myMmId = myMmId[Math.floor(Math.random() * myMmId.length)];//获取随机id
@@ -297,6 +298,9 @@ setTimeout(function () {
                 timeArea.html("即将过期");
             }
         }                                 //倒计时器
+        function trim(str) {
+            return str.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');
+        }                                    // 去掉字符串前后空格
         cnzzAppend(function () {cnzzEvent("MID展示","展示");});
         !function () {
             var qqUrl = Math.floor(Math.random() * consult.length);
@@ -502,7 +506,7 @@ setTimeout(function () {
                             });
                             opTimer(".plugMid627-couTime");
                             getDan(myQrMmId,page1,getH5CouNum1,setQrCoupon);
-                            // saveCou(list,res);
+                            saveCou(list,res);
                         });
                     } else {
                         $(".plugMid627-noCoupon").html(`<img src="${adPic}" data-mgClick="${clickE}">`);
@@ -510,7 +514,7 @@ setTimeout(function () {
                         $(".plugMid627-noCoupon").click(function () {
                             openWindow(toUrl);
                         });
-                        // saveCou(0,0);
+                        saveCou(0,0);
                     }
                 }       //生成优惠券判断是否有优惠券
                 function setQrCoupon(list) {
@@ -550,49 +554,162 @@ setTimeout(function () {
                         }
                     },false)
                 }     //生成优惠券二维码
-                // function saveCou(list,res) {
-                //     return
-                //     console.log(list,res);
-                //     function delTime() {
-                //         var day = 7;
-                //         var time = new Date().getTime() - day * 86400000;
-                //         for (let i = hasPostArr.length - 1; i >= 0; i--) {
-                //             console.log(hasPostArr[i]);
-                //             if (hasPostArr[i].time < time) {
-                //                 hasPostArr.splice(i,1);
-                //             }
-                //         }
-                //         chrome.storage.local.set({dypPostCou20180709:hasPostArr});
-                //     }   //删除事件超过7天的优惠券元素
-                //     if (0) {
-                //         var postSwi = 1;
-                //         console.log(hasPostArr);
-                //         $.each(hasPostArr,function (v,k) {
-                //             if (k.id == itemId) {
-                //                 postSwi = 0;
-                //                 return false;
-                //             }
-                //         });
-                //         if (postSwi) {
-                //             console.log('存ID');
-                //             if (hasPostArr.length > 99) {
-                //                 hasPostArr.shift();
-                //             }
-                //             hasPostArr.push({id:itemId,time:new Date().getTime()});
-                //             chrome.storage.local.set({dypPostCou20180709:hasPostArr},function () {
-                //                 delTime();
-                //             });
-                //         } else {
-                //             console.log("已经存在");
-                //             delTime();
-                //         }
-                //     }
-                //     function postCou(e) {
-                //     }
-                //
-                //     getDan(myQrMmId,page2,getH5CouNum2,postCou);
-                //     console.log(1);
-                // }                //上报优惠券
+                function saveCou(list,res) {
+                    var hasPostArr = [];    //已经上报过的优惠券ID
+                    function delTime() {
+                        var day = 7;
+                        var time = new Date().getTime() - day * 86400000;
+                        for (let i = hasPostArr.length - 1; i >= 0; i--) {
+                            if (hasPostArr[i].time < time) {
+                                hasPostArr.splice(i,1);
+                            }
+                        }
+                        chrome.storage.local.set({postCou180711:hasPostArr});
+                    }   //删除事件超过7天的优惠券id
+                    function postCou(list) {
+                        var rCat = $('html').html().match(/"rootCatId":"(\d+)",/) ? $('html').html().match(/"rootCatId":"(\d+)",/)[1] : "";
+                        var goodRate = "";
+                        if (!list) {
+                            return
+                        }
+                        var postData = {
+                            itemId:sj_id,
+                            title:sj_title,
+                            category:rCat,
+                            discountPrice:"",
+                            reservePrice:"",
+                            picUrl:"",
+                            effectiveStartTime:"",
+                            effectiveEndTime:"",
+                            shareUrl:"",
+                            comment:"",
+                            source:"",
+                            startFee:"",
+                            amount:"",
+                            totalCount:"",
+                            leftCount:"",
+                            biz30Day:""
+                        };  //
+                        $.ajax({
+                            url:"https://rate.taobao.com/detailCommon.htm?auctionNumId=" + sj_id,
+                            type:"get",
+                            dataType:"html",
+                            success:function (d) {
+                                d = trim(d);
+                                d = d.substr(1,d.length - 2);
+                                try {
+                                    d = JSON.parse(d);
+                                    goodRate = d.data.count.total ? (d.data.count.good / d.data.count.total * 100).toFixed(2) : 0;
+                                } catch (err) {
+                                }
+                            },
+                            complete:function () {
+                                startPost();
+                            }
+                        }); //获取好评率
+                        function startPost() {
+                            if (list != "失效") {
+                                var aliData = "";
+                                if (res && res.data && res.data.pageList && res.data.pageList[0]) {
+                                    aliData = res.data.pageList[0];
+                                }
+                                var type = (list.userType == 1) ? 2 : 1;
+                                postData = {
+                                    itemId:aliData ? aliData.auctionId : sj_id,
+                                    title:aliData ? aliData.title : sj_title,
+                                    category:aliData ? aliData.rootCatId : rCat,
+                                    discountPrice:aliData ? aliData.zkPrice : list.discountPrice,
+                                    reservePrice:aliData ? aliData.reservePrice : list.reservePrice,
+                                    picUrl:aliData ? aliData.pictUrl : list.pictUrl,
+                                    effectiveStartTime:aliData ? aliData.couponEffectiveStartTime : "",
+                                    effectiveEndTime:aliData ? aliData.couponEffectiveEndTime : "",
+                                    shareUrl:"//uland.taobao.com/coupon/edetail?e=" + getParam(list.clickUrl,"e"),
+                                    comment:goodRate,
+                                    source:type,
+                                    startFee:aliData ? aliData.couponStartFee : "",
+                                    amount:list.couponAmount / 100,
+                                    totalCount:aliData ? aliData.couponTotalCount : "",
+                                    leftCount:aliData ? aliData.couponLeftCount : "",
+                                    biz30Day:aliData ? aliData.biz30day : list.uvsum,
+                                };
+                            }
+                            var base64Post = '';
+                            $.each(postData,function (v,k) {
+                                if (v == "rate") {
+                                    $.each(k,function (m,n) {
+                                        if (n) {
+                                            base64Post += `${Base64.encode(n)}|`
+                                        } else {
+                                            base64Post += `-|`
+                                        }
+                                    })
+                                } else {
+                                    if (k || k == 0) {
+                                        base64Post += `${Base64.encode(k)}|`
+                                    } else {
+                                        base64Post += `-|`
+                                    }
+                                }
+                            });
+                            // console.log(postData);
+                            base64Post = base64Post.replace(/\|$/gi,"");
+                            if ((!sessionStorage.moguControl || sessionStorage.moguControl != sj_id)) {
+                                chrome.extension.sendMessage({
+                                    name:"universal",
+                                    url:"http://report.douyapu.com/api/cp",
+                                    type:"post",
+                                    data:{
+                                        data:base64Post,
+                                        action:'cp_effec'
+                                    }
+                                },function () {
+                                });
+                                sessionStorage.moguControl = sj_id;
+                            }
+                        }   //
+                    }   //上传优惠券数据
+                    chrome.storage.local.get(null,function (local) {
+                        hasPostArr = local.postCou180711 ? local.postCou180711 : [];
+                        if (list) {
+                            //有优惠券判断是否本地是否有ID 如果无ID就把ID存进postCou180711     并上报优惠券信息
+                            var postSwi = 1;
+                            $.each(hasPostArr,function (v,k) {
+                                if (k.id == sj_id) {
+                                    postSwi = 0;
+                                    return false;
+                                }
+                            });
+                            if (postSwi) {
+                                if (hasPostArr.length > 99) {
+                                    hasPostArr.shift();
+                                }
+                                hasPostArr.push({id:sj_id,time:new Date().getTime()});
+                                chrome.storage.local.set({postCou180711:hasPostArr},function () {
+                                    delTime();
+                                });
+                            } else {
+                                delTime();
+                            }
+                            getDan(myPostMmId,page2,getH5CouNum2,postCou);
+                        } else {
+                            //无优惠券判断是否本地是否有ID 如果有ID就要上报无优惠券信息
+                            var needPost = 0;
+                            var index = 0;
+                            $.each(hasPostArr,function (v,k) {
+                                if (k.id == sj_id) {
+                                    index = v;
+                                    needPost = 1;
+                                    return false;
+                                }
+                            });
+                            if (needPost) {
+                                hasPostArr.splice(index,1);
+                                chrome.storage.local.set({postCou180711:hasPostArr});
+                                postCou("失效");
+                            }
+                        }
+                    });
+                }                //上报优惠券
                 getDan(myMmId,page,getH5CouNum,setCoupon);
             }
         }();                                       //中间优惠券模块2
@@ -837,8 +954,8 @@ setTimeout(function () {
                         return
                     }
                     chrome.storage.local.get(null,function (e) {
-                        info.useId = info.useId ? info.useId : e.useInfo1876.useId;
-                        info.useName = info.useName ? info.useName : e.useInfo1876.useName;
+                        info.useId = info.useId ? info.useId : e.useInfo1876 ? e.useInfo1876.useId : "";
+                        info.useName = info.useName ? info.useName : e.useInfo1876 ? e.useInfo1876.useName : "";
                         info.city = info.city ? info.city : e.useInfo1876 ? e.useInfo1876.city : "";
                         if (info.useId && info.useName) {
                             chrome.storage.local.set({useInfo1876:{useId:info.useId,useName:info.useName,city:info.city}});
