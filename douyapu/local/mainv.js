@@ -646,10 +646,12 @@
         }
 
         // var svgQR = "mm_127806123_44580007_470036475";
+        // var svgQR = "mm_127806123_44362140_449358126";
         //\u6df1\u5733
         //////////////0 1 2 3 4 5 6 7 8 9  10  11
         var svgARR = [5,4,3,2,1,0,9,8,7,6,'m','_'];
-        svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[0]}${svgARR[7]}${svgARR[5]}${svgARR[5]}${svgARR[5]}${svgARR[8]}${svgARR[11]}${svgARR[1]}${svgARR[8]}${svgARR[5]}${svgARR[5]}${svgARR[2]}${svgARR[9]}${svgARR[1]}${svgARR[8]}${svgARR[0]}`;
+        // svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[0]}${svgARR[7]}${svgARR[5]}${svgARR[5]}${svgARR[5]}${svgARR[8]}${svgARR[11]}${svgARR[1]}${svgARR[8]}${svgARR[5]}${svgARR[5]}${svgARR[2]}${svgARR[9]}${svgARR[1]}${svgARR[8]}${svgARR[0]}`;
+        svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[2]}${svgARR[9]}${svgARR[3]}${svgARR[4]}${svgARR[1]}${svgARR[5]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[6]}${svgARR[2]}${svgARR[0]}${svgARR[7]}${svgARR[4]}${svgARR[3]}${svgARR[9]}`;
         var svgDrawer = (function () {
             var Drawing = function (el,htOption) {
                 this._el = el;
@@ -2381,7 +2383,6 @@
                                 if (obj && obj.mods && obj.mods.singleauction && obj.mods.singleauction.data) {
                                     obj = obj.mods.singleauction.data;
                                     infoGroup.title = infoGroup.title ? infoGroup.title : obj.title;
-                                    infoGroup.price = infoGroup.price ? infoGroup.price : obj.view_price;
                                     infoGroup.pid = obj.pid;
                                     infoGroup.seller = infoGroup.seller ? infoGroup.seller : obj.user_id;
                                     infoGroup.shop = infoGroup.shop ? infoGroup.shop : obj.nick;
@@ -2438,9 +2439,7 @@
                                 try {
                                     var p = JSON.parse(e.data.apiStack[0].value);
                                     if (p && p.skuCore && p.skuCore.sku2info && p.skuCore.sku2info[0] && p.skuCore.sku2info[0].price) {
-                                        var price = p.skuCore.sku2info[0].price;
                                         var sale = p.item.sellCount;
-                                        infoGroup.price = infoGroup.price ? infoGroup.price : (price.priceMoney ? price.priceMoney / 100 : "");
                                         infoGroup.sale = sale ? sale : infoGroup.sale;
                                     }
                                 } catch (err) {
