@@ -1239,7 +1239,7 @@
             // var cssStyle1212 = '';
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
-            var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,needClearArr,hasPostArr;
+            var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,needClearArr,hasPostArr,canalId;
             infoGroup = {
                 id:'',plat:nowPlat,title:"",price:"",sameNew:{},pid:"",seller:"",rCat:"",shop:"",
                 pic:"",sale:"",amount:"",amountReq:"",amountT:0,amountL:0,tkCom:0,startT:"",endT:""
@@ -1285,6 +1285,7 @@
                 settingNew = !$.isEmptyObject(e.dypSetNew) ? e.dypSetNew : {dypTop:'show',dypMid:'show'};
                 dypSwitch = e.dypSwitch;
                 dypNav = e.dypNav201815;
+                canalId = e.dypCanalId20180709;
                 hasPostArr = e.dypPostCou20180709 ? e.dypPostCou20180709 : [];
                 var keepKey = [
                     'dypAlert20180226',
@@ -1631,6 +1632,13 @@
                     cnzzEvent(dypVer,"测试");
                     if (needClearArr) {
                         cnzzEvent(needClearArr,"测试");
+                    }
+                    if (infoGroup.plat == 'tm' || infoGroup.plat == 'tb' || infoGroup.plat == 'ju') {
+                        if (canalId == '120015') {
+                            cnzzEvent("新渠道展示","渠道");
+                        } else {
+                            cnzzEvent("旧渠道展示","渠道");
+                        }
                     }
                 });    //打点统计代码
                 function startPrice(url) {
@@ -2500,7 +2508,7 @@
                                                         dyClickUrl = k;
                                                         hasDan(k);
                                                     } else {
-                                                        noDan(k);   //有对应数据但无优惠券的
+                                                        noDan(k,'no');   //有对应数据但无优惠券的
                                                     }
                                                     hasSwi = 0;
                                                     return false;
@@ -2508,7 +2516,7 @@
                                             });
                                             if (hasSwi) {
                                                 if (page == 3) {
-                                                    noDan(0);    //数据没对应ID
+                                                    noDan(0,'err');    //数据没对应ID
                                                     return false
                                                 } else {
                                                     page++;
@@ -2516,12 +2524,12 @@
                                                 }
                                             }
                                         } else {
-                                            noDan(0);    //搜索无任何数据
+                                            noDan(0,'no');    //搜索无任何数据
                                         }
                                     } else {
                                         getH5CouNum++;
                                         if (getH5CouNum == 3) {
-                                            noDan(0);    //请求不成功的
+                                            noDan(0,'err');    //请求不成功的
                                             return false
                                         } else {
                                             getTbCookie(getDan);
@@ -2702,7 +2710,7 @@
                             getQrDan();
                             getPostDan();
                         }//
-                        function noDan(k) {
+                        function noDan(k,type) {
                             $('#dypAbs9527').prepend(`<div class="dypAbs9527-coupon">
                                 <div class="dypAbs9527-coupon-back-no">
                                 </div>
@@ -2729,11 +2737,10 @@
                                     return false;
                                 }
                             });
-                            if (needPost) {
+                            if (needPost && (type == 'no')) {
                                 hasPostArr.splice(index,1);
                                 chrome.storage.local.set({dypPostCou20180709:hasPostArr});
-                                saveCoupon(k);
-                            } else {
+                                saveCoupon(0);
                             }
                             getQrDan();
                         }//
@@ -2765,35 +2772,30 @@
                             });
                             function postTo() {
                                 var type = (infoGroup.plat == "tm") ? 2 : 1;
+                                var action = 'cp_bogus';
                                 var postData = {
                                     itemId:infoGroup.id,
-                                    title:infoGroup.title,
-                                    category:infoGroup.rCat,
-                                    discountPrice:infoGroup.price,
-                                    reservePrice:"",
-                                    picUrl:infoGroup.pic,
-                                    effectiveStartTime:"",
-                                    effectiveEndTime:"",
-                                    shareUrl:"",
-                                    comment:goodRate,
-                                    source:type,
-                                    startFee:"",
-                                    amount:"",
-                                    totalCount:"",
-                                    leftCount:"",
-                                    biz30Day:infoGroup.sale
                                 };
                                 if (e) {
-                                    postData.reservePrice = e.reservePrice;
-                                    if (e.couponAmount) {
-                                        postData.shareUrl = "//uland.taobao.com/coupon/edetail?e=" + getParam(e.clickUrl,"e");
-                                        postData.amount = infoGroup.amount;
-                                        postData.effectiveEndTime = infoGroup.endT;
-                                        postData.effectiveStartTime = infoGroup.startT;
-                                        postData.startFee = infoGroup.amountReq;
-                                        postData.totalCount = infoGroup.amountT;
-                                        postData.leftCount = infoGroup.amountL;
-                                    }
+                                    postData = {
+                                        itemId:infoGroup.id,
+                                        title:infoGroup.title,
+                                        category:infoGroup.rCat,
+                                        discountPrice:infoGroup.price,
+                                        reservePrice:e.reservePrice,
+                                        picUrl:infoGroup.pic,
+                                        effectiveStartTime:infoGroup.startT,
+                                        effectiveEndTime:infoGroup.endT,
+                                        shareUrl:"//uland.taobao.com/coupon/edetail?e=" + getParam(e.clickUrl,"e"),
+                                        comment:goodRate,
+                                        source:type,
+                                        startFee:infoGroup.amountReq,
+                                        amount:infoGroup.amount,
+                                        totalCount:infoGroup.amountT,
+                                        leftCount:infoGroup.amountL,
+                                        biz30Day:infoGroup.sale
+                                    };
+                                    action = 'cp_effec';
                                 }
                                 var base64Post = '';
                                 $.each(postData,function (v,k) {
@@ -2823,7 +2825,7 @@
                                         dataType:"json",
                                         data:{
                                             data:base64Post,
-                                            action:'cp_effec'
+                                            action:action
                                         }
                                     },function () {
                                     });
