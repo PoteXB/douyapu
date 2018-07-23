@@ -1,20 +1,22 @@
 {
   "website": "https://www.douyapu.com/",
   "myMmId": [
-    "mm_117650097_45264728_529228034",
-    "mm_117650097_45272655_529232094",
-    "mm_117650097_45264728_529228591",
     "mm_112599953_15986703_132830775",
     "mm_112599953_15986703_240312875",
     "mm_112599953_15986703_240342181",
-    "mm_112599953_15986703_240314880",
+    "mm_112599953_15986703_240314880"
+  ],
+  "myNewMmId": [
     "mm_112599953_15986703_240342232"
   ],
   "phoneId": [
     "mm_130510017_42932909_740326106"
   ],
+  "phoneNewId": [
+    "mm_133078964_46586405_10638200228"
+  ],
   "postId": "mm_133078964_46586405_1416646851",
-  "versionNum": "2018626",
+  "versionNum": "2018723",
   "popUrlNew": "https://data.douyapu.com/api/coupon?action=query&page_size=20&sorts=comment:true",
   "popUrlZhe": "https://data.douyapu.com/api/coupon?action=query&page_size=20&sorts=discountRate:true",
   "popUrlHot": "https://data.douyapu.com/api/coupon?action=query&page_size=20&sorts=biz30Day:false",
