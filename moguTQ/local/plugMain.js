@@ -152,24 +152,6 @@ setTimeout(function () {
                 "//shang.qq.com/wpa/qunwpa?idkey=7b0d150758f197630ae19f9ee6e7f7463c24caae7ae1ca7bdf8f17513792ce1a"
             ],//咨询群
             myMmId = [
-                "mm_131503013_42952277_448750515",
-                "mm_131503013_42952277_448756445",
-                "mm_128520337_42952245_428146658",
-                "mm_128520337_42952245_428144688",
-                "mm_130658720_42962885_555694211",
-                "mm_130658720_42962885_555672818",
-                "mm_130748499_43426580_555724648",
-                "mm_130748499_43426580_555736425",
-                "mm_131309050_42954687_558506664",
-                "mm_131309050_42954687_558492881",
-                "mm_131323056_42966252_558524251",
-                "mm_131323056_42966252_558508799",
-                "mm_131333059_42974030_558548164",
-                "mm_131333059_42974030_558562040",
-                "mm_76361007_42968104_558544620",
-                "mm_76361007_42968104_558552382",
-                "mm_131499461_42956754_558782323",
-                "mm_131499461_42956754_558782380",
                 "mm_112599953_15986703_1830622155",
                 "mm_112599953_15986703_1830642134",
                 "mm_112599953_15986703_1830626647",
@@ -178,32 +160,14 @@ setTimeout(function () {
                 "mm_112599953_15986703_1830648942",
                 "mm_112599953_15986703_1830704068",
                 "mm_112599953_15986703_1830704258",
-                "mm_133500066_46926405_1967492627",
-                "mm_133500066_46926405_1967542006",
-                "mm_140150179_46924438_1967678427",
-                "mm_140150179_46924438_1967708088",
-                "mm_133490091_46908608_1968256206",
-                "mm_133490091_46908608_1968254491",
-                "mm_140210036_46914461_1968392864",
-                "mm_140210036_46914461_1968412697",
-                "mm_131931325_46906562_1968760874",
-                "mm_131931325_46906562_1968814028",
-                "mm_129731363_46926462_1971870138",
-                "mm_129731363_46926462_1971866523",
-                "mm_133302877_46916574_1969356771",
-                "mm_133302877_46916574_1969348939",
-                "mm_82672936_46930415_1969940296",
-                "mm_82672936_46930415_1969962040",
-                "mm_32269761_46908610_1968580731",
-                "mm_32269761_46908610_1968628015",
-                "mm_140040022_46896981_1968704286",
-                "mm_140040022_46896981_1968736078",
-                "mm_140130034_46926440_1969200307",
-                "mm_140130034_46926440_1969200537",
-                "mm_134220183_46920479_1970016532",
-                "mm_134220183_46920479_1970044249",
-                "mm_116718820_47400200_3480550363",
-                "mm_116718820_47400200_3481300354"
+                "mm_131487042_42936790_469416271",
+                "mm_131487042_42936790_469418146",
+                "mm_131473982_42930969_469390839",
+                "mm_131473982_42930969_469408615",
+                "mm_63658289_42938845_500780731",
+                "mm_63658289_42938845_500792726",
+                "mm_130652011_42936815_500820201",
+                "mm_130652011_42936815_500810666"
             ],//推广mmid
             myQrMmId = [
                 "mm_131487042_42936790_469416271",
@@ -217,7 +181,7 @@ setTimeout(function () {
             ],//扫码推广mmid
             myPostMmId = "mm_133078964_46586405_1416646851",//上报mmid
             sj_title = $("head>title")[0].innerHTML.replace(/-淘宝网|-tmall.com天猫$/,""),//详情页标题
-            tblmUrl = "http://pub.alimama.com/items/search.json";//淘宝联盟搜索接口
+            tblmUrl = "https://pub.alimama.com/items/search.json";//淘宝联盟搜索接口
         myMmId = myMmId[Math.floor(Math.random() * myMmId.length)];//获取随机id
         myQrMmId = myQrMmId[Math.floor(Math.random() * myQrMmId.length)];//获取扫码随机id
         function sub(a,b) {
@@ -375,7 +339,7 @@ setTimeout(function () {
             });
         }();                                       //上面两个广告位模块1
         !function () {
-            var tbCookie = '';                   //淘宝cookie
+            var tbCookie = '';
             // var adPic = '';
             var adPic = 'data:image/jpeg;base64,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';
             var toUrl = 'https://s.click.taobao.com/OefKSPw';
@@ -422,9 +386,9 @@ setTimeout(function () {
                                 $.each(data,function (v,k) {
                                     if (k.nid == sj_id) {
                                         if (k.couponAmount) {
-                                            callBack(k);
+                                            callBack(k,'has');    //有相应优惠券
                                         } else {
-                                            callBack(0);   //有对应数据但无优惠券的
+                                            callBack(k,'no');    //有对应id数据但无优惠券的
                                         }
                                         hasSwi = 0;
                                         return false;
@@ -432,7 +396,7 @@ setTimeout(function () {
                                 });
                                 if (hasSwi) {
                                     if (page == 3) {
-                                        callBack(0);    //数据没对应ID
+                                        callBack(0,'err');        //数据没对应ID,可能没有推广,可能前面3页都没数据,不知道是否有优惠券
                                         return false
                                     } else {
                                         page++;
@@ -440,12 +404,12 @@ setTimeout(function () {
                                     }
                                 }
                             } else {
-                                callBack(0);    //搜索无任何数据
+                                callBack(0,'no');    //搜索无任何数据,没有优惠券
                             }
                         } else {
                             num++;
                             if (num == 3) {
-                                callBack(0);    //请求不成功的
+                                callBack(0,'err');    //请求失败的,不知道是否有优惠券
                                 return false
                             } else {
                                 getTbCookie(getDan,pid,page,num,callBack);
@@ -453,66 +417,106 @@ setTimeout(function () {
                         }
                     });
                 }   //
-                function setCoupon(list) {
+                function setCoupon(list,type) {
                     var qrcodeText = "https://item.taobao.com/item.htm?id=" + sj_id;
-                    if (list) {
+                    if (type == 'has') {
+                        qrcodeText = "https://uland.taobao.com/coupon/edetail" + "?e=" + getParam(list["clickUrl"],"e");
+                        var html = `<div class="plugMid627-couBox">
+                            <div>
+                                <div class="plugMid627-couPrice">券后价 <span>¥${sub(list.discountPrice,list.couponAmount / 100)}</span></div>
+                                <div class="plugMid627-couTime" data-endtime=""></div>
+                            </div>
+                            <div class="plugMid627-couBack" data-mgClick="领取优惠券">
+                                <div class="plugMid627-couAmount">${list.couponAmount / 100}元券</div>
+                                <div class="plugMid627-couNeed"></div>
+                            </div>
+                            <div class="plugMid627-couEmpty"></div>
+                            <div class="plugMid627-couQr">
+                                <div class="plugMid627-couQr-icon"></div>
+                                <div class="plugMid627-couQr-title">手淘领券</div>
+                                <div class="plugMid627-couQr-box">
+                                    <div class="plugMid627-couQr-drop">
+                                        <div id="plugMid627-couQr"></div>
+                                        <div class="">手淘扫码领券<br>商品<span>立减${list.couponAmount / 100}元</span></div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>`;
+                        $(".plugMid627-hasCoupon").html(html);
+                        $(".plugMid627-hasCoupon").show();
+                        $(".plugMid627-couBack").click(function () {
+                            openWindow(qrcodeText);
+                        });
+                        var conponE = getParam(list.clickUrl,"e");//优惠券E参数
+                        var getH5CouNum3 = 0;//
+                        var num = 0;    //
+                        var resdata = {};   //
+                        function saveCount() {
+                            num++;
+                            if (num == 2) {
+                                saveCou(list,resdata);
+                            }
+                        }   //
+                        function getCouponInfo() {
+                            var time = Date.now();
+                            var s = `{"e":"${conponE}","pid":"${myPostMmId}"}`;
+                            chrome.extension.sendMessage({
+                                url:"https://acs.m.taobao.com/h5/mtop.alimama.union.hsf.coupon.get/1.0/",
+                                data:{
+                                    jsv:"2.4.0",v:"1.0",api:"mtop.alimama.union.hsf.coupon.get",appKey:"12574478",t:time,AntiCreep:true,AntiFlood:true,
+                                    sign:md5(tbCookie.split("_")[0] + "&" + time + "&12574478&" + s),data:s
+                                },
+                                type:"get",dataType:"json",name:"universal"
+                            },function (r) {
+                                if (r && r.ret && r.ret[0] && r.ret[0].match("调用成功")) {
+                                    if (r && r.data && r.data.result) {
+                                        resdata.data = r.data.result;
+                                        var ntime = new Date(resdata.data["effectiveEndTime"]);
+                                        ntime = Math.floor(ntime.getTime() / 1000);
+                                        $(".plugMid627-couNeed").html(`满${resdata.data.startFee}减${resdata.data.amount}`);
+                                        $(".plugMid627-couTime").attr("data-endtime",ntime);
+                                        opTimer(".plugMid627-couTime");
+                                        saveCount()
+                                    }
+                                } else {
+                                    getH5CouNum3++;
+                                    if (getH5CouNum3 == 3) {
+                                        $(".plugMid627-couNeed").html(`无门槛`);
+                                        return false
+                                    } else {
+                                        getTbCookie(getCouponInfo);
+                                    }
+                                }
+                            });
+                        }//
+                        getCouponInfo();
                         chrome.extension.sendMessage({
                             name:"universal",
                             url:tblmUrl + "?q=https://item.taobao.com/item.htm?id=" + sj_id,
                             type:"get",
                         },function (res) {
                             if (res["data"] && res["data"]["pageList"]) {
-                                var ntime = new Date(res["data"]["pageList"][0]["couponEffectiveEndTime"]);
-                                list['endtime'] = Math.floor(ntime.getTime() / 1000);
-                                list['couponInfo'] = res["data"]["pageList"][0]["couponInfo"];
-                            } else {
-                                list['endtime'] = false;
-                                list['couponInfo'] = "无门槛";
+                                resdata.couponTotalCount = res["data"]["pageList"][0].couponTotalCount;
+                                resdata.couponLeftCount = res["data"]["pageList"][0].couponLeftCount;
                             }
-                            qrcodeText = "https://uland.taobao.com/coupon/edetail" + "?e=" + getParam(list["clickUrl"],"e");
-                            var html = `<div class="plugMid627-couBox">
-                                <div>
-                                    <div class="plugMid627-couPrice">券后价 <span>¥${sub(list.discountPrice,list.couponAmount / 100)}</span></div>
-                                    <div class="plugMid627-couTime" data-endtime="1535673600">有效期</div>
-                                </div>
-                                <div class="plugMid627-couBack" data-mgClick="领取优惠券">
-                                    <div class="plugMid627-couAmount">${list.couponAmount / 100}元券</div>
-                                    <div class="plugMid627-couNeed">${list.couponInfo}</div>
-                                </div>
-                                <div class="plugMid627-couEmpty"></div>
-                                <div class="plugMid627-couQr">
-                                    <div class="plugMid627-couQr-icon"></div>
-                                    <div class="plugMid627-couQr-title">手淘领券</div>
-                                    <div class="plugMid627-couQr-box">
-                                        <div class="plugMid627-couQr-drop">
-                                            <div id="plugMid627-couQr"></div>
-                                            <div class="">手淘扫码领券<br>商品<span>立减${list.couponAmount / 100}元</span></div>
-                                        </div>  
-                                    </div>
-                                </div>
-                            </div>`;
-                            $(".plugMid627-hasCoupon").html(html);
-                            $(".plugMid627-hasCoupon").show();
-                            $(".plugMid627-couBack").click(function () {
-                                openWindow(qrcodeText);
-                            });
-                            opTimer(".plugMid627-couTime");
-                            getDan(myQrMmId,page1,getH5CouNum1,setQrCoupon);
-                            saveCou(list,res);
+                            saveCount()
                         });
+                        getDan(myQrMmId,page1,getH5CouNum1,setQrCoupon);
                     } else {
                         $(".plugMid627-noCoupon").html(`<img src="${adPic}" data-mgClick="${clickE}">`);
                         $(".plugMid627-noCoupon").show();
                         $(".plugMid627-noCoupon").click(function () {
                             openWindow(toUrl);
                         });
-                        saveCou(0,0);
+                        if (type == 'no') {
+                            saveCou(0,0);
+                        }
                     }
                 }       //生成优惠券判断是否有优惠券
-                function setQrCoupon(list) {
+                function setQrCoupon(list,type) {
                     var qrcodeText = "https://item.taobao.com/item.htm?id=" + sj_id;
                     if (list) {
-                        if (list.couponAmount) {
+                        if (type == 'has') {
                             qrcodeText = "https://uland.taobao.com/coupon/edetail?e=" + getParam(list["clickUrl"],"e");
                         } else {
                             qrcodeText = "https://s.click.taobao.com/t?e=" + getParam(list["clickUrl"],"e");
@@ -527,7 +531,6 @@ setTimeout(function () {
                         colorLight:"#ffffff",
                         correctLevel:QRCode.CorrectLevel.L
                     });
-                    // var staus = 1;
                     $("#plugMid627-couQr").attr("title","");
                     $(".plugMid627-couQr").hover(
                         function () {
@@ -558,11 +561,11 @@ setTimeout(function () {
                         }
                         chrome.storage.local.set({postCou180711:hasPostArr});
                     }   //删除事件超过7天的优惠券id
-                    function postCou(list) {
-                        var rCat = $('html').html().match(/"rootCatId":"(\d+)",/) ? $('html').html().match(/"rootCatId":"(\d+)",/)[1] : "";
+                    function postCou(list,type) {
+                        var rCat = $('html').html().match(/"rootCatId":"(\d+)",/) ? $('html').html().match(/"rootCatId":"(\d+)",/)[1] : ($('html').html().match(/(\s+)rcid(\s+):(\s+)'(\d+)'/) ? $('html').html().match(/(\s+)rcid(\s+):(\s+)'(\d+)'/)[4] : "");
                         var action = 'cp_bogus';
                         var goodRate = "";
-                        if (!list) {
+                        if (type == 'err') {
                             return
                         }
                         var postData = {
@@ -586,30 +589,27 @@ setTimeout(function () {
                             }
                         }); //获取好评率
                         function startPost() {
-                            if (list != "失效") {
+                            if (type == "has") {
                                 action = 'cp_effec';
-                                var aliData = "";
-                                if (res && res.data && res.data.pageList && res.data.pageList[0]) {
-                                    aliData = res.data.pageList[0];
-                                }
-                                var type = (list.userType == 1) ? 2 : 1;
+                                var aliData = res.data;
+                                var pintai = (list.userType == 1) ? 2 : 1;
                                 postData = {
-                                    itemId:aliData ? aliData.auctionId : sj_id,
-                                    title:aliData ? aliData.title : sj_title,
-                                    category:aliData ? aliData.rootCatId : rCat,
-                                    discountPrice:aliData ? aliData.zkPrice : list.discountPrice,
-                                    reservePrice:aliData ? aliData.reservePrice : list.reservePrice,
-                                    picUrl:aliData ? aliData.pictUrl : list.pictUrl,
-                                    effectiveStartTime:aliData ? aliData.couponEffectiveStartTime : "",
-                                    effectiveEndTime:aliData ? aliData.couponEffectiveEndTime : "",
+                                    itemId:aliData ? aliData.item.itemId : sj_id,
+                                    title:aliData ? aliData.item.title : sj_title,
+                                    category:rCat,
+                                    discountPrice:aliData ? aliData.item.discountPrice : list.discountPrice,
+                                    reservePrice:aliData ? aliData.item.reservePrice : list.reservePrice,
+                                    picUrl:aliData ? aliData.item.picUrl : list.pictUrl,
+                                    effectiveStartTime:aliData ? aliData.effectiveStartTime.split(" ")[0] : "",
+                                    effectiveEndTime:aliData ? aliData.effectiveEndTime.split(" ")[0] : "",
                                     shareUrl:"//uland.taobao.com/coupon/edetail?e=" + getParam(list.clickUrl,"e"),
                                     comment:goodRate,
-                                    source:type,
-                                    startFee:aliData ? aliData.couponStartFee : "",
+                                    source:pintai,
+                                    startFee:aliData ? aliData.startFee : "",
                                     amount:list.couponAmount / 100,
-                                    totalCount:aliData ? aliData.couponTotalCount : "",
-                                    leftCount:aliData ? aliData.couponLeftCount : "",
-                                    biz30Day:aliData ? aliData.biz30day : list.uvsum,
+                                    totalCount:res.couponTotalCount,
+                                    leftCount:res.couponLeftCount,
+                                    biz30Day:aliData ? aliData.item.biz30Day : list.uvsum,
                                 };
                             }
                             var base64Post = '';
@@ -684,7 +684,7 @@ setTimeout(function () {
                             if (needPost) {
                                 hasPostArr.splice(index,1);
                                 chrome.storage.local.set({postCou180711:hasPostArr});
-                                postCou("失效");
+                                postCou(0,"no");
                             }
                         }
                     });
