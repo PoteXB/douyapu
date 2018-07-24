@@ -2399,6 +2399,8 @@
                                 infoGroup.amountT = data.couponTotalCount;
                                 infoGroup.amountL = data.couponLeftCount;
                                 infoGroup.tkCom = data.tkCommFee;
+                                infoGroup.startT = data.couponEffectiveStartTime;
+                                infoGroup.endT = data.couponEffectiveEndTime;
                                 if (infoGroup.plat == "ju") {
                                     infoGroup.plat = (data.userType == 1) ? "tm" : "tb"
                                 }
@@ -2631,7 +2633,7 @@
                                 </div>
                                 <div class="dypAbs9527-coupon-contact">
                                     <div class="dypAbs9527-coupon-price">券后价 <span>${numSub(k.discountPrice,amount)}元</span><a href="${qqOnline}" target="_blank"><b data-douyababapaopao="工具+外部QQ群"></b></a></div>
-                                    <div class="dypAbs9527-coupon-time dypClear">
+                                    <div class="dypAbs9527-coupon-time dypClear" style="visibility:hidden">
                                         <div class="fl">还剩 &nbsp;</div>
                                         <div id="dypAbs9527-coupon-time" class="fl">
                                             <span class="day">00</span><span class="dypMid9527-c-2c2c2c">日</span> <span class="hour">00</span><span class="dypMid9527-c-2c2c2c">时</span>
@@ -2653,6 +2655,7 @@
                             });
                             try {
                                 $("#dypAbs9527-coupon-time").fnTimeCountDown(infoGroup.endT + ' 23:59:59');
+                                $(".dypAbs9527-coupon-time").css("visibility","visible");
                             } catch (e) {
                             }
                             function delTime() {
