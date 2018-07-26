@@ -1500,7 +1500,7 @@
                         <div class="dypAbs9527-ad">
                             <div id="dai360_link" class="fl" title="拆红包">
                                 <div class="dai360_title" data-douyababapaopao="MID-拆红包活动点击">
-                                    <b class="dai360_logo"></b><span>酷</span><span>g</span><span>i</span><span>r</span><span>l</span><span>的</span><span>夏</span><span>日</span><span>潮</span><span>搭</span><span>牛</span><span>仔</span>
+                                    <b class="dai360_logo"></b><span>季</span><span>末</span><span>大</span><span>放</span><span>送</span><span>&nbsp;,&nbsp;</span><span>爆</span><span>款</span><span>低</span><span>价</span>
                                 </div>
                             </div>
                         </div>
@@ -1566,7 +1566,7 @@
                     //     $("#dai360Pop").css("display","block");
                     // });
                     $("body").on("click","#dai360_link",function () {
-                        openWindow("https://s.click.taobao.com/J1aQGPw")
+                        openWindow("https://s.click.taobao.com/ySoCNOw")
                     });
                     // $("body").on("click","#dai360Pop>.shadow",function () {
                     //     $("#dai360Pop").css("display","none");
