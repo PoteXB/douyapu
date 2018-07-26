@@ -228,7 +228,7 @@ setTimeout(function () {
         }                           //指定url提参方法
         function opTimer(eve) {
             var timeArea = $(eve);
-            var endTime = $(eve).data("endtime") + 86400;
+            var endTime = $(eve).data("endtime");
             if (endTime) {
                 dateCountDown();
                 setInterval(dateCountDown,1000);
@@ -694,7 +694,7 @@ setTimeout(function () {
         }();                                       //中间优惠券模块2
         !function () {
             var data = [
-                {name:'618活动',title:'酷girl的夏日潮搭牛仔',pic:'http://file.douyapu.com/douyapu/dai360/2018618.png',clickE:"酷girl",type:0,url:"https://s.click.taobao.com/J1aQGPw"}
+                {name:'618活动',title:'季末大放送 , 爆款低价',pic:'http://file.douyapu.com/douyapu/dai360/2018618.png',clickE:"酷girl",type:0,url:"https://s.click.taobao.com/ySoCNOw"}
             ];
             var html = '';
             $.each(data,function (v,k) {
@@ -763,7 +763,7 @@ setTimeout(function () {
         }();                                       //下面轮播活动模块3
     }           //淘宝客业务页面
     function startAllUrl() {
-        cnzzAppend(function () {});
+        // cnzzAppend(function () {});
         !function () {
             var total;
             var locHost = location.host;
