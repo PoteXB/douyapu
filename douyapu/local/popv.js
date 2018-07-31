@@ -256,7 +256,7 @@ chrome.storage.local.get("dypjsonvdata",function (e) {
                     activeNowpage += 1;
                 }
             } else {
-                if (data && data.res && data.res.length > 0) {
+                if (data && data.code == 1 && data.res && data.res.length > 0) {
                     var oli = "";
                     $.each(data.res,function (key,value) {
                         var webWay; //存储来源
@@ -290,7 +290,7 @@ chrome.storage.local.get("dypjsonvdata",function (e) {
                                     <p class="content-title" title="${value.title}">${value.title}</p>
                                 </a>
                                 <p class="content-price">
-                                    <span class="fw-bold c-ff3e3e fs-14"><span class="fs-12">¥</span>${Math.floor(discountPrice - amount)}</span>
+                                    <span class="fw-bold c-ff3e3e fs-14"><span class="fs-12">¥</span>${numSub(discountPrice,amount)}</span>
                                     <span class="content-border"></span>
                                     <span class="td-through">¥${discountPrice}</span>
                                 </p>
@@ -325,3 +325,32 @@ chrome.browserAction.setBadgeText({
 function trim(str) {
     return str.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');
 }
+function numSub(a,b) {
+    var c,d,e;    //
+    function mul(a,b) {
+        var c = 0,
+            d = a.toString(),
+            e = b.toString();
+        try {
+            c += d.split(".")[1].length;
+        } catch (f) {
+        }
+        try {
+            c += e.split(".")[1].length;
+        } catch (f) {
+        }
+        return Number(d.replace(".","")) * Number(e.replace(".","")) / Math.pow(10,c);
+    }   //
+    try {
+        c = a.toString().split(".")[1].length;
+    } catch (f) {
+        c = 0;
+    }
+    try {
+        d = b.toString().split(".")[1].length;
+    } catch (f) {
+        d = 0;
+    }
+    e = Math.pow(10,Math.max(c,d));
+    return (mul(a,e) - mul(b,e)) / e;
+}                  //去掉浮点数的相减方法
