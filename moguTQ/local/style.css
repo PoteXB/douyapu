@@ -74,10 +74,28 @@
 }
 .plugMid627-AD .plugMid627-drop{
     left:0;
-    width:500px;
 }
 .plugMid627-ADImg{
     background:#ffffff;
+}
+.plugMid627-AD .plugMid627-drop.qrCode{
+    left:auto;
+    right:80px;
+    width:153px;
+    border:1px solid #ECECEC;
+    border-top:none;
+}
+.plugMid627-AD .plugMid627-drop.qrCode > div{
+    background:#FFFFFF;
+}
+.plugMid627-drop.qrCode .plugMid627-ADImg{
+    width:130px;
+    margin:0 auto;
+    padding:15px 0;
+}
+.plugMid627-drop.qrCode .plugMid627-drop-title{
+    text-align:center;
+    padding-bottom:15px;
 }
 .plugMid627-ADImg img{
     width:100%;
