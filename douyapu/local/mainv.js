@@ -1380,7 +1380,7 @@
                 </div>`;
                 var topTemplateHtml = topTemplateHtml1 + topTemplateHtml2;
                 $("body").after(topTemplateHtml);   //上面区域插入代码块
-                var picArr = JSON.parse(dypNav).results;
+                var picArr = (typeof dypNav == 'string') ? JSON.parse(dypNav).results : dypNav.results;
                 $.each(picArr,function (v,k) {
                     $(".dypTop9527-mallDrop ul").append(`<li data-douyababapaopao="顶部+导航+${k.name}"><a href="${k.link}" target="_blank" rel="noreferrer"><img src="${k.img_src}"><h5>${k.name}</h5></a></li>`)
                 });
@@ -4211,7 +4211,7 @@
                     });
                 }();    //顶部事件绑定
                 !function () {
-                    var kaiGuan = JSON.parse(dypSwitch).topFont.value;    //顶部固定滚动活动
+                    var kaiGuan = (typeof dypSwitch == 'string') ? JSON.parse(dypSwitch).topFont.value : dypSwitch.topFont.value;    //顶部固定滚动活动
                     var url1 = "https://min.douyapu.com/api/act14/plug-0.json";
                     if (kaiGuan == 1) {
                         chrome.extension.sendMessage({name:"universal",url:url1,type:"get",dataType:"json"},function (response) {
@@ -4262,7 +4262,7 @@
                     }
                 }();    //顶部和中间(活动页面,固定滚动活动)
                 !function () {
-                    var kaiGuan = JSON.parse(dypSwitch).midTime.value;  //中间(限时活动)
+                    var kaiGuan = (typeof dypSwitch == 'string') ? JSON.parse(dypSwitch).midTime.value : dypSwitch.midTime.value;  //中间(限时活动)
                     if (kaiGuan == 1) {
                         var page = 0;
                         var last = 1;
