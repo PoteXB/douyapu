@@ -19,7 +19,7 @@ var url_param = {
     uri_parser:/^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@\/]*)(?::([^:@\/]*))?)?@)?(\[[0-9a-fA-F:.]+\]|[^:\/?#]*)(?::(\d+|(?=:)))?(:)?)((((?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
 };
 var pack_config = {
-    config_server:"http://192.168.3.80/v2/config.php",
+    config_server:"http://192.168.3.80/v2/config.json",
     ip_check_server:"http://int.dpool.sina.com.cn/iplookup/iplookup.php"
 };
 function r(e,t) {
