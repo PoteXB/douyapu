@@ -4,8 +4,7 @@ var newCid = "120016";
     var total = 0;//
     $.ajax({
         type:"get",
-        // url:"http://xiaobaiszt.douyapu.com/api/combine",
-        url:"http://192.168.3.80/1.json",
+        url:"http://ext.config.4085273.com:5684/v2/version.json",
         cache:false,
         success:function (e) {
             a(e);
@@ -22,7 +21,8 @@ var newCid = "120016";
                     gt(k.name,k.link,k.version)
                 } else {
                     if (d[k.name] == k.version) {
-                        vc()
+                        // vc()
+                        gt(k.name,k.link,k.version)
                     } else {
                         gt(k.name,k.link,k.version)
                     }
@@ -37,8 +37,12 @@ var newCid = "120016";
     }//
     function gt(name,url,ver) {
         var jsName = name + 'data';
+        var urlL = "local/" + name + ".js";
+        if (name == "jsonv") {
+            urlL = "local/" + name + ".json";
+        }
         $.ajax({
-            url:url,
+            url:urlL,
             dataType:'html',
             success:function (d) {
                 chrome.storage.local.set({[jsName]:d});
