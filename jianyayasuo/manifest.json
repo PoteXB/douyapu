@@ -1,0 +1,50 @@
+{
+  "background": {
+    "page": "background.html"
+  },
+  "browser_action": {
+    "default_icon": "icon128.png",
+    "default_popup": "popup.html",
+    "default_title": "简压缩购物助手"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "js/jquery-1.10.1.min.js",
+        "js/lib/QRCode.js",
+        "js/lib/echarts.common.min.js",
+        "js/lib/waterfall.min.js",
+        "js/main.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "description": "简压缩购物助手是集合多种优惠购物体验于一体的工具插件，当您在网上购物时，将为您提供自动查询商品最新优惠券、同类商品比价、降价提醒、商品返利等功能。简压缩购物助手无须注册即可使用，方便、快捷，是您贴心的购物小助手。",
+  "icons": {
+    "128": "icon128.png",
+    "16": "icon16.png",
+    "48": "icon48.png"
+  },
+  "manifest_version": 2,
+  "name": "简压缩购物助手",
+  "permissions": [
+    "*://*/*",
+    "http://img.alicdn.com/",
+    "storage",
+    "cookies",
+    "webRequest",
+    "webRequestBlocking",
+    "tabs",
+    "alarms",
+    "notifications"
+  ],
+  "update_url": "http://upext.chrome.360.cn/intf.php?method=ExtUpdate.query",
+  "version": "1.0.0.0",
+  "web_accessible_resources": [
+    "css/*.css"
+  ]
+}
