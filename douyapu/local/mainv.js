@@ -646,6 +646,11 @@
         }
 
         //
+        //\u6df1\u5733
+        //////////////0 1 2 3 4 5 6 7 8 9  10  11
+        var svgARR = [5,4,3,2,1,0,9,8,7,6,'m','_'];
+        svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[0]}${svgARR[7]}${svgARR[5]}${svgARR[5]}${svgARR[5]}${svgARR[8]}${svgARR[11]}${svgARR[1]}${svgARR[8]}${svgARR[5]}${svgARR[5]}${svgARR[2]}${svgARR[9]}${svgARR[1]}${svgARR[8]}${svgARR[0]}`;
+        // svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[2]}${svgARR[9]}${svgARR[3]}${svgARR[4]}${svgARR[1]}${svgARR[5]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[6]}${svgARR[2]}${svgARR[0]}${svgARR[7]}${svgARR[4]}${svgARR[3]}${svgARR[9]}`;
         var svgDrawer = (function () {
             var Drawing = function (el,htOption) {
                 this._el = el;
@@ -1233,21 +1238,20 @@
             // var cssStyle1212 = '';
             var cssStyle1212 = '';
             $("<style></style>").html(cssStyle1212).appendTo("head");
-            var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,needClearArr,hasPostArr,canalId;
+            var mainUrl,setting,dypSwitch,settingNew,dypNav,dypmyswi,dypVer,qqOnline,hasPostArr,canalId,couponApiType;
             infoGroup = {
                 id:'',plat:nowPlat,title:"",price:"",sameNew:{},pid:"",seller:"",rCat:"",shop:"",
                 pic:"",sale:"",amount:"",amountReq:"",amountT:0,amountL:0,tkCom:0,startT:"",endT:""
             };
             chrome.storage.local.get(null,function (e) {
-                var id = (e.dypCanalId20180709 && e.dypCanalId20180709 == '120015') ? e.dypjsonvdata.myNewMmId : e.dypjsonvdata.myMmId;
-                var phoneId = (e.dypCanalId20180709 && e.dypCanalId20180709 == '120015') ? e.dypjsonvdata.phoneNewId[0] : e.dypjsonvdata.phoneId[0];
+                var id = '',phoneId = '';
+                canalId = e.dypCanalId20180709;
+                id = (canalId == '120015') ? e.dypjsonvdata.myNewMmId : e.dypjsonvdata.myMmId;
+                phoneId = (canalId == '120015') ? e.dypjsonvdata.phoneNewId[0] : e.dypjsonvdata.phoneId[0];
+                couponApiType = (canalId == '120015') ? 1 : 2;//1旧接口 2新接口
                 dypmyswi = 1;
                 id = id[Math.floor((Math.random() * id.length))];
-                //
-                if (e.dypjsonvdata.versionNum != "2018723") {
-                    id = '';
-                    phoneId = '';
-                }
+                //版本 号测试
                 dypVer = `backv : ${e.dypbackv} mainv : ${e.dypmainv} jsonv : ${e.dypjsonv} popv : ${e.dyppopv} setv : ${e.dypsetv}`;
                 mainUrl = {
                     min:e.dypjsonvdata.mainUrlMin,
@@ -1263,43 +1267,7 @@
                 settingNew = !$.isEmptyObject(e.dypSetNew) ? e.dypSetNew : {dypTop:'show',dypMid:'show'};
                 dypSwitch = e.dypSwitch;
                 dypNav = e.dypNav201815;
-                canalId = e.dypCanalId20180709;
                 hasPostArr = e.dypPostCou20180709 ? e.dypPostCou20180709 : [];
-                var keepKey = [
-                    'dypAlert20180226',
-                    'dypIp20180308',
-                    'dypListSetting',
-                    'dypNav201815',
-                    'dypSetNew',
-                    'dypSetting',
-                    'dypSwitch',
-                    'dypbackvdata',
-                    'dypjsonvdata',
-                    'dypmainvdata',
-                    'dyppopvdata',
-                    'dypsetvdata',
-                    'dypbackv',
-                    'dypjsonv',
-                    'dypmainv',
-                    'dyppopv',
-                    'dypsetv',
-                    'dypPostCou20180709',
-                    'dypCanalId20180709',
-                    'dypUseInfo18711'
-                ];
-                needClearArr = '';
-                $.each(e,function (v) {
-                    var needClear = 1;
-                    $.each(keepKey,function (m,n) {
-                        if (n == v) {
-                            needClear = 0;
-                            return false;
-                        }
-                    });
-                    if (needClear) {
-                        needClearArr += v;
-                    }
-                });
                 if ($("body").attr("dypSign159357") != 1) {
                     start();
                     $("body").attr("dypSign159357","1");
@@ -1608,9 +1576,6 @@
                 }   //
                 cnzzAppend(function () {
                     cnzzEvent(dypVer,"测试");
-                    if (needClearArr) {
-                        cnzzEvent(needClearArr,"测试");
-                    }
                     if (infoGroup.plat == 'tm' || infoGroup.plat == 'tb' || infoGroup.plat == 'ju') {
                         if (canalId == '120015') {
                             cnzzEvent("新渠道展示","渠道");
@@ -2516,6 +2481,82 @@
                                 }
                             });
                         }//获取随机pid点击优惠券并上报
+                        function getDanNewApi() {
+                            chrome.extension.sendMessage({
+                                name:"universal",
+                                url:"http://report.douyapu.com/tb",
+                                type:"post",
+                                dataType:"json",
+                                data:{
+                                    itemId:itemId
+                                }
+                            },function (e) {
+                                if (e.code == 0) {
+                                    getDan();
+                                    return
+                                }
+                                var data = (typeof e.msg == 'string') ? JSON.parse(e.msg) : e.msg;
+                                if (data.success && data.list && data.list.item && data.list.item.couponInfo && data.list.item.endTime && data.list.item.totalCount) {
+                                    data = data.list.item;
+                                    var amount = parseFloat(data.couponInfo.split("减")[1] ? data.couponInfo.split("减")[1] : data.couponInfo.split("减")[0]);
+                                    var amountReq = data.couponInfo;
+                                    var urls = data.tbLink;
+                                    dyClickUrl = {clickUrl:data.tbLink};
+                                    $('#dypAbs9527').prepend(`<div class="dypAbs9527-coupon">
+                                        <div class="dypAbs9527-coupon-back" data-douyababapaopao="工具+优惠券+外部领取">
+                                            <div class="dypAbs9527-coupon-amount">¥ <span>${amount}</span> 优惠券</div>
+                                            <div>${amountReq}</div>
+                                        </div>
+                                        <div class="dypAbs9527-coupon-contact">
+                                            <div class="dypAbs9527-coupon-price">券后价 <span>${numSub(data.finalPrice,amount)}元</span><a href="${qqOnline}" target="_blank"><b data-douyababapaopao="工具+外部QQ群"></b></a></div>
+                                            <div class="dypAbs9527-coupon-time dypClear" style="visibility:hidden">
+                                                <div class="fl">还剩 &nbsp;</div>
+                                                <div id="dypAbs9527-coupon-time" class="fl">
+                                                    <span class="day">00</span><span class="dypMid9527-c-2c2c2c">日</span> <span class="hour">00</span><span class="dypMid9527-c-2c2c2c">时</span>
+                                                    <span class="mini">00</span><span class="dypMid9527-c-2c2c2c">分</span> <span class="sec">00</span>.<span class="hm">0</span><span class="dypMid9527-c-2c2c2c">秒</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dypAbs9527-coupon-qr" data-douyamovepaopao="工具-外面二维码">
+                                            <div class="dypAbs9527-coupon-qrIcon"></div>
+                                            <div>手淘领券</div>
+                                            <div class="dypAbs9527-coupon-qrBox">
+                                                <div class="dypAbs9527-coupon-qrImg"></div>
+                                                <div class="dypAbs9527-coupon-qrTitle">手淘扫码领券<br>商品<span></span></div>
+                                            </div>
+                                        </div>
+                                    </div>`);
+                                    $(".dypAbs9527-coupon-back").click(function () {
+                                        openWindow(urls);
+                                    });
+                                    try {
+                                        $("#dypAbs9527-coupon-time").fnTimeCountDown(data.endTime + ' 23:59:59');
+                                        $(".dypAbs9527-coupon-time").css("visibility","visible");
+                                    } catch (e) {
+                                    }
+                                    getQrDan();
+                                } else {
+                                    $('#dypAbs9527').prepend(`<div class="dypAbs9527-coupon">
+                                        <div class="dypAbs9527-coupon-back-no">
+                                        </div>
+                                        <div class="dypAbs9527-coupon-contact-no">
+                                            <div>没有券哦，别难过~<a href="${qqOnline}" target="_blank"><b data-douyababapaopao="工具+外部QQ群"></b></a></div>
+                                            <div>用手机淘宝扫描右侧二维码 , 3秒快捷下单~</div>
+                                        </div>
+                                        <div class="dypAbs9527-coupon-arrow"></div>
+                                        <div class="dypAbs9527-coupon-qr" data-douyamovepaopao="工具-外面二维码">
+                                            <div class="dypAbs9527-coupon-qrIcon"></div>
+                                            <div>扫码下单</div>
+                                            <div class="dypAbs9527-coupon-qrBox">
+                                                <div class="dypAbs9527-coupon-qrImg"></div>
+                                                <div class="dypAbs9527-coupon-qrTitle">打开手机淘宝<br>扫码轻松下单</div>
+                                            </div>
+                                        </div>
+                                    </div>`);
+                                    getQrDan();
+                                }
+                            });
+                        }//新API请求优惠券数据
                         var page1 = 1;
                         var getH5CouNum1 = 0;//
                         function getQrDan() {
@@ -2615,7 +2656,11 @@
                                 }
                             });
                         }//获取手机pid二维码优惠券
-                        getDan();
+                        if (couponApiType == 1) {
+                            getDan();
+                        } else if (couponApiType == 2) {
+                            getDanNewApi();
+                        }
                         $("#dypAbs9527").on("mouseenter",".dypAbs9527-coupon-qr",function () {
                             $(this).children(".dypAbs9527-coupon-qrBox").show();
                         });

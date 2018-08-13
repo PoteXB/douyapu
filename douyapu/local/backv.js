@@ -143,40 +143,4 @@ chrome.storage.local.get(null,function (e) {
             }
         });
     }
-    var keepKey = [
-        'dypAlert20180226',
-        'dypIp20180308',
-        'dypListSetting',
-        'dypNav201815',
-        'dypSetNew',
-        'dypSetting',
-        'dypSwitch',
-        'dypbackvdata',
-        'dypjsonvdata',
-        'dypmainvdata',
-        'dyppopvdata',
-        'dypsetvdata',
-        'dypbackv',
-        'dypjsonv',
-        'dypmainv',
-        'dyppopv',
-        'dypsetv',
-        'dypPostCou20180709',
-        'dypCanalId20180709',
-        'dypUseInfo18711'
-    ];
-    var needClearArr = [];
-    $.each(e,function (v) {
-        var needClear = 1;
-        $.each(keepKey,function (m,n) {
-            if (n == v) {
-                needClear = 0;
-                return false;
-            }
-        });
-        if (needClear) {
-            needClearArr.push(v);
-        }
-    });
-    chrome.storage.local.remove(needClearArr);
 });
