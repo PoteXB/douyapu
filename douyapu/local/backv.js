@@ -45,6 +45,7 @@ browserObj().extension.onMessage.addListener(function (request,sender,sendRespon
             url:request.url,
             dataType:request.dataType,
             data:request.data,
+            timeout:5000,
             success:function (e) {
                 sendResponse(e);
             },error:function () {

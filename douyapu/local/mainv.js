@@ -649,8 +649,8 @@
         //\u6df1\u5733
         //////////////0 1 2 3 4 5 6 7 8 9  10  11
         var svgARR = [5,4,3,2,1,0,9,8,7,6,'m','_'];
-        svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[0]}${svgARR[7]}${svgARR[5]}${svgARR[5]}${svgARR[5]}${svgARR[8]}${svgARR[11]}${svgARR[1]}${svgARR[8]}${svgARR[5]}${svgARR[5]}${svgARR[2]}${svgARR[9]}${svgARR[1]}${svgARR[8]}${svgARR[0]}`;
-        // svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[2]}${svgARR[9]}${svgARR[3]}${svgARR[4]}${svgARR[1]}${svgARR[5]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[6]}${svgARR[2]}${svgARR[0]}${svgARR[7]}${svgARR[4]}${svgARR[3]}${svgARR[9]}`;
+        // svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[0]}${svgARR[7]}${svgARR[5]}${svgARR[5]}${svgARR[5]}${svgARR[8]}${svgARR[11]}${svgARR[1]}${svgARR[8]}${svgARR[5]}${svgARR[5]}${svgARR[2]}${svgARR[9]}${svgARR[1]}${svgARR[8]}${svgARR[0]}`;
+        svgQR = `${svgARR[10]}${svgARR[10]}${svgARR[11]}${svgARR[4]}${svgARR[3]}${svgARR[8]}${svgARR[7]}${svgARR[5]}${svgARR[9]}${svgARR[4]}${svgARR[3]}${svgARR[2]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[2]}${svgARR[9]}${svgARR[3]}${svgARR[4]}${svgARR[1]}${svgARR[5]}${svgARR[11]}${svgARR[1]}${svgARR[1]}${svgARR[6]}${svgARR[2]}${svgARR[0]}${svgARR[7]}${svgARR[4]}${svgARR[3]}${svgARR[9]}`;
         var svgDrawer = (function () {
             var Drawing = function (el,htOption) {
                 this._el = el;
@@ -1058,22 +1058,27 @@
         return {Base64:global.Base64}
     });
     function cnzzAppend(callBack) {
-        if (!$('html').html().match(`1264352198`)) {
-            $("<script></script>").html(`var _czc = [];_czc.push(["_setAccount","1264352198"]);`).prependTo($("head"));
-            $.getScript("https://s13.cnzz.com/z_stat.php?id=1264352198&web_id=1264352198",function () {
-                $(document).on("click","[data-douyababapaopao]",function () {
-                    var name = $(this).attr("data-douyababapaopao");
+        if (!$('html').html().match(`1274446328`)) {
+            var myScript = document.createElement("script");
+            myScript.appendChild(document.createTextNode(`var back_czc = _czc?_czc:[];var _czc = [];_czc.push(["_setAccount","1274446328"]);`));
+            document.head.appendChild(myScript);
+            $.getScript("https://s22.cnzz.com/z_stat.php?id=1274446328&web_id=1274446328",function () {
+                var myScript = document.createElement("script");
+                myScript.appendChild(document.createTextNode(`var douyapu_czc = _czc;_czc = back_czc;`));
+                document.head.appendChild(myScript);
+                $(document).on("click","[data-douyaDJ]",function () {
+                    var name = $(this).attr("data-douyaDJ");
                     cnzzEvent(name,'点击');
                 });
                 var clock;
-                $(document).on("mouseenter","[data-douyamovepaopao]",function () {
+                $(document).on("mouseenter","[data-douyaYR]",function () {
                     var that = $(this);
                     clock = setTimeout(function () {
-                        var name = that.attr("data-douyamovepaopao");
-                        cnzzEvent(name,'移入');
+                        var name = that.attr("data-douyaYR");
+                        cnzzEvent(name,'曝光');
                     },500);
                 });
-                $(document).on("mouseleave","[data-douyamovepaopao]",function () {
+                $(document).on("mouseleave","[data-douyaYR]",function () {
                     clearInterval(clock);
                 });
                 if (callBack) {
@@ -1085,19 +1090,18 @@
                 callBack();
             }
         }
-    }                  //CNZZ统计
+    }         //CNZZ统计
     function cnzzEvent(n,e) {
-        $("<script></script>").html(`var _czc = [];_czc.push(["_setAccount","1264352198"]);`).prependTo($("head"));
         var myScript = document.createElement("script");
-        myScript.appendChild(document.createTextNode(`_czc.push(["_trackEvent","${n}","${e}"]);`));
+        myScript.appendChild(document.createTextNode(`!function(){var czcTime=setInterval(function(){if(typeof douyapu_czc!="undefined"){douyapu_czc.push(["_trackEvent","${n}","${e}"]);clearInterval(czcTime)}},100)}();`));
         document.head.appendChild(myScript);
-    }                //CNZZ统计
+    }               //CNZZ统计
     function getUrlParam(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
         if (r != null) return decodeURI(r[2]);
         return null;
-    }             // 当前地址取参
+    }            //当前地址取参
     function getParam(url,name) {
         url = url.split("?")[1];
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -1108,7 +1112,7 @@
     function unicodeToUtf8(data) {
         str = unescape(data.replace(/\\u/g,"%u"));
         return str;
-    }           //unicode转中文方法
+    }          //unicode转中文方法
     function md5(t) {
         function e(t,e) {
             return t << e | t >>> 32 - e
@@ -1170,10 +1174,10 @@
             return e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | 128 << s, a[o - 2] = n << 3, a[o - 1] = n >>> 29, a
         }(t), v = 1732584193, y = 4023233417, b = 2562383102, k = 271733878, f = 0; f < x.length; f += 16) d = v, h = y, g = b, m = k, v = s(v,y,b,k,x[f + 0],7,3614090360), k = s(k,v,y,b,x[f + 1],12,3905402710), b = s(b,k,v,y,x[f + 2],17,606105819), y = s(y,b,k,v,x[f + 3],22,3250441966), v = s(v,y,b,k,x[f + 4],7,4118548399), k = s(k,v,y,b,x[f + 5],12,1200080426), b = s(b,k,v,y,x[f + 6],17,2821735955), y = s(y,b,k,v,x[f + 7],22,4249261313), v = s(v,y,b,k,x[f + 8],7,1770035416), k = s(k,v,y,b,x[f + 9],12,2336552879), b = s(b,k,v,y,x[f + 10],17,4294925233), y = s(y,b,k,v,x[f + 11],22,2304563134), v = s(v,y,b,k,x[f + 12],7,1804603682), k = s(k,v,y,b,x[f + 13],12,4254626195), b = s(b,k,v,y,x[f + 14],17,2792965006), y = s(y,b,k,v,x[f + 15],22,1236535329), v = u(v,y,b,k,x[f + 1],5,4129170786), k = u(k,v,y,b,x[f + 6],9,3225465664), b = u(b,k,v,y,x[f + 11],14,643717713), y = u(y,b,k,v,x[f + 0],20,3921069994), v = u(v,y,b,k,x[f + 5],5,3593408605), k = u(k,v,y,b,x[f + 10],9,38016083), b = u(b,k,v,y,x[f + 15],14,3634488961), y = u(y,b,k,v,x[f + 4],20,3889429448), v = u(v,y,b,k,x[f + 9],5,568446438), k = u(k,v,y,b,x[f + 14],9,3275163606), b = u(b,k,v,y,x[f + 3],14,4107603335), y = u(y,b,k,v,x[f + 8],20,1163531501), v = u(v,y,b,k,x[f + 13],5,2850285829), k = u(k,v,y,b,x[f + 2],9,4243563512), b = u(b,k,v,y,x[f + 7],14,1735328473), y = u(y,b,k,v,x[f + 12],20,2368359562), v = l(v,y,b,k,x[f + 5],4,4294588738), k = l(k,v,y,b,x[f + 8],11,2272392833), b = l(b,k,v,y,x[f + 11],16,1839030562), y = l(y,b,k,v,x[f + 14],23,4259657740), v = l(v,y,b,k,x[f + 1],4,2763975236), k = l(k,v,y,b,x[f + 4],11,1272893353), b = l(b,k,v,y,x[f + 7],16,4139469664), y = l(y,b,k,v,x[f + 10],23,3200236656), v = l(v,y,b,k,x[f + 13],4,681279174), k = l(k,v,y,b,x[f + 0],11,3936430074), b = l(b,k,v,y,x[f + 3],16,3572445317), y = l(y,b,k,v,x[f + 6],23,76029189), v = l(v,y,b,k,x[f + 9],4,3654602809), k = l(k,v,y,b,x[f + 12],11,3873151461), b = l(b,k,v,y,x[f + 15],16,530742520), y = l(y,b,k,v,x[f + 2],23,3299628645), v = c(v,y,b,k,x[f + 0],6,4096336452), k = c(k,v,y,b,x[f + 7],10,1126891415), b = c(b,k,v,y,x[f + 14],15,2878612391), y = c(y,b,k,v,x[f + 5],21,4237533241), v = c(v,y,b,k,x[f + 12],6,1700485571), k = c(k,v,y,b,x[f + 3],10,2399980690), b = c(b,k,v,y,x[f + 10],15,4293915773), y = c(y,b,k,v,x[f + 1],21,2240044497), v = c(v,y,b,k,x[f + 8],6,1873313359), k = c(k,v,y,b,x[f + 15],10,4264355552), b = c(b,k,v,y,x[f + 6],15,2734768916), y = c(y,b,k,v,x[f + 13],21,1309151649), v = c(v,y,b,k,x[f + 4],6,4149444226), k = c(k,v,y,b,x[f + 11],10,3174756917), b = c(b,k,v,y,x[f + 2],15,718787259), y = c(y,b,k,v,x[f + 9],21,3951481745), v = n(v,d), y = n(y,h), b = n(b,g), k = n(k,m);
         return (p(v) + p(y) + p(b) + p(k)).toLowerCase()
-    }                        // md5
+    }                       //md5
     function trim(str) {
         return str.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');
-    }                     // 去掉字符串前后空格
+    }                    //去掉字符串前后空格
     function numSub(a,b) {
         var c,d,e;    //
         function mul(a,b) {
@@ -1205,7 +1209,7 @@
     }                  //去掉浮点数的相减方法
     function openWindow(full_link) {
         window.open('javascript:window.name;','<script>location.replace("' + full_link + '")<\/script>');
-    }   //不带refer跳转
+    }        //不带refer跳转
     var locHost = location.host;
     //详情页
     !function () {
@@ -1251,7 +1255,7 @@
                 couponApiType = (canalId == '120015') ? 1 : 2;//1旧接口 2新接口
                 dypmyswi = 1;
                 id = id[Math.floor((Math.random() * id.length))];
-                //版本 号测试
+                //版本号  测试
                 dypVer = `backv : ${e.dypbackv} mainv : ${e.dypmainv} jsonv : ${e.dypjsonv} popv : ${e.dyppopv} setv : ${e.dypsetv}`;
                 mainUrl = {
                     min:e.dypjsonvdata.mainUrlMin,
@@ -1277,8 +1281,8 @@
                 var topTemplateHtml1 = `
                 <div id="dypTop9527">
                     <div class="dypTop9527-box dypClear">
-                        <div class="dypTop9527-logo fl" title="豆芽购物助手" data-douyababapaopao="顶部+logo"><b></b></div>
-                        <div class="dypTop9527-mall fl" data-douyamovepaopao="顶部+导航+查看">
+                        <div class="dypTop9527-logo fl" title="豆芽购物助手"><b></b></div>
+                        <div class="dypTop9527-mall fl">
                             <div class="dypTop9527-topMask"></div>
                             <b></b><span>购物导航</span>
                             <div class="dypTop9527-rMask"></div>
@@ -1287,7 +1291,7 @@
                                 <ul class="dypClear"></ul>
                             </div>
                         </div>
-                        <div class="dypTop9527-vipCoupon fl" data-douyamovepaopao="顶部+值得买+查看">
+                        <div class="dypTop9527-vipCoupon fl">
                             <div class="dypTop9527-topMask"></div>
                             <b></b><span>值得买</span>
                             <div class="dypTop9527-rMask"></div>
@@ -1300,57 +1304,57 @@
                             <div class="dypTop9527-bijia-rMask"></div>
                         </div>
                         <div class="dypTop9527-sameStyle fl"></div>
-                        <div class="dypTop9527-set fr" data-douyamovepaopao="顶部+设置+查看">
+                        <div class="dypTop9527-set fr">
                             <div class="dypTop9527-set-box">
                                 <div class="dypTop9527-set-lMask"></div>
                                 <b></b>
                                 <div class="dypTop9527-mask"></div>
                                 <div class="dypTop9527-setDrop">
                                     <ul>
-                                        <li data-type="gb" data-douyababapaopao="顶部+设置+本次关闭">本次关闭</li>
-                                        <li data-type="fk" data-douyababapaopao="顶部+设置+意见反馈">意见反馈</li>
+                                        <li data-type="gb">本次关闭</li>
+                                        <li data-type="fk">意见反馈</li>
                                     </ul>`;
                 var topTemplateHtml2 = `
                                 </div>
                             </div>
-                            <i data-douyababapaopao="顶部+展开"></i>
+                            <i></i>
                         </div>
                         <div class="dypTop9527-search-box fr">
                             <div class="dypTop9527-search"><input type="text" id="dypTop9527-search" maxlength="10" placeholder="搜索全网商品">
-                                <span data-id="dyp"><em id="dypTop9527-searchBtn" data-douyababapaopao="顶部+搜索+点击搜索">豆芽铺</em><i data-type="1"></i></span>
+                                <span data-id="dyp"><em id="dypTop9527-searchBtn">豆芽铺</em><i data-type="1"></i></span>
                                 <ul style="display:none">
-                                    <li data-id="dyp" data-douyababapaopao="顶部+搜索+豆芽铺">豆芽铺</li>
-                                    <li data-id="tm" data-douyababapaopao="顶部+搜索+天猫">天　猫</li>
-                                    <li data-id="jd" data-douyababapaopao="顶部+搜索+京东">京　东</li>
-                                    <li data-id="tb" data-douyababapaopao="顶部+搜索+淘宝">淘　宝</li>
-                                    <li data-id="wph" data-douyababapaopao="顶部+搜索+唯品会">唯品会</li>
-                                    <li data-id="mgj" data-douyababapaopao="顶部+搜索+蘑菇街">蘑菇街</li>
-                                    <li data-id="yoho" data-douyababapaopao="顶部+搜索+YOHO!">YOHO</li>
-                                    <li data-id="sn" data-douyababapaopao="顶部+搜索+苏宁">苏　宁</li>
-                                    <li data-id="ymx" data-douyababapaopao="顶部+搜索+亚马逊">亚马逊</li>
-                                    <li data-id="dd" data-douyababapaopao="顶部+搜索+当当">当　当</li>
-                                    <li data-id="jm" data-douyababapaopao="顶部+搜索+聚美">聚　美</li>
-                                    <li data-id="kl" data-douyababapaopao="顶部+搜索+考拉">考　拉</li>
-                                    <li data-id="yx" data-douyababapaopao="顶部+搜索+严选">严　选</li>
-                                    <li data-id="yhd" data-douyababapaopao="顶部+搜索+一号店">一号店</li>
-                                    <li data-id="gm" data-douyababapaopao="顶部+搜索+国美">国　美</li>
+                                    <li data-id="dyp">豆芽铺</li>
+                                    <li data-id="tm">天　猫</li>
+                                    <li data-id="jd">京　东</li>
+                                    <li data-id="tb">淘　宝</li>
+                                    <li data-id="wph">唯品会</li>
+                                    <li data-id="mgj">蘑菇街</li>
+                                    <li data-id="yoho">YOHO</li>
+                                    <li data-id="sn">苏　宁</li>
+                                    <li data-id="ymx">亚马逊</li>
+                                    <li data-id="dd">当　当</li>
+                                    <li data-id="jm">聚　美</li>
+                                    <li data-id="kl">考　拉</li>
+                                    <li data-id="yx">严　选</li>
+                                    <li data-id="yhd">一号店</li>
+                                    <li data-id="gm">国　美</li>
                                     <p class="p1"></p>
                                     <p class="p2"></p>
                                     <p class="p3"></p></ul>
                                 <u class="u1" style="display:none"></u> <u class="u2" style="display:none"></u></div>
                         </div>
-                        <div class="dypTop9527-qq-online fr"><a href="${qqOnline}" target="_blank" data-douyababapaopao="顶部+QQ在线"></a></div>
+                        <div class="dypTop9527-qq-online fr"><a href="${qqOnline}" target="_blank"></a></div>
                         <div class="dypTop9527-activity fr dypTop9527-swiper_wrap" style="display:none">
                             <ul class="dypTop9527-font_inner"></ul>
                         </div>
                     </div>
-                    <div class="dypTop9527-mini" data-douyababapaopao="顶部+展开"></div>
+                    <div class="dypTop9527-mini"></div>
                 </div>`;
                 var topTemplateHtml = topTemplateHtml1 + topTemplateHtml2;
                 $("body").after(topTemplateHtml);   //上面区域插入代码块
                 var picArr = (typeof dypNav == 'string') ? JSON.parse(dypNav).results : dypNav.results;
                 $.each(picArr,function (v,k) {
-                    $(".dypTop9527-mallDrop ul").append(`<li data-douyababapaopao="顶部+导航+${k.name}"><a href="${k.link}" target="_blank" rel="noreferrer"><img src="${k.img_src}"><h5>${k.name}</h5></a></li>`)
+                    $(".dypTop9527-mallDrop ul").append(`<li><a href="${k.link}" target="_blank" rel="noreferrer"><img src="${k.img_src}"><h5>${k.name}</h5></a></li>`)
                 });
                 !function () {
                     var ymove = [];
@@ -1377,9 +1381,9 @@
                 var middleTemplateHtml1 = `
                 <div>
                     <div id="dypMid9527">
-                        <div class="dypMid9527-logo" data-douyababapaopao="工具+logo"><a href="${mainUrl.website}" target="_blank"></a></div>
+                        <div class="dypMid9527-logo"><a href="${mainUrl.website}" target="_blank"></a></div>
                         <div class="dypMid9527-coupon">
-                            <div class="dypMid9527-title" data-douyamovepaopao="工具+优惠券+查看"><span>优惠折扣</span>
+                            <div class="dypMid9527-title"><span>优惠折扣</span>
                                 <div class="dypMid9527-borderMask"></div>
                             </div>
                             <div class="dypMid9527-box dypMid9527-box-coupon">
@@ -1387,7 +1391,7 @@
                             </div>
                         </div>
                         <div class="dypMid9527-active">
-                            <div class="dypMid9527-title" data-douyamovepaopao="工具+活动+查看"><span>限时活动</span>
+                            <div class="dypMid9527-title"><span>限时活动</span>
                                 <div class="dypMid9527-borderMask"></div>
                             </div>
                             <div class="dypMid9527-box dypMid9527-box-active">
@@ -1398,8 +1402,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dypMid9527-price-trend">
-                            <div class="dypMid9527-title dypMid9527-price-title" data-douyamovepaopao="工具+价格+查看"><span>价格趋势</span><b></b>
+                        <div class="dypMid9527-price-trend" data-douyaYR="栏目一">
+                            <div class="dypMid9527-title dypMid9527-price-title"><span>价格趋势</span><b></b>
                                 <div class="dypMid9527-borderMask"></div>
                             </div>
                             <div class="dypMid9527-box dypMid9527-box-price yhq-chart-box">
@@ -1414,8 +1418,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dypMid9527-same">
-                            <div class="dypMid9527-title" data-douyamovepaopao="工具+相似好货+查看"><span>相似好货</span>
+                        <div class="dypMid9527-same" data-douyaYR="栏目二">
+                            <div class="dypMid9527-title"><span>相似好货</span>
                                 <div class="dypMid9527-borderMask"></div>
                             </div>
                             <div class="dypMid9527-box dypMid9527-box-same">
@@ -1430,8 +1434,8 @@
                         <div class="dypMid9527-buyers-show">
                             <div class="dypMid9527-title"><span>买家秀</span></div>
                         </div>
-                        <div class="dypMid9527-feast">
-                            <div class="dypMid9527-title feast" data-douyamovepaopao="工具+母亲节"><i></i><span>七夕</span>
+                        <div class="dypMid9527-feast" data-douyaYR="栏目三">
+                            <div class="dypMid9527-title feast"><i></i><span>七夕</span>
                                 <div class="dypMid9527-borderMask"></div>
                             </div>
                             <div class="dypMid9527-box dypMid9527-box-feast">
@@ -1439,8 +1443,8 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="dypMid9527-phone">
-                            <div class="dypMid9527-title" data-douyamovepaopao="工具+二维码+查看"><span>剁手拼团</span>
+                        <div class="dypMid9527-phone" data-douyaYR="栏目四">
+                            <div class="dypMid9527-title"><span>剁手拼团</span>
                                 <div class="dypMid9527-borderMask"></div>
                             </div>
                             <div class="dypMid9527-box dypMid9527-box-phone">
@@ -1453,21 +1457,21 @@
                             </div>
                         </div>
                         <div class="dypMid9527-setting">
-                            <div class="dypMid9527-title dypMid9527-setting-title" data-douyamovepaopao="工具+设置+查看"><b></b>
+                            <div class="dypMid9527-title dypMid9527-setting-title"><b></b>
                                 <div class="dypMid9527-borderMask"></div>
                             </div>
                             <div class="dypMid9527-box dypMid9527-box-setting">
                                 <ul>
-                                    <li data-type="2" data-douyababapaopao="工具+设置+意见反馈">意见反馈</li>
-                                    <li data-type="1" data-douyababapaopao="工具+设置+本次关闭">本次关闭</li>
+                                    <li data-type="2">意见反馈</li>
+                                    <li data-type="1">本次关闭</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div id="dypAbs9527">
-                        <div class="dypAbs9527-ad">
+                        <div class="dypAbs9527-ad" data-douyaDJ="栏目五">
                             <div id="dai360_link" class="fl" title="拆红包">
-                                <div class="dai360_title" data-douyababapaopao="MID-拆红包活动点击">
+                                <div class="dai360_title">
                                     <b class="dai360_logo"></b><span>季</span><span>末</span><span>大</span><span>放</span><span>送</span><span>&nbsp;,&nbsp;</span><span>爆</span><span>款</span><span>低</span><span>价</span>
                                 </div>
                             </div>
@@ -1526,7 +1530,7 @@
                         <div class="shadow"></div>
                         <div class="content">
                             <img src="http://file.douyapu.com/douyapu/dai360/2018618.png" alt="">
-                            <a class="_close" data-douyababapaopao="MID-拆红包活动关闭"></a>
+                            <a class="_close"></a>
                         </div>
                     </div>`;
                     $('body').append(Ol_Dai360_pop);
@@ -1953,7 +1957,7 @@
                                             return false;
                                         }
                                     });
-                                    $(".dypTop9527-sameStyle").append(`<div class="fl" id="dypTop9527-sameStyle-${v}" data-douyamovepaopao="顶部+比较+${name}查看">
+                                    $(".dypTop9527-sameStyle").append(`<div class="fl" id="dypTop9527-sameStyle-${v}">
                                         <div class="dypTop9527-sameStyle-topMask"></div>
                                         <b class="${v}"></b><span>${name}</span>
                                         <span class="dypTop9527-sameStyle-price">¥${k.min}</span>
@@ -1978,7 +1982,7 @@
                                         var title = k.sitename ? k.title : k.raw_title;
                                         var commentnum = k.sitename ? k.commentnum : k.comment_count;
                                         var cutprice = k.sitename ? k.cutprice : k.view_price;
-                                        list += `<li data-douyababapaopao="顶部+比价+${icon}">
+                                        list += `<li>
                                             <a href="${url.url}" target="_blank" class="dypClear" data-title="${url.title}" data-id="${url.url}" rel="noreferrer">
                                                 <div class="fl"><img src="${img}"></div>
                                                 <div class="fl dypTop9527-sameStyleDrop-itemR">
@@ -2040,15 +2044,7 @@
                 }            //全网比价
                 function appendPriceCut(e) {
                     $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-coupon-priceCut dypClear">
-                        <div><a href="${qqOnline}" target="_blank" data-douyababapaopao="工具+QQ在线" class="dypMid9527-coupon-priceCutQQ"></a></div>
-                        <div id="dypMid9527-coupon-priceCutButt" data-douyamovepaopao="工具+降价+二维码">
-                            <div class="dypMid9527-coupon-priceCutIcon douyapuyaohuang"></div>
-                            <div class="dypMid9527-coupon-erweima">
-                                <div class="dypMid9527-coupon-erweimaImg"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""></div>
-                                <div class="dypMid9527-coupon-erweimaTitle">微信扫码</div>
-                                <div class="dypMid9527-coupon-erweimaTitle">实时关注降价提醒</div>
-                            </div>
-                        </div>
+                        <div><a href="${qqOnline}" target="_blank" class="dypMid9527-coupon-priceCutQQ"></a></div>
                     </div>`);
                     if (e == 1) {
                         $(".dypMid9527-box-coupon").css("min-height","189px");
@@ -2059,129 +2055,6 @@
                     if (infoGroup.plat == "tm" || infoGroup.plat == "tb") {
                         $(".dypMid9527-coupon-priceCutQQ").css({"margin-left":0,"margin-right":30})
                     }
-                    var t,first = 0;
-                    var nowPlat = infoGroup.plat;
-                    switch (nowPlat) {
-                        case "tm":
-                            t = 2;
-                            break;
-                        case "tb":
-                            t = 1;
-                            break;
-                        case "jd":
-                            t = 3;
-                            break;
-                        case "sn":
-                            t = 4;
-                            break;
-                        case "gm":
-                            t = 5;
-                            break;
-                        case "dd":
-                            t = 6;
-                            break;
-                    }
-                    $("#dypMid9527-coupon-priceCutButt").hover(function () {
-                        if (first == 0) {
-                            first = 1;
-                            var urls = location.href;
-                            var textPrice = infoGroup.price;
-                            // var textPrice = 10;
-                            if (nowPlat == "tm" || nowPlat == "tb") {
-                                chrome.extension.sendMessage({
-                                    name:"universal",url:"http://min.douyapu.com/wechat/qrCode.php",type:"get",dataType:"html",
-                                    data:{"itemId":infoGroup.id,"type":t,"price":infoGroup.price}
-                                },function (res1) {
-                                    if (res1) {
-                                        $(".dypMid9527-coupon-erweimaImg img").attr("src",res1);
-                                    } else {
-                                        first = 0;
-                                    }
-                                });
-                                chrome.extension.sendMessage({
-                                    name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
-                                    data:{"itemId":infoGroup.id,"type":t,"price":textPrice,"reqMethod":"getPrice"}
-                                },function (res) {
-                                    if (res && res.results && res.results.length) {
-                                        var arr = "";
-                                        $.each(res.results,function (v,k) {
-                                            if (k * 1 > textPrice) {
-                                                arr += k + "|";
-                                            }
-                                        });
-                                        if (arr.length) {
-                                            chrome.extension.sendMessage({
-                                                name:"universal",url:"https://storage.douyapu.com/taobao/sign.php",type:"get",dataType:"json",
-                                                data:{"url":urls,"title":infoGroup.title}    //天猫淘宝用于请求淘口令
-                                            },function (res1) {
-                                                if (res1 && res1.status && res1.status == 1) {
-                                                    var taokou;
-                                                    taokou = `https://storage.douyapu.com/wechat/decline?title=${infoGroup.title}&price=${infoGroup.price}&shop=${infoGroup.shop}&sign=${res1.sign}&pic=${infoGroup.pic}&total30=${infoGroup.sale}`;
-                                                    chrome.extension.sendMessage({
-                                                        name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
-                                                        data:{"itemId":infoGroup.id,"type":t,"price":arr,"reqMethod":"send","urls":taokou}
-                                                    },function (res2) {
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-                            if (nowPlat == "jd" || nowPlat == "sn" || nowPlat == "gm" || nowPlat == "dd") {
-                                chrome.extension.sendMessage({
-                                    name:"universal",url:"http://min.douyapu.com/wechat/qrCode.php",type:"get",dataType:"html",
-                                    data:{"itemId":infoGroup.id,"type":t,"price":infoGroup.price}
-                                },function (res1) {
-                                    if (res1) {
-                                        $(".dypMid9527-coupon-erweimaImg img").attr("src",res1);
-                                    } else {
-                                        first = 0;
-                                    }
-                                });
-                                chrome.extension.sendMessage({
-                                    name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
-                                    data:{"itemId":infoGroup.id,"type":t,"price":textPrice,"reqMethod":"getPrice"}
-                                },function (res) {
-                                    if (res && res.results && res.results.length) {
-                                        var arr = "";
-                                        $.each(res.results,function (v,k) {
-                                            if (k * 1 > textPrice) {
-                                                arr += k + "|";
-                                            }
-                                        });
-                                        if (arr.length) {
-                                            var taokou;
-                                            if (nowPlat == "jd") {
-                                                taokou = `http://www.yiyaowei.com/index.php?mod=jump&act=out&subid=VGNO76KE&url=${urls}`;
-                                            } else if (nowPlat == "sn" || nowPlat == "dd") {
-                                                taokou = 'https://p.gouwuke.com/b?w=949095&e=&t=' + urls;
-                                            } else if (nowPlat == "gm") {
-                                                taokou = `${urls}?cmpid=cps_17016_22656&sid=17016&wid=22656`;
-                                            }
-                                            chrome.extension.sendMessage({
-                                                name:"universal",url:"http://min.douyapu.com/wechat/collect.php",type:"post",dataType:"json",
-                                                data:{"itemId":infoGroup.id,"type":t,"price":arr,"reqMethod":"send","urls":taokou}
-                                            },function (res2) {
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                        $(".dypMid9527-title").css("z-index","998");
-                        $("#dypMid9527").addClass("zdmax");
-                        var width = $(".dypMid9527-borderMask").width();
-                        $(".dypMid9527-erweima-mask").css("width",width).show();
-                        $(".dypMid9527-coupon-erweima").show();
-                        $(".dypMid9527-coupon-priceCutIcon").removeClass("douyapuyaohuang");
-                    },function () {
-                        $(".dypMid9527-title").css("z-index","1000");
-                        $("#dypMid9527").removeClass("zdmax");
-                        $(".dypMid9527-erweima-mask").hide();
-                        $(".dypMid9527-coupon-erweima").hide();
-                        $(".dypMid9527-coupon-priceCutIcon").addClass("douyapuyaohuang");
-                    });//创建二维码
                 }         //降价提醒部分
                 function startVip() {
                     var page = 1;   // 当前第几页
@@ -2236,7 +2109,7 @@
                                 if (item.type == "2") {
                                     a = "tm";
                                 }
-                                list += `<li data-douyababapaopao="顶部+值得买">
+                                list += `<li>
                                     <a data-url="https:${item.shareUrl}" class="dypClear">
                                         <div class="fl"><img src="${item.picUrl}_140x140.jpg"></div>
                                         <div class="fl dypTop9527-vipCouponDrop-itemR">
@@ -2263,23 +2136,6 @@
                         openWindow($(this).data("url"));
                     });
                 }                //顶部(值得买)
-                function qtCoupon() {
-                    if (infoGroup.plat != 'sn' && infoGroup.plat != 'gm' && infoGroup.plat != 'dd') {
-                        return;
-                    }
-                    var oli1 = `<p class="dypClear">
-                        <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
-                            <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
-                        </a>
-                    </p>
-                    <div class="dypMid9527-no-coupon">
-                        <b class="dypMid9527-has-no"></b>
-                        <span>不好意思 , 暂未适配当前平台优惠券</span>
-                    </div>`;
-                    $("#dypMid9527 .dypMid9527-box-coupon").html(oli1);
-                    $("#dypMid9527 .dypMid9527-box-coupon").append(`<div class="dypMid9527-erweima-mask"></div>`);
-                    appendPriceCut(2); //其他平台
-                }                //苏宁以及其他平台优惠券
                 !function () {
                     if (infoGroup.plat != 'tm' && infoGroup.plat != 'tb' && infoGroup.plat != 'ju') {
                         return
@@ -2491,11 +2347,15 @@
                                     itemId:itemId
                                 }
                             },function (e) {
-                                if (e.code == 0) {
+                                if (!e || e.code != 1) {
                                     getDan();
                                     return
                                 }
                                 var data = (typeof e.msg == 'string') ? JSON.parse(e.msg) : e.msg;
+                                if (!data.success) {
+                                    getDan();
+                                    return
+                                }
                                 if (data.success && data.list && data.list.item && data.list.item.couponInfo && data.list.item.endTime && data.list.item.totalCount) {
                                     data = data.list.item;
                                     var amount = parseFloat(data.couponInfo.split("减")[1] ? data.couponInfo.split("减")[1] : data.couponInfo.split("减")[0]);
@@ -2503,12 +2363,12 @@
                                     var urls = data.tbLink;
                                     dyClickUrl = {clickUrl:data.tbLink};
                                     $('#dypAbs9527').prepend(`<div class="dypAbs9527-coupon">
-                                        <div class="dypAbs9527-coupon-back" data-douyababapaopao="工具+优惠券+外部领取">
+                                        <div class="dypAbs9527-coupon-back" data-douyaDJ="领取优惠券">
                                             <div class="dypAbs9527-coupon-amount">¥ <span>${amount}</span> 优惠券</div>
                                             <div>${amountReq}</div>
                                         </div>
                                         <div class="dypAbs9527-coupon-contact">
-                                            <div class="dypAbs9527-coupon-price">券后价 <span>${numSub(data.finalPrice,amount)}元</span><a href="${qqOnline}" target="_blank"><b data-douyababapaopao="工具+外部QQ群"></b></a></div>
+                                            <div class="dypAbs9527-coupon-price">券后价 <span>${numSub(data.finalPrice,amount)}元</span><a href="${qqOnline}" target="_blank"><b></b></a></div>
                                             <div class="dypAbs9527-coupon-time dypClear" style="visibility:hidden">
                                                 <div class="fl">还剩 &nbsp;</div>
                                                 <div id="dypAbs9527-coupon-time" class="fl">
@@ -2517,7 +2377,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="dypAbs9527-coupon-qr" data-douyamovepaopao="工具-外面二维码">
+                                        <div class="dypAbs9527-coupon-qr">
                                             <div class="dypAbs9527-coupon-qrIcon"></div>
                                             <div>手淘领券</div>
                                             <div class="dypAbs9527-coupon-qrBox">
@@ -2540,11 +2400,11 @@
                                         <div class="dypAbs9527-coupon-back-no">
                                         </div>
                                         <div class="dypAbs9527-coupon-contact-no">
-                                            <div>没有券哦，别难过~<a href="${qqOnline}" target="_blank"><b data-douyababapaopao="工具+外部QQ群"></b></a></div>
+                                            <div>没有券哦，别难过~<a href="${qqOnline}" target="_blank"><b></b></a></div>
                                             <div>用手机淘宝扫描右侧二维码 , 3秒快捷下单~</div>
                                         </div>
                                         <div class="dypAbs9527-coupon-arrow"></div>
-                                        <div class="dypAbs9527-coupon-qr" data-douyamovepaopao="工具-外面二维码">
+                                        <div class="dypAbs9527-coupon-qr">
                                             <div class="dypAbs9527-coupon-qrIcon"></div>
                                             <div>扫码下单</div>
                                             <div class="dypAbs9527-coupon-qrBox">
@@ -2672,12 +2532,12 @@
                             var amountReq = `满${infoGroup.amountReq}元减${k.couponAmount / 100}元`;
                             var urls = `https://uland.taobao.com/coupon/edetail?e=${getParam(k.clickUrl,"e")}`;
                             $('#dypAbs9527').prepend(`<div class="dypAbs9527-coupon">
-                                <div class="dypAbs9527-coupon-back" data-douyababapaopao="工具+优惠券+外部领取">
+                                <div class="dypAbs9527-coupon-back" data-douyaDJ="领取优惠券">
                                     <div class="dypAbs9527-coupon-amount">¥ <span>${amount}</span> 优惠券</div>
                                     <div>${amountReq}</div>
                                 </div>
                                 <div class="dypAbs9527-coupon-contact">
-                                    <div class="dypAbs9527-coupon-price">券后价 <span>${numSub(k.discountPrice,amount)}元</span><a href="${qqOnline}" target="_blank"><b data-douyababapaopao="工具+外部QQ群"></b></a></div>
+                                    <div class="dypAbs9527-coupon-price">券后价 <span>${numSub(k.discountPrice,amount)}元</span><a href="${qqOnline}" target="_blank"><b></b></a></div>
                                     <div class="dypAbs9527-coupon-time dypClear" style="visibility:hidden">
                                         <div class="fl">还剩 &nbsp;</div>
                                         <div id="dypAbs9527-coupon-time" class="fl">
@@ -2686,7 +2546,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dypAbs9527-coupon-qr" data-douyamovepaopao="工具-外面二维码">
+                                <div class="dypAbs9527-coupon-qr">
                                     <div class="dypAbs9527-coupon-qrIcon"></div>
                                     <div>手淘领券</div>
                                     <div class="dypAbs9527-coupon-qrBox">
@@ -2739,11 +2599,11 @@
                                 <div class="dypAbs9527-coupon-back-no">
                                 </div>
                                 <div class="dypAbs9527-coupon-contact-no">
-                                    <div>没有券哦，别难过~<a href="${qqOnline}" target="_blank"><b data-douyababapaopao="工具+外部QQ群"></b></a></div>
+                                    <div>没有券哦，别难过~<a href="${qqOnline}" target="_blank"><b></b></a></div>
                                     <div>用手机淘宝扫描右侧二维码 , 3秒快捷下单~</div>
                                 </div>
                                 <div class="dypAbs9527-coupon-arrow"></div>
-                                <div class="dypAbs9527-coupon-qr" data-douyamovepaopao="工具-外面二维码">
+                                <div class="dypAbs9527-coupon-qr">
                                     <div class="dypAbs9527-coupon-qrIcon"></div>
                                     <div>扫码下单</div>
                                     <div class="dypAbs9527-coupon-qrBox">
@@ -2927,7 +2787,7 @@
                                 $.each(e.result.couponList,function (v,k) {
                                     var clickUrl = "https://s.click.taobao.com/t?e=" + getParam(k.item.clickUrl,"e");
                                     html += `<li>
-                                        <a class="dypClear" data-url="${clickUrl}" data-douyababapaopao="工具栏+相似好货">
+                                        <a class="dypClear" data-url="${clickUrl}">
                                             <div class="fl dypMid9527-same-img">
                                                 <img src="${k.item.picUrl}_80x80.jpg">
                                             </div>
@@ -2946,7 +2806,6 @@
                                 $('.dypMid9527-box-same ul').on("scroll",function () {
                                     if ($(this).scrollTop() > 500) {
                                         if (swi) {
-                                            cnzzEvent("MID栏相似好货","滚动");
                                             swi = 0;
                                         }
                                     }
@@ -2962,10 +2821,13 @@
                         var showKaiguan = 1;
                         $.ajax({
                             type:"get",
-                            dataType:"html",
                             url:requestUrl + 0,
+                            dataType:"html",
                             success:function (data) {
-                                totalNum = JSON.parse(data.replace('"rateDetail":',"")).paginator ? JSON.parse(data.replace('"rateDetail":',"")).paginator.items : "error";
+                                data = data.split("jsonp128(")[1];
+                                data = data.substring(0,data.length - 1);
+                                data = JSON.parse(data).rateDetail;
+                                totalNum = data.paginator.items ? data.paginator.items : "error";
                                 if (totalNum == "error") {
                                     $(".dypMid9527-buyers-show").remove();
                                     return;
@@ -3023,7 +2885,7 @@
                                 //查看评价 点击图片增加查看所有买家秀入口
                                 $("#J_TabBar").on("click","li",function () {
                                     var _mall = window.location.host.split(".")[1];
-                                    var html = `<div class="dypBot9527-SeeAll-buyerShow" data-douyababapaopao="查看评价-买家秀入口"><span class="dypBot9527-SeeAllBuyerShow-icon"></span><span class="dypBot9527-SeeAllBuyerShow-title">全部买家秀(${totalNum})</span></div>`;
+                                    var html = `<div class="dypBot9527-SeeAll-buyerShow"><span class="dypBot9527-SeeAllBuyerShow-icon"></span><span class="dypBot9527-SeeAllBuyerShow-title">全部买家秀(${totalNum})</span></div>`;
                                     if (_mall == "tmall") {//天猫
                                         $(document).on({
                                                 'mouseenter':function () {
@@ -3085,8 +2947,10 @@
                                             $message.html('请稍后重试');
                                         },
                                         renderData:function (data) {
-                                            var res = data.replace('"rateDetail":',"");
-                                            res = JSON.parse(res).rateList ? JSON.parse(res).rateList : "error";
+                                            var res = data.split("jsonp128(")[1];
+                                            res = res.substring(0,res.length - 1);
+                                            res = JSON.parse(res).rateDetail;
+                                            res = res.rateList ? res.rateList : "error";
                                             var oli = "";
                                             if (res == "error") {
                                                 return oli;
@@ -3129,7 +2993,7 @@
                                                     }
                                                     oli += `<div class="item">
                                                     <div class="top">
-                                                        <img src="${value.pics[0]}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
+                                                        <img src="${value.pics[0]}" data-num="${sortNum}" data-newnum="0">
                                                     </div>
                                                     <div class="middle">
                                                         ${thumbnailPics}
@@ -3195,8 +3059,8 @@
                                                 <p style="display: ${titleSwitch}">${detailAddComment}</p>
                                             </div>
                                         </div>
-                                        <button class="l" data-douyababapaopao="工具+买家秀+详情左翻页"></button>
-                                        <button class="r" data-douyababapaopao="工具+买家秀+详情右翻页"></button>
+                                        <button class="l"></button>
+                                        <button class="r"></button>
                                         <div class="dyp779946-waterfallDetail-page"><span id="dyp779946-waterfallDetail-now">${index + 1}</span>/${total}</div>
                                     </div>
                                     <div class="clearfix dyp-detail-thumb">
@@ -3306,8 +3170,10 @@
                                     type:"get",
                                     dataType:"html",
                                     success:function (d) {
-                                        var res = d.replace('"rateDetail":',"");
-                                        res = JSON.parse(res).rateList ? JSON.parse(res).rateList : [];
+                                        var res = d.split("jsonp128(")[1];
+                                        res = res.substring(0,res.length - 1);
+                                        res = JSON.parse(res).rateDetail;
+                                        res = res.rateList ? res.rateList : [];
                                         if (res && res.length != 0) {
                                             $.each(res,function (v,k) {
                                                 AllDetail.push(k);
@@ -3548,7 +3414,7 @@
                                 if (creatBottomSign == 0) {
                                     var bottomTemplateHtml = `<div id="dypBot9527">
                                         <div class="dypBot9527-icon"></div>
-                                        <div class="dypBot9527-coupon"></div>
+                                        <div class="dypBot9527-coupon" data-douyaDJ="领取优惠券"></div>
                                         <div class="dypBot9527-biKan"></div>
                                         <div class="dypBot9527-buyerShow"></div>
                                     </div>`;
@@ -3571,7 +3437,7 @@
                                 if (t == 1) {
                                     var qrUrls = 'https://uland.taobao.com/coupon/edetail?e=' + getParam(e.clickUrl,"e");
                                     var urls = 'https://uland.taobao.com/coupon/edetail?e=' + getParam(dyClickUrl.clickUrl,"e");
-                                    $(".dypBot9527-coupon").html(`<a data-douyababapaopao="底部-优惠券">领券<span> ${e.couponAmount / 100}元</span></a>
+                                    $(".dypBot9527-coupon").html(`<a>领券<span> ${e.couponAmount / 100}元</span></a>
                                     <div class="dypBot9527-coupon-qr">
                                         <div class="dypBot9527-coupon-qrT">淘宝APP扫码领券</div>
                                         <div class="dypBot9527-coupon-qrB" id="dypBot9527-coupon-qrB"></div>
@@ -3597,14 +3463,14 @@
                                     });
                                 }
                                 if (t == 2) {
-                                    $(".dypBot9527-buyerShow").html(`<a data-douyababapaopao="底部-买家秀">买家秀<span> ${e}</span></a>`);
+                                    $(".dypBot9527-buyerShow").html(`<a>买家秀<span> ${e}</span></a>`);
                                     $(".dypBot9527-buyerShow").fadeIn();
                                     $(".dypBot9527-buyerShow").on("click",function () {
                                         $(".dypMid9527-buyers-show").click();
                                     });
                                 }
                                 if (t == 3) {
-                                    $(".dypBot9527-biKan").html(`<a data-douyababapaopao="底部-必看评价">必看评价<span> ${e}</span></a>`);
+                                    $(".dypBot9527-biKan").html(`<a>必看评价<span> ${e}</span></a>`);
                                     $(".dypBot9527-biKan").fadeIn();
                                     $(".dypBot9527-biKan").on("click",function () {
                                         $(".dypMid9527-must-see").click();
@@ -3657,7 +3523,6 @@
                             dataType:"json",
                             url:requestUrl + 0,
                             success:function (data) {
-                                // saveCoupon(e,data);
                                 totalNum = data.productCommentSummary.showCount;
                                 if (totalNum > 999) {
                                     totalNum = "999+";
@@ -3777,7 +3642,7 @@
                                                     }
                                                     oli += `<div class="item">
                                                         <div class="top">
-                                                            <img src="${value.images[0].imgUrl.replace(/((\d+)x(\d+))/,"640x480").replace(/n0/,"shaidan")}" data-num="${sortNum}" data-newnum="0" data-douyababapaopao="工具+买家秀+点击详情">
+                                                            <img src="${value.images[0].imgUrl.replace(/((\d+)x(\d+))/,"640x480").replace(/n0/,"shaidan")}" data-num="${sortNum}" data-newnum="0">
                                                         </div>
                                                         <div class="middle">
                                                             ${thumbnailPics}
@@ -3843,8 +3708,8 @@
                                                     <p style="display: ${titleSwitch}">${detailAddComment}</p>
                                                 </div>
                                             </div>
-                                            <button class="l" data-douyababapaopao="工具+买家秀+详情左翻页"></button>
-                                            <button class="r" data-douyababapaopao="工具+买家秀+详情右翻页"></button>
+                                            <button class="l"></button>
+                                            <button class="r"></button>
                                             <div class="dyp779946-waterfallDetail-page"><span id="dyp779946-waterfallDetail-now">${index + 1}</span>/${total}</div>
                                         </div>
                                         <div class="clearfix dyp-detail-thumb">
@@ -3967,7 +3832,7 @@
                                     appendPriceCut(1); //京东有
                                 } else {
                                     var oli1 = `<p class="dypClear">
-                                        <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
+                                        <a href="${mainUrl.website}" class="fr" target="_blank">
                                             <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
                                         </a>
                                     </p>
@@ -3983,12 +3848,12 @@
                         }   //
                         function append(data) {
                             var oli = `<p class="dypClear">
-                                    <a href="${mainUrl.website}" class="fr" target="_blank" data-douyababapaopao="工具+优惠券+更多">
+                                    <a href="${mainUrl.website}" class="fr" target="_blank">
                                         <span class="dypMid9527-coupon-topIcon"></span><span>更多优惠券>></span>
                                     </a>
                                 </p>
                             <div class="dypClear">
-                                <a href="${data.url}" target="_blank" data-douyababapaopao="工具+优惠券+领取" id="dypButton">
+                                <a href="${data.url}" target="_blank" id="dypButton">
                                     <div class="fl dypMid9527-coupon-backImg">
                                         <p class="p1"><i></i><span>${data.discount}</span>优惠券</p>
                                         <p><span>满${data.quota}减${data.discount}元</span></p>
@@ -4021,66 +3886,12 @@
                             $("#dypMid9527-fnTimeCountDown").fnTimeCountDown(data.endTime.split(" ")[0] + " 23:59:59");
                         }   //
                     }     //中间京东优惠券
-                    function saveCoupon(event,data) {
-                        $.ajax({
-                            url:"https://app.douyapu.com/api/jd",
-                            type:"get",
-                            dataType:"json",
-                            data:{itemId:productId},
-                            success:function (d) {
-                                if (d && d.status != 1) {
-                                    return
-                                }
-                                $.ajax({
-                                    url:d.api,
-                                    type:"get",
-                                    dataType:"json",
-                                    success:function (e) {
-                                        try {
-                                            e = JSON.parse(e.jingdong_service_promotion_goodsInfo_responce.getpromotioninfo_result);
-                                            if (e.sucessed != true) {
-                                                return
-                                            }
-                                            e = e.result[0];
-                                            var postData = {
-                                                clickUrl:"",shareUrl:"",amount:"",discountPrice:e.unitPrice,itemId:e.skuId,
-                                                picUrl:JSON.stringify({picUrl:e.imgUrl,detailImg:event.data.douyapuImgs}),reservePrice:"",title:e.goodsName,
-                                                userId:e.shopId,cat:e.cid,type:2,biz30Day:e.inOrderCount,
-                                                effectiveEndTime:"",effectiveStartTime:"",startFee:"",rate:""
-                                            };
-                                            var goodRate = data.productCommentSummary ? (data.productCommentSummary.goodCount / data.productCommentSummary.commentCount * 100).toFixed(2) : 0;
-                                            postData.rate = {
-                                                sale:e.inOrderCount,
-                                                favCount:"",
-                                                picNum:event.data.douyapuImgs.length,
-                                                goodRate:goodRate
-                                            };
-                                            // console.log(postData);
-                                            if ((!sessionStorage.douyapuControl || sessionStorage.douyapuControl != infoGroup.id) && dypmyswi) {
-                                                chrome.extension.sendMessage({
-                                                    name:"universal",
-                                                    url:mainUrl.storage,
-                                                    type:"post",
-                                                    dataType:"json",
-                                                    data:{
-                                                        coupon:JSON.stringify(postData),
-                                                    }
-                                                },function () {
-                                                });
-                                                sessionStorage.douyapuControl = infoGroup.id;
-                                            }
-                                        } catch (err) {
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }    //入库商品数据
                 }();    //京东页面
                 !function () {
                     if (infoGroup.plat != 'sn') {
                         return;
                     }
+                    $(".dypMid9527-coupon").hide();
                     var myScript = document.createElement("script");
                     myScript.type = "text/javascript";
                     myScript.appendChild(document.createTextNode('window.postMessage({"douyapuPrice":sn},"*")'));
@@ -4100,13 +3911,13 @@
                         }
                     },false);
                     startSame(location.origin + location.pathname); //苏宁
-                    qtCoupon();
                     startVip();
                 }();    //苏宁易购页面
                 !function () {
                     if (infoGroup.plat != 'gm') {
                         return;
                     }
+                    $(".dypMid9527-coupon").hide();
                     $("#dypMid9527").css("z-index",105);
                     var myScript = document.createElement("script");
                     myScript.type = "text/javascript";
@@ -4127,13 +3938,13 @@
                         }
                     },false);
                     startSame(location.origin + location.pathname); //国美
-                    qtCoupon();
                     startVip();
                 }();    //国美页面
                 !function () {
                     if (infoGroup.plat != 'dd') {
                         return;
                     }
+                    $(".dypMid9527-coupon").hide();
                     $("#dypMid9527").css("z-index",6667);
                     var myScript = document.createElement("script");
                     myScript.type = "text/javascript";
@@ -4156,7 +3967,6 @@
                         }
                     },false);
                     startSame(location.origin + location.pathname); //当当
-                    qtCoupon();
                     startVip();
                 }();    //当当页面
                 !function () {
@@ -4264,7 +4074,7 @@
                                 !function () {
                                     var html = "";
                                     $.each(response.results,function (v,k) {
-                                        html += `<li data-douyababapaopao="顶部+活动+ID${k.id}">
+                                        html += `<li>
                                             <b class="icon${k.act_badge_label}"></b>                        
                                             <a href="${k.act_link}" target="_blank" rel="noreferrer">${k.act_name}</a>
                                         </li>`;
@@ -4329,7 +4139,7 @@
                                 if (e && e.results && e.results.length > 0) {
                                     var html = "";
                                     $.each(e.results,function (v,k) {
-                                        html += `<li data-douyababapaopao="工具+活动+ID${k.id}"><a href="${k.act_link}" target="_blank" rel="noreferrer"><b></b>${k.act_name}<i class="icon${k.act_badge_label}"></i></a></li>`;
+                                        html += `<li><a href="${k.act_link}" target="_blank" rel="noreferrer"><b></b>${k.act_name}<i class="icon${k.act_badge_label}"></i></a></li>`;
                                     });
                                     $(".dypMid9527-box-active ul").html(html);
                                     last = 1;
@@ -4397,7 +4207,7 @@
                                 return
                             }
                             list += `<li>
-                                <a class="dypClear" data-url="https:${k.shareUrl}" data-douyababapaopao="工具栏+母亲节">
+                                <a class="dypClear" data-url="https:${k.shareUrl}">
                                     <div class="fl dypMid9527-feast-img">
                                         <img src="${k.picUrl}_80x80.jpg">
                                     </div>
@@ -4417,7 +4227,6 @@
                     $('.dypMid9527-box-feast ul').on("scroll",function () {
                         if ($(this).scrollTop() > 500) {
                             if (swi) {
-                                cnzzEvent("MID栏母亲节活动","滚动");
                                 swi = 0;
                             }
                         }
@@ -4705,7 +4514,7 @@
                         });
                     }   //请求惠惠助手接口拿取商品历史价格数据
                     $.each($(k[0]),function () {
-                        $(this).append(`<div class="douyapulist-price-item" data-type="0" data-douyamovepaopao="列表+查看+${k[2]}">
+                        $(this).append(`<div class="douyapulist-price-item" data-type="0">
                             <div class="douyapulist-price-box" >
                                 <div class="douyapulist-price-icon"></div>
                                 <div>价格趋势</div>
@@ -4749,7 +4558,7 @@
                                             d = d.results;
                                             $.each(dom,function (v) {
                                                 if (d[arr[v]] && d[arr[v]].amount) {
-                                                    $(this).parent().after(`<a class="douyapulist-coupon" href="${d[arr[v]].shareUrl}" target="_blank" data-douyababapaopao="列表+优惠券">¥领${d[arr[v]].amount}券</a>`);
+                                                    $(this).parent().after(`<a class="douyapulist-coupon" href="${d[arr[v]].shareUrl}" target="_blank">¥领${d[arr[v]].amount}券</a>`);
                                                 }
                                                 $(this).attr("douyapuHasCoupon",1)
                                             });
@@ -4808,8 +4617,8 @@
                                             <div class="douyapulist-price-drop-logo fl"></div>
                                             <div class="douyapulist-price-drop-set fr">
                                                 <ul>
-                                                    <li data-douyababapaopao="列表+意见反馈+${k[2]}" class="dypLi">意见反馈</li>
-                                                    <li data-douyababapaopao="列表+本次关闭+${k[2]}" class="dypLi">本次关闭</li>
+                                                    <li class="dypLi">意见反馈</li>
+                                                    <li class="dypLi">本次关闭</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -4828,7 +4637,7 @@
                                 if (activeData) {
                                     var html = "";
                                     $.each(activeData,function (v,k) {
-                                        html += `<div data-douyababapaopao="列表+活动+ID${k.id}" class="douyapulist-price-drop-adItem">
+                                        html += `<div class="douyapulist-price-drop-adItem">
                                             <div class="douyapulist-price-drop-icon icon${k.act_badge_label}"></div>
                                             <div><a href="${k.act_link}" target="_blank" rel="noreferrer">${k.act_name}</a></div>
                                         </div>`
@@ -5087,4 +4896,18 @@
             getUseInfo();
         }
     }();
+    //电商平台统计
+    !function () {
+        var cnzzArr = ['.taobao.com','.taobao.hk','.tmall.com','.tmall.hk','.jd.com','.jd.hk','.suning.com','.vip.com','.mogujie.com','dangdang.com'];
+        var cnzzArrOK = 0;
+        $.each(cnzzArr,function (v,k) {
+            if (locHost.indexOf(k) != -1) {
+                cnzzArrOK = 1;
+                return false;
+            }
+        });
+        if (cnzzArrOK == 1) {
+            cnzzAppend();
+        }
+    }()
 }();
