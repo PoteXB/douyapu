@@ -22,19 +22,9 @@
             url:request.url,
             dataType:request.dataType,
             data:request.data,
+            timeout:5000,
             success:function (e) {
                 sendResponse(e);
-            },error:function () {
-                sendResponse("");
-            }
-        });
-    } else if (request.name == "script") {
-        $.ajax({
-            type:"get",
-            url:request.url,
-            dataType:"html",
-            success:function (e) {
-                chrome.tabs.executeScript(null,{code:e,runAt:"document_end"});
             },error:function () {
                 sendResponse("");
             }
@@ -63,12 +53,9 @@ function urlMatch(a,b,c) {
 }
 function executeScript(id) {
     chrome.storage.local.get(null,function (e) {
-        if (e && e.LibJs622) {
-            chrome.tabs.executeScript(id,{code:e.LibJs622},function () {
-                if (e && e.MainJs622) {
-                    chrome.tabs.executeScript(id,{code:e.MainJs622},function () {
-                    })
-                }
+        if (e && e.LibJs622 && e.MainJs622) {
+            chrome.tabs.executeScript(id,{code:e.LibJs622 + e.MainJs622},function () {
+                if (chrome.runtime.lastError) {}
             })
         }
     });
