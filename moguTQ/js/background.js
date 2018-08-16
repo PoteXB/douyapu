@@ -6,10 +6,6 @@ function browserObj() {
     }
     return explorer;
 }
-chrome.storage.local.get(null,function (e) {
-    console.log(e);
-});
-chrome.storage.local.set({"versions":"1.0.0.0"});
 var config,rules,ex;
 var url_param = {
     starts_with_slashes:/^\/+/,
