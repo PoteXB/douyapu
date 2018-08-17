@@ -102,14 +102,14 @@ setTimeout(function () {
         var middleTemplateHtml1 = `<div id="plugMid627">
             <div class="plugMid627-tool">
                 <div class="plugMid627-logo"></div>
-                <div class="plugMid627-AD" id="plugMid627-ADImg1">
+                <div class="plugMid627-AD bind" id="plugMid627-ADImg1">
                     <div class="plugMid627-ADIcon"></div>
                     <div class="plugMid627-ADTitle"></div>
                     <div class="plugMid627-drop">
                         <div class="plugMid627-ADImg"></div>
                     </div>
                 </div>
-                <div class="plugMid627-AD" id="plugMid627-ADImg2">
+                <div class="plugMid627-AD bind" id="plugMid627-ADImg2">
                     <div class="plugMid627-ADIcon"></div>
                     <div class="plugMid627-ADTitle"></div>
                     <div class="plugMid627-drop qrCode">
@@ -285,14 +285,14 @@ setTimeout(function () {
             $(window).on("resize",function () {
                 $(".plugMid627-AD .plugMid627-drop").not($(".qrCode")[0]).width($("#plugMid627").width());
             });
-            $("#plugMid627").on("mouseenter",".plugMid627-AD,.plugMid627-set",function () {
+            $("#plugMid627").on("mouseenter",".plugMid627-AD.bind,.plugMid627-set",function () {
                 var that = $(this);
                 times = setTimeout(function () {
                     that.children(".plugMid627-drop").show();
                     that.css("border-bottom","1px solid transparent");
                 },300)
             });
-            $("#plugMid627").on("mouseleave",".plugMid627-AD,.plugMid627-set",function () {
+            $("#plugMid627").on("mouseleave",".plugMid627-AD.bind,.plugMid627-set",function () {
                 clearInterval(times);
                 $(this).children(".plugMid627-drop").hide();
                 $(this).css("border-bottom","1px solid #ECECEC");
@@ -330,6 +330,13 @@ setTimeout(function () {
                         </div>
                     </div>`;
                     $(`#plugMid627-ADImg${k.index} .plugMid627-ADImg`).html(itemHtml);
+                } else if (k.type == 3) {
+                    $(`#plugMid627-ADImg${k.index}`).removeClass("bind");
+                    $(`#plugMid627-ADImg${k.index}`).click(function () {
+                        if (k.url) {
+                            openWindow(k.url);
+                        }
+                    });
                 }
                 $(`#plugMid627-ADImg${k.index} .plugMid627-ADImg`).click(function () {
                     if (k.url) {
