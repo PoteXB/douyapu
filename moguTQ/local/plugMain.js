@@ -332,6 +332,7 @@ setTimeout(function () {
                     $(`#plugMid627-ADImg${k.index} .plugMid627-ADImg`).html(itemHtml);
                 } else if (k.type == 3) {
                     $(`#plugMid627-ADImg${k.index}`).removeClass("bind");
+                    $(`#plugMid627-ADImg${k.index}`).attr("data-moguDJ",k.cnzzName);
                     $(`#plugMid627-ADImg${k.index}`).click(function () {
                         if (k.url) {
                             openWindow(k.url);
