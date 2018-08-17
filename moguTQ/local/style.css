@@ -34,10 +34,6 @@
 .plugMid627-QQ, .plugMid627-set{
     width:40px;
 }
-.plugMid627-flex{
-    display:flex;
-    align-items:center;
-}
 /**/
 /*logo*/
 .plugMid627-logo{
@@ -315,7 +311,39 @@
 }
 .plugMid627-noCoupon{
     display:none;
+    border-left:1px solid #ececec;
+    border-right:1px solid #ececec;
+    border-bottom:1px dashed #ececec;
+    padding:5px 0 5px 14px;
+}
+.plugMid627-noCoupon b{
+    font-weight:normal;
+    font-size:12px;
+    background:#fff;
+    color:#FF3A27;
+    border:1px solid #FF3A27;
+    border-radius:3px;
+    float:left;
+    padding:0 2px;
+    margin-top:5px;
+    width:auto;
+    line-height:18px;
+}
+.plugMid627-noCoupon span{
+    float:none;
+    display:block;
+    margin-left:36px;
+    line-height:30px;
+    position:relative;
+    font-size:12px;
     cursor:pointer;
+}
+.plugMid627-noCoupon span.color{
+    color:#FF3A27;
+}
+.plugMid627-noCoupon span:hover{
+    text-decoration:underline;
+    color:#FF3A27;
 }
 /**/
 /*轮播活动*/
