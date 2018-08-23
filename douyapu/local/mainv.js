@@ -1252,10 +1252,10 @@
                 canalId = e.dypCanalId20180709;
                 id = (canalId == '120015') ? e.dypjsonvdata.myNewMmId : e.dypjsonvdata.myMmId;
                 phoneId = (canalId == '120015') ? e.dypjsonvdata.phoneNewId[0] : e.dypjsonvdata.phoneId[0];
-                couponApiType = (canalId == '120015') ? 1 : 2;//1旧接口 2新接口
+                couponApiType = (canalId == '120015') ? 1 : 2;//1新渠道 2旧渠道
                 dypmyswi = 1;
                 id = id[Math.floor((Math.random() * id.length))];
-                //版本号  测试
+                //版本号测试
                 dypVer = `backv : ${e.dypbackv} mainv : ${e.dypmainv} jsonv : ${e.dypjsonv} popv : ${e.dyppopv} setv : ${e.dypsetv}`;
                 mainUrl = {
                     min:e.dypjsonvdata.mainUrlMin,
@@ -2147,7 +2147,7 @@
                     if (infoGroup.plat == 'ju' || infoGroup.plat == 'tm') {
                         changeColor("#F40137","天　猫","tm");
                         if (infoGroup.plat == 'ju') {
-                            infoGroup.id = getUrlParam("item_id");
+                            infoGroup.id = getUrlParam("item_id") ? getUrlParam("item_id") : getUrlParam("itemId");
                             itemId = infoGroup.id;
                         } else {
                             infoGroup.title = htmlT.match(/"title":"(.+?)"/) ? htmlT.match(/"title":"(.+?)"/)[1] : "";
@@ -2337,16 +2337,18 @@
                                 }
                             });
                         }//获取随机pid点击优惠券并上报
-                        function getDanNewApi() {
+                        function getDanNewApi(typeName) {
                             chrome.extension.sendMessage({
                                 name:"universal",
                                 url:"http://report.douyapu.com/tb",
                                 type:"post",
                                 dataType:"json",
                                 data:{
-                                    itemId:itemId
+                                    itemId:itemId,
+                                    type:typeName
                                 }
                             },function (e) {
+                                //判断是否需要切换旧接口
                                 if (!e || e.code != 1) {
                                     getDan();
                                     return
@@ -2517,9 +2519,9 @@
                             });
                         }//获取手机pid二维码优惠券
                         if (couponApiType == 1) {
-                            getDan();
+                            getDanNewApi("x");
                         } else if (couponApiType == 2) {
-                            getDanNewApi();
+                            getDanNewApi("d");
                         }
                         $("#dypAbs9527").on("mouseenter",".dypAbs9527-coupon-qr",function () {
                             $(this).children(".dypAbs9527-coupon-qrBox").show();
