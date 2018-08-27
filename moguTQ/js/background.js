@@ -6,7 +6,7 @@ function browserObj() {
     }
     return explorer;
 }
-chrome.storage.local.clear();
+// chrome.storage.local.clear();
 var config,rules,ex;
 var url_param = {
     starts_with_slashes:/^\/+/,
