@@ -107,8 +107,8 @@
         if (j816 != e.JsonVer816) {
             $.ajax({
                 type:"get",
-                url:`http://file.douyapu.com/crx/azuo/plug/${j816}/plugData.json`,
-                // url:"local/plugData.json",
+                // url:`http://file.douyapu.com/crx/azuo/plug/${j816}/plugData.json`,
+                url:"local/plugData.json",
                 dataType:"json",
                 success:function (d) {
                     chrome.storage.local.set({JsonVer816:j816});
