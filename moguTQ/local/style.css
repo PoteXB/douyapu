@@ -544,6 +544,8 @@
     display:flex;
     align-items:center;
     justify-content:space-around;
+    height:170px;
+    color:#666;
 }
 .plugBot627-burst-drop li{
     width:95px;
@@ -551,7 +553,6 @@
     margin-bottom:10px;
 }
 .plugBot627-burst-dropTitle{
-    color:#666666;
     font-size:12px;
     height:18px;
     margin-top:12px;
@@ -579,8 +580,19 @@
 .plugBot627-rollAd li{
     display:flex;
     align-items:center;
-    height:40px
+    height:40px;
+    font-size:12px;
+    color:#FF3A27;
+}
+.plugBot627-rollAd li:hover{
+    text-decoration:underline;
 }
 .plugBot627-rollAd img{
     height:30px;
+}
+.plugBot627-close{
+    width:28px;
+    height:40px;
+    background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAKlBMVEUAAACTnaaVnaWUnaaTnaWVn6WUnKaUnaWUnKeTnKaXn6eUnaaUnKaUnaZyV6Y5AAAADXRSTlMAwGDwgDCgn0CQIHBfvGJUrQAAAIRJREFUKM9jIB6sAeKOAASf1XYCA8NdAYRA8F0HsABCwTUGFAHluwkoAkx3gQqQBXSBCsACcAVXGCACcAUKUAGYgksMKAK+YAUIATagAoQAQgFCwNaIAU0AqANDC35DEUowHYbpdEzPwZUUMKAF0HW4AEIJWiADleCNBsyIYlgNjUrCAAC8Dj4kPBg6uAAAAABJRU5ErkJggg==) center no-repeat;
+    cursor:pointer;
 }
