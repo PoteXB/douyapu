@@ -391,10 +391,10 @@
             });
         }();                                       //上面两个广告位模块1
         !function () {
-            var adData = [
-                {name:'进口好货汇，买二免一！',url:'https://s.click.taobao.com/bPoAHNw	',cnzz:'无券广告1'},
-                {name:'全球精选大牌，优惠大放送！',url:'https://s.click.taobao.com/y845eNw',cnzz:'无券广告2'}
-            ]; //没有优惠券时或者京东等其他平台中间的广告图和跳转地址以及cnzz点击事件名称
+            var adData = []; //没有优惠券时或者京东等其他平台中间的广告图和跳转地址以及cnzz点击事件名称
+            if (adJson) {
+                adData = adJson.noCouAD
+            }
             function noCouponHtml(adData) {
                 return `<div class="plugMid627-couBox">
                     <div>
@@ -1206,106 +1206,170 @@
     //全网弹窗广告
     !function () {
         var total;
+        var cssTest1 = 1;
+        var cssTest2 = 1;
         var sj_title = $("head>title").length ? $("head>title").html().replace(/-淘宝网|-tmall.com天猫$/,"") : "";
+        var alertTime = {};                             //图片弹窗广告的过期时间
+        var nowTime = new Date().getTime();             //当前时间戳
         chrome.storage.local.get(null,function (e) {
             if (!e.JsonJs816) {
                 return
             }
             var n = 0;
-            var dypAlert = e.JsonJs816.alertAD;      //右下角弹窗模块4
+            var dypAlert = e.JsonJs816.alertAD;                         //右下角弹窗模块4
+            var tipsTime = e.tipsTime;                                  //tips过期时间
+            alertTime = e.alertTime ? e.alertTime : {};
             total = dypAlert.length;
             $.each(dypAlert,function (v,k) {
                 n++;
-                if (k.position.match('2')) {
-                    start1(k,n);
-                }
-            });
-        });
-        function start1(k,n) {
-            var urlOk = 0;
-            var keyOK = 0;
-            var urlArr = k.plant.split('|');
-            var keyArr = k.keys ? k.keys.split('|') : [];
-            $.each(urlArr,function (v,k) {
-                if (locHost == k) {
-                    urlOk = 1;
-                    return false;
-                }
-            });
-            if (keyArr.length) {
-                $.each(keyArr,function (v,k) {
-                    if (sj_title.match(k)) {
-                        keyOK = 1;
+                var urlOk = 0;
+                var keyOK = 0;
+                var urlArr = k.plant.split('|');
+                var keyArr = k.keys ? k.keys.split('|') : [];
+                $.each(urlArr,function (v1,k1) {
+                    if (locHost == k1) {
+                        urlOk = 1;
                         return false;
                     }
                 });
-            } else {
-                keyOK = 1
-            }
-            if (urlOk && keyOK) {
-                cnzzAppend();
-                if (document.cookie.indexOf(`mgTqAlert${n}=1`) == -1) {
-                    var curDate = new Date();
-                    var curTamp = curDate.getTime();
-                    var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;
-                    var passedTamp = curTamp - curWeeHours;
-                    var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;
-                    var leftTime = new Date();
-                    leftTime.setTime(leftTamp + curTamp);
-                    document.cookie = `mgTqAlert${n}=1;expires=` + leftTime;
-                    var typeimg = '',toUrl = '';
-                    $("<style></style>").html(`#plug625-alert${n}{z-index:999999999999;position:fixed;bottom:10px;right:35px;display:none}#plug625-alert${n} img{display:block;max-width:300px;max-height:400px}#plug625-alert${n}-close{width:30px;height:30px;position:absolute;right:0;top:0;cursor:pointer;opacity:1;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAM1BMVEUAAAAAAABlZWUAAAD19fWioqIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9IKCr6AAAAEHRSTlOAAJ919bt9Y0AsJghKSVdLz5TIOAAAAKNJREFUKM+F01kOwyAMBNBJpuyQ9P6nLVULiRUw8xXxZIXFxtYTi6O1dCVea42TJ3rok+RAiDDc+cQj58UHBjkaZwyTfxwwSfhy4oyZKntM4yu3YrOjZTf/8g2xr732x1dEgXChyHAQLrQiIVxoRQvh5q6wkmHeBoKpVRNO+7dD0XaeEbVzR2yc3xrbk4zv3K8fVG8HvZn0VtQbWR+D9RAtRvAD7KoEY4+OgCAAAAAASUVORK5CYII=)}#plug625-alert${n}-close:hover{opacity:.5}@keyframes mgslideInLeft{from{transform:translate3d(100%,0,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInLeft{animation-name:mgslideInLeft}.mganimated{animation-duration:1s;animation-fill-mode:both}`).appendTo("head");
-                    typeimg = k.img_src;
-                    toUrl = k.link ? k.link : 'javascript:void(0);';
-                    $(document).ready(function () {
-                        $("body").after(`<div id="plug625-alert${n}" class="mganimated mgslideInLeft" data-name="${k.name}">
-                                <a href="${toUrl}" target="_blank" rel="noreferrer"><img src='${typeimg}'></a>
-                                <div id="plug625-alert${n}-close"></div>
-                            </div>`);
-                        if (k.link) {
-                            $(`#plug625-alert${n} a`).attr("data-moguDJ",k.name);
+                if (keyArr.length) {
+                    $.each(keyArr,function (v2,k2) {
+                        if (sj_title.match(k2)) {
+                            keyOK = 1;
+                            return false;
                         }
-                        setTimeout(function () {
-                            var swi = 0;
-                            for (var i = 1; i < n; i++) {
-                                if ($(`#plug625-alert${i}`).length) {
-                                    swi = 1;
-                                    break;
-                                }
-                            }
-                            if (!swi) {
-                                $(`#plug625-alert${n}`).show();
-                                cnzzEvent(`${k.name}`,"弹出");
-                            }
-                            $(`#plug625-alert${n}-close`).click(function () {
-                                cnzzEvent(`${k.name}关闭`,"点击");
-                                var that = $(this);
-                                that.parent().fadeOut(1000,function () {
-                                    that.parent().remove();
-                                });
-                            });
-                            var swi1 = 0;
-                            var nextNum = "";
-                            for (var j = n + 1; j < total + 1; j++) {
-                                if ($(`#plug625-alert${j}`).length) {
-                                    swi1 = 1;
-                                    nextNum = j;
-                                    break;
-                                }
-                            }
-                            if (swi1) {
-                                $(`#plug625-alert${n}-close`).click(function () {
-                                    setTimeout(function () {
-                                        $(`#plug625-alert${nextNum}`).show();
-                                        cnzzEvent(`${$(`#plug625-alert${nextNum}`).data("name")}`,"弹出");
-                                    },2500);
-                                });
-                            }
-                        },1000 * n);
                     });
+                } else {
+                    keyOK = 1
+                }
+                if (urlOk && keyOK) {
+                    cnzzAppend();
+                    if (alertTime[`mgTqAlert${n}${locHost}`] && nowTime < alertTime[`mgTqAlert${n}${locHost}`]) {
+                        return
+                    }
+                    if (k.position.match('2')) {
+                        start1(k,n);
+                    } else if (k.position.match('3')) {
+                        if (tipsTime && nowTime < tipsTime) {
+                            return
+                        }
+                        start2(k,n)
+                    }
+                }
+            });
+        });
+        function setCookie(n) {
+            var curDate = new Date();
+            var curTamp = curDate.getTime();
+            var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;
+            var passedTamp = curTamp - curWeeHours;
+            var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;
+            alertTime[`mgTqAlert${n}${locHost}`] = leftTamp + curTamp;
+            chrome.storage.local.set({alertTime:alertTime});
+        }       //存cookie
+        function bindEvent(k,n) {
+            var swi = 0;
+            for (var i = 1; i < n; i++) {
+                if ($(`#plug625-alert${i}`).length) {
+                    swi = 1;
+                    break;
                 }
             }
-        }
+            if (!swi) {
+                $(`#plug625-alert${n}`).show();
+                cnzzEvent(`${k.name}`,"弹出");
+                setCookie(n);
+            }
+            $(`#plug625-alert${n}-close`).click(function () {
+                cnzzEvent(`${k.name}关闭`,"点击");
+                $(`#plug625-alert${n}`).fadeOut(1000,function () {
+                    $(`#plug625-alert${n}`).remove();
+                });
+            });
+            var swi1 = 0;
+            var nextNum = "";
+            for (var j = n + 1; j < total + 1; j++) {
+                if ($(`#plug625-alert${j}`).length) {
+                    swi1 = 1;
+                    nextNum = j;
+                    break;
+                }
+            }
+            if (swi1) {
+                $(`#plug625-alert${n}-close`).click(function () {
+                    setTimeout(function () {
+                        $(`#plug625-alert${nextNum}`).show();
+                        cnzzEvent(`${$(`#plug625-alert${nextNum}`).data("name")}`,"弹出");
+                        setCookie(nextNum);
+                    },2500);
+                });
+            }
+        }     //绑定事件
+        function start1(k,n) {
+            var typeimg = k.img_src;
+            var toUrl = k.link ? k.link : 'javascript:void(0);';
+            if (cssTest1) {
+                $("<style></style>").html(`.plug625-alert{z-index:999999999999;position:fixed;bottom:0;right:0;display:none}.plug625-alert img{display:block;max-width:300px;max-height:400px}.plug625-alert-close{width:30px;height:30px;position:absolute;right:0;top:0;cursor:pointer;opacity:1;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAM1BMVEUAAAAAAABlZWUAAAD19fWioqIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///9IKCr6AAAAEHRSTlOAAJ919bt9Y0AsJghKSVdLz5TIOAAAAKNJREFUKM+F01kOwyAMBNBJpuyQ9P6nLVULiRUw8xXxZIXFxtYTi6O1dCVea42TJ3rok+RAiDDc+cQj58UHBjkaZwyTfxwwSfhy4oyZKntM4yu3YrOjZTf/8g2xr732x1dEgXChyHAQLrQiIVxoRQvh5q6wkmHeBoKpVRNO+7dD0XaeEbVzR2yc3xrbk4zv3K8fVG8HvZn0VtQbWR+D9RAtRvAD7KoEY4+OgCAAAAAASUVORK5CYII=)}.plug625-alert-close:hover{opacity:.5}@keyframes mgslideInLeft{from{transform:translate3d(100%,0,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInLeft{animation-name:mgslideInLeft}.mganimated{animation-duration:1s;animation-fill-mode:both}`).appendTo("head");
+                cssTest1 = 0;
+            }
+            $(document).ready(function () {
+                $("body").after(`<div id="plug625-alert${n}" class="mganimated mgslideInLeft plug625-alert" data-name="${k.name}">
+                    <a href="${toUrl}" target="_blank" rel="noreferrer"><img src='${typeimg}'></a>
+                    <div id="plug625-alert${n}-close" class="plug625-alert-close"></div>
+                </div>`);
+                if (k.link) {
+                    $(`#plug625-alert${n} a`).attr("data-moguDJ",k.name);
+                }
+                setTimeout(function () {
+                    bindEvent(k,n)
+                },1000 * n);
+            });
+        }        //整个图片形式
+        function start2(k,n) {
+            if (cssTest2) {
+                $("<style></style>").html(`.plug625-alertNew{z-index:999999999999;position:fixed;bottom:0;right:0;display:none;background:#fff;font-family:"Microsoft Yahei",sans-serif}.plug625-alertNew-head{display:flex;background:linear-gradient(to right,#F53669,#FB5E95);color:#fff;height:30px;padding-left:10px;align-items:center;font-size:14px}.plug625-alertNew-head-title{letter-spacing:2px}.plug625-alertNew-set{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAP1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////9Du/pqAAAAFHRSTlMAQBCAMNDAILDwYKDfv5+Q4HBvUC8i92oAAAE+SURBVDjLjVNbcsQgDAsP8w7LZnX/sxYcKKRTptVHGMeOJTviWKATGEkfv+MFY4xTCq9NgfH3CbMpSD1B9DOjg+QvXe+E9pThW4oAfNYiQd2xQhI6e0CM1j4QAK/kHUvlAZiAdMdvvCtLdHZyWhdt6/Tmel82omXxkqcPy6dCLI0+bSN2mVqcqDjF3AxsVaBGGOBjCNHPlgqfQxLymJYs01CfTzqQrIfpiRO67w0nHwQn+09yrR5xdI6wTcAk55SYsWIOh+O/BapTuCeFg+pau0gzRRqe5hYpCXG8T7qrF8NiJJ+LQr6ujOeiLM65aoMKM1dNsK3PZ/ezAneXPsmdST1nWIXITi8mdbnyqCGm4CJU5GG53KJ0eVpMG7Uo07RF6DhNO21vNrYfKLS5ONNgf1y9F07G9vLqAkZZyb8ABqcQzlq00WIAAAAASUVORK5CYII=);margin-left:78px;margin-right:10px;position:relative}.plug625-alertNew-setDrop{display:none;position:absolute;top:20px;left:-32px;width:85px;z-index:10;color:#333;font-size:12px}.plug625-alertNew-setDrop div{margin-top:10px;background:#fff;border:1px solid #ddd;padding:5px}.plug625-alertNew-setDrop div:hover{color:red}.plug625-alertNew-close{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAKlBMVEUAAAD///////////////////////////////////////////////////+Gu8ovAAAADXRSTlMA76AwENCQP8CwYFAgw5s7dQAAAJdJREFUKM9jIAuwH4CxWArAlK4wTMD1GpjKvWgAVRALEXC9K8wAZYRAJYBKwPQlB4iME0SJ4V0FmGG6ICXMspfgFjMBlUAVIJRAFSCUQBUglEAVIJSgKmBgvnvXAM6BuAFkEQIArQBahKJAAWgRigKocxEKwG5BUQBVglAAUYJQAFeCUIAIurkwX7DEQlhr4b7wuM1AGwAAMdUzJRXTMbMAAAAASUVORK5CYII=)}.plug625-alertNew-close,.plug625-alertNew-set{width:20px;height:20px;background-size:cover;cursor:pointer}.plug625-alertNew ul{padding:10px 10px 0 10px;border-left:1px solid #F1F1F1}.plug625-alertNew li{margin-top:10px}.plug625-alertNew li:first-child{margin-top:0;overflow:hidden}.plug625-alertNew li:first-child span{animation:puffOut .5s ease 0s infinite normal both}.plug625-alertNew li img{width:190px;height:110px;vertical-align:middle}.plug625-alertNew li a{position:relative;display:flex}.plug625-alertNew li span{z-index:3;text-align:center;display:block;position:absolute;bottom:0;left:0;width:190px;padding:4px 7px;max-height:28px;line-height:14px;color:#fff;cursor:pointer;background:rgba(0,0,0,.6);font-size:12px;box-sizing:border-box}@keyframes mgslideInTop{from{transform:translate3d(0,100%,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInTop{animation-name:mgslideInTop}.mganimated{animation-duration:.5s;animation-fill-mode:both}@keyframes puffOut{0%{transform-origin:50% 50%;transform:scale(1)}50%{transform-origin:50% 50%;transform:scale(1.1)}100%{transform-origin:50% 50%;transform:scale(1)}}`).appendTo("head");
+                cssTest2 = 0;
+            }
+            $(document).ready(function () {
+                $("body").after(`<div id="plug625-alert${n}" class="plug625-alertNew mgslideInTop mganimated">
+                    <div class="plug625-alertNew-head">
+                        <div class="plug625-alertNew-head-title">猜你喜欢</div>
+                        <div class="plug625-alertNew-set" title="设置" id="plug625-alert${n}-set">
+                            <div class="plug625-alertNew-setDrop">
+                                <div id="plug625-alert${n}-setClick">三天不再弹出</div>
+                            </div>
+                        </div>
+                        <div class="plug625-alertNew-close" id="plug625-alert${n}-close" title="关闭"></div>
+                    </div>
+                    <ul></ul>
+                </div>`);
+                var html = '';
+                $.each(k.data,function (v,k) {
+                    html += `<li>
+                        <a href="${k.link}" target="_blank" rel="noreferrer">
+                            <img src="${k.img_src}">
+                            <span>${k.title}</span>
+                        </a>
+                    </li>`
+                });
+                $(`#plug625-alert${n} ul`).html(html);
+                setTimeout(function () {
+                    bindEvent(k,n);
+                    $(`#plug625-alert${n}-set`).hover(
+                        function () {
+                            $(this).find('.plug625-alertNew-setDrop').show()
+                        },
+                        function () {
+                            $(this).find('.plug625-alertNew-setDrop').hide()
+                        }
+                    );
+                    $(`#plug625-alert${n}-setClick`).click(function () {
+                        chrome.storage.local.set({tipsTime:nowTime + 259200000});
+                        $(`#plug625-alert${n}-close`).click();
+                    });
+                },1000 * n);
+            });
+        }        //信息流广告形式
     }();
     //淘宝首页用户信息上报
     !function () {
