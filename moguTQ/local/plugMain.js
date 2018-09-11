@@ -182,8 +182,7 @@
                 "//shang.qq.com/wpa/qunwpa?idkey=f39f47defe3af4c5f8d51097757a4a8a2117cde3122d24d209edd1247a50b7fd",
                 "//shang.qq.com/wpa/qunwpa?idkey=7fd3b630aefe61709b871b882eeaa589e27e7602981384d1d90abf5e2bca2eab",
                 "//shang.qq.com/wpa/qunwpa?idkey=2a33f551c1c50c803ab643f76a7bdb109f4f7f781ed407ec87ba5479247e4816",
-                "//shang.qq.com/wpa/qunwpa?idkey=7a7d503e5a1a5cac589fa293034513c7d6f09da5873072b2161bb3096246ade9",
-                "//shang.qq.com/wpa/qunwpa?idkey=7b0d150758f197630ae19f9ee6e7f7463c24caae7ae1ca7bdf8f17513792ce1a"
+                "//shang.qq.com/wpa/qunwpa?idkey=7a7d503e5a1a5cac589fa293034513c7d6f09da5873072b2161bb3096246ade9"
             ],//咨询群
             myMmId = [
                 "mm_112599953_15986703_1830622155",
@@ -1244,16 +1243,21 @@
                 }
                 if (urlOk && keyOK) {
                     cnzzAppend();
-                    if (alertTime[`mgTqAlert${n}${locHost}`] && nowTime < alertTime[`mgTqAlert${n}${locHost}`]) {
+                    if (alertTime[`mgTqAlert${n}${locHost}`] && (nowTime < alertTime[`mgTqAlert${n}${locHost}`])) {
                         return
                     }
                     if (k.position.match('2')) {
                         start1(k,n);
                     } else if (k.position.match('3')) {
-                        if (tipsTime && nowTime < tipsTime) {
+                        if (tipsTime && (nowTime < tipsTime)) {
                             return
                         }
                         start2(k,n)
+                    } else if (k.position.match('4')) {
+                        if (tipsTime && (nowTime < tipsTime)) {
+                            return
+                        }
+                        start3(k,n)
                     }
                 }
             });
@@ -1325,15 +1329,60 @@
                 },1000 * n);
             });
         }        //整个图片形式
-        function start2(k,n) {
+        // function start2(k,n) {
+        //     if (cssTest2) {
+        //         $("<style></style>").html(`.plug625-alertNew{z-index:999999999999;position:fixed;bottom:0;right:0;display:none;background:#fff;font-family:"Microsoft Yahei",sans-serif}.plug625-alertNew-head{display:flex;background:linear-gradient(to right,#F53669,#FB5E95);color:#fff;height:30px;padding-left:10px;align-items:center;font-size:14px}.plug625-alertNew-head-title{letter-spacing:2px}.plug625-alertNew-set{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAP1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////9Du/pqAAAAFHRSTlMAQBCAMNDAILDwYKDfv5+Q4HBvUC8i92oAAAE+SURBVDjLjVNbcsQgDAsP8w7LZnX/sxYcKKRTptVHGMeOJTviWKATGEkfv+MFY4xTCq9NgfH3CbMpSD1B9DOjg+QvXe+E9pThW4oAfNYiQd2xQhI6e0CM1j4QAK/kHUvlAZiAdMdvvCtLdHZyWhdt6/Tmel82omXxkqcPy6dCLI0+bSN2mVqcqDjF3AxsVaBGGOBjCNHPlgqfQxLymJYs01CfTzqQrIfpiRO67w0nHwQn+09yrR5xdI6wTcAk55SYsWIOh+O/BapTuCeFg+pau0gzRRqe5hYpCXG8T7qrF8NiJJ+LQr6ujOeiLM65aoMKM1dNsK3PZ/ezAneXPsmdST1nWIXITi8mdbnyqCGm4CJU5GG53KJ0eVpMG7Uo07RF6DhNO21vNrYfKLS5ONNgf1y9F07G9vLqAkZZyb8ABqcQzlq00WIAAAAASUVORK5CYII=);margin-left:78px;margin-right:10px;position:relative}.plug625-alertNew-setDrop{display:none;position:absolute;top:20px;left:-32px;width:85px;z-index:10;color:#333;font-size:12px}.plug625-alertNew-setDrop div{margin-top:10px;background:#fff;border:1px solid #ddd;padding:5px}.plug625-alertNew-setDrop div:hover{color:red}.plug625-alertNew-close{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAKlBMVEUAAAD///////////////////////////////////////////////////+Gu8ovAAAADXRSTlMA76AwENCQP8CwYFAgw5s7dQAAAJdJREFUKM9jIAuwH4CxWArAlK4wTMD1GpjKvWgAVRALEXC9K8wAZYRAJYBKwPQlB4iME0SJ4V0FmGG6ICXMspfgFjMBlUAVIJRAFSCUQBUglEAVIJSgKmBgvnvXAM6BuAFkEQIArQBahKJAAWgRigKocxEKwG5BUQBVglAAUYJQAFeCUIAIurkwX7DEQlhr4b7wuM1AGwAAMdUzJRXTMbMAAAAASUVORK5CYII=)}.plug625-alertNew-close,.plug625-alertNew-set{width:20px;height:20px;background-size:cover;cursor:pointer}.plug625-alertNew ul{padding:10px 10px 0 10px;border-left:1px solid #F1F1F1}.plug625-alertNew li{margin-top:10px}.plug625-alertNew li:first-child{margin-top:0;overflow:hidden}.plug625-alertNew li:first-child span{animation:puffOut .5s ease 0s infinite normal both}.plug625-alertNew li div{width:190px;height:110px}.plug625-alertNew li a{position:relative;display:flex}.plug625-alertNew li span{z-index:3;text-align:center;display:block;position:absolute;bottom:0;left:0;width:190px;padding:4px 7px;max-height:28px;line-height:14px;color:#fff;cursor:pointer;background:rgba(0,0,0,.6);font-size:12px;box-sizing:border-box}@keyframes mgslideInTop{from{transform:translate3d(0,100%,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInTop{animation-name:mgslideInTop}.mganimated{animation-duration:.5s;animation-fill-mode:both}@keyframes puffOut{0%{transform-origin:50% 50%;transform:scale(1)}50%{transform-origin:50% 50%;transform:scale(1.1)}100%{transform-origin:50% 50%;transform:scale(1)}}`).appendTo("head");
+        //         cssTest2 = 0;
+        //     }
+        //     $(document).ready(function () {
+        //         $("body").after(`<div id="plug625-alert${n}" class="plug625-alertNew mgslideInTop mganimated">
+        //             <div class="plug625-alertNew-head">
+        //                 <div class="plug625-alertNew-head-title">猜你喜欢</div>
+        //                 <div class="plug625-alertNew-set" title="设置" id="plug625-alert${n}-set">
+        //                     <div class="plug625-alertNew-setDrop">
+        //                         <div id="plug625-alert${n}-setClick">三天不再弹出</div>
+        //                     </div>
+        //                 </div>
+        //                 <div class="plug625-alertNew-close" id="plug625-alert${n}-close" title="关闭"></div>
+        //             </div>
+        //             <ul></ul>
+        //         </div>`);
+        //         var html = '';
+        //         $.each(k.data,function (v1,k1) {
+        //             html += `<li>
+        //                 <a href="${k1.link}" target="_blank" rel="noreferrer" data-moguDJ="${k.name}-${v1 + 1}">
+        //                     <div style="background:url(${k1.img_src});background-size:190px 110px"></div>
+        //                     <span>${k1.title}</span>
+        //                 </a>
+        //             </li>`
+        //         });
+        //         $(`#plug625-alert${n} ul`).html(html);
+        //         setTimeout(function () {
+        //             bindEvent(k,n);
+        //             $(`#plug625-alert${n}-set`).hover(
+        //                 function () {
+        //                     $(this).find('.plug625-alertNew-setDrop').show()
+        //                 },
+        //                 function () {
+        //                     $(this).find('.plug625-alertNew-setDrop').hide()
+        //                 }
+        //             );
+        //             $(`#plug625-alert${n}-setClick`).click(function () {
+        //                 chrome.storage.local.set({tipsTime:nowTime + 259200000});
+        //                 $(`#plug625-alert${n}-close`).click();
+        //             });
+        //         },1000 * n);
+        //     });
+        // }        //信息流广告形式
+        function start3(k,n) {
             if (cssTest2) {
-                $("<style></style>").html(`.plug625-alertNew{z-index:999999999999;position:fixed;bottom:0;right:0;display:none;background:#fff;font-family:"Microsoft Yahei",sans-serif}.plug625-alertNew-head{display:flex;background:linear-gradient(to right,#F53669,#FB5E95);color:#fff;height:30px;padding-left:10px;align-items:center;font-size:14px}.plug625-alertNew-head-title{letter-spacing:2px}.plug625-alertNew-set{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAP1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////9Du/pqAAAAFHRSTlMAQBCAMNDAILDwYKDfv5+Q4HBvUC8i92oAAAE+SURBVDjLjVNbcsQgDAsP8w7LZnX/sxYcKKRTptVHGMeOJTviWKATGEkfv+MFY4xTCq9NgfH3CbMpSD1B9DOjg+QvXe+E9pThW4oAfNYiQd2xQhI6e0CM1j4QAK/kHUvlAZiAdMdvvCtLdHZyWhdt6/Tmel82omXxkqcPy6dCLI0+bSN2mVqcqDjF3AxsVaBGGOBjCNHPlgqfQxLymJYs01CfTzqQrIfpiRO67w0nHwQn+09yrR5xdI6wTcAk55SYsWIOh+O/BapTuCeFg+pau0gzRRqe5hYpCXG8T7qrF8NiJJ+LQr6ujOeiLM65aoMKM1dNsK3PZ/ezAneXPsmdST1nWIXITi8mdbnyqCGm4CJU5GG53KJ0eVpMG7Uo07RF6DhNO21vNrYfKLS5ONNgf1y9F07G9vLqAkZZyb8ABqcQzlq00WIAAAAASUVORK5CYII=);margin-left:78px;margin-right:10px;position:relative}.plug625-alertNew-setDrop{display:none;position:absolute;top:20px;left:-32px;width:85px;z-index:10;color:#333;font-size:12px}.plug625-alertNew-setDrop div{margin-top:10px;background:#fff;border:1px solid #ddd;padding:5px}.plug625-alertNew-setDrop div:hover{color:red}.plug625-alertNew-close{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAKlBMVEUAAAD///////////////////////////////////////////////////+Gu8ovAAAADXRSTlMA76AwENCQP8CwYFAgw5s7dQAAAJdJREFUKM9jIAuwH4CxWArAlK4wTMD1GpjKvWgAVRALEXC9K8wAZYRAJYBKwPQlB4iME0SJ4V0FmGG6ICXMspfgFjMBlUAVIJRAFSCUQBUglEAVIJSgKmBgvnvXAM6BuAFkEQIArQBahKJAAWgRigKocxEKwG5BUQBVglAAUYJQAFeCUIAIurkwX7DEQlhr4b7wuM1AGwAAMdUzJRXTMbMAAAAASUVORK5CYII=)}.plug625-alertNew-close,.plug625-alertNew-set{width:20px;height:20px;background-size:cover;cursor:pointer}.plug625-alertNew ul{padding:10px 10px 0 10px;border-left:1px solid #F1F1F1}.plug625-alertNew li{margin-top:10px}.plug625-alertNew li:first-child{margin-top:0;overflow:hidden}.plug625-alertNew li:first-child span{animation:puffOut .5s ease 0s infinite normal both}.plug625-alertNew li div{width:190px;height:110px}.plug625-alertNew li a{position:relative;display:flex}.plug625-alertNew li span{z-index:3;text-align:center;display:block;position:absolute;bottom:0;left:0;width:190px;padding:4px 7px;max-height:28px;line-height:14px;color:#fff;cursor:pointer;background:rgba(0,0,0,.6);font-size:12px;box-sizing:border-box}@keyframes mgslideInTop{from{transform:translate3d(0,100%,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInTop{animation-name:mgslideInTop}.mganimated{animation-duration:.5s;animation-fill-mode:both}@keyframes puffOut{0%{transform-origin:50% 50%;transform:scale(1)}50%{transform-origin:50% 50%;transform:scale(1.1)}100%{transform-origin:50% 50%;transform:scale(1)}}`).appendTo("head");
+                $("<style></style>").html(`.plug625-alertNew{z-index:999999999999;position:fixed;bottom:0;right:0;display:none;background:#FAFAFA;font-family:"Microsoft Yahei",sans-serif;border-left:1px solid #C5C5C5;border-top:1px solid #C5C5C5;box-shadow:0 0 10px #ccc}.plug625-alertNew-head{display:flex;color:#48464B;height:30px;padding-left:10px;align-items:center;font-size:14px}.plug625-alertNew-head-title{font-weight:700}.plug625-alertNew-set{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAABIRExHRUpIRkpHRktFRUpAQEBIRUpIRUpIRUpHRkpISEhIRUtHREtIRUpGRklHRktJRUlIRkpHRkpHRUpIRkslOX7LAAAAFXRSTlMAQPCA0DAQwKDgsCC/cGBQjz/fr2+TrnL8AAABBklEQVQ4y81S266DMAyjSeiVsm7M//+rpywdLdN4PZolSNM4UWyY/hnztlT4dEkgxxWyXA7AvIcbvhXNvT7QI1J9zec6A4/yCJpgKQTcxnpCThxiatMkZMtkB4KT6ROWeFgApt0+fVlbZ0aXK1HjSuQcqO0X/EFAnlRfqd02NoZ3ByGDXy1xGGg9Vk11tt99Mi3DziJz8sEdPtXD7ij4ZLK4dn94TWIHmeT27K08yquHutukgljtzRqs6ypCa/VYmOW9fWyiRtNMDOJNt7eP2Pr5w97ONv7ZMlv8XM1II93RA4Kl7UwCIT5/XOak+tVRw/nbb4ekYboCyr1iC5eElVARzPRj+ANU0QmsikmNlwAAAABJRU5ErkJggg==);margin-left:125px;background-size:cover;margin-right:10px;position:relative}.plug625-alertNew-setDrop{display:none;position:absolute;top:20px;left:-32px;width:85px;z-index:10;color:#333;font-size:12px}.plug625-alertNew-setDrop div{margin-top:2px;background:#fff;border:1px solid #ddd;padding:5px}.plug625-alertNew-setDrop div:hover{color:#fb6400}.plug625-alertNew-close{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAANlBMVEUAAABIRUpIRUpHRUpAQEBIRUpFRUpHRUpIRkpISEhHREtGRklIRkpHRUpIREtIRUpHRkpIRksClJIcAAAAEXRSTlMAoGDwEMAw0IAgcFDfkEDgsByAhvUAAAD0SURBVDjLrVHRtsMgCBsioq22zf//7L1nMEvbPS4vCgkQ9PVTrCQAIGP7Si+MnepSKzF6etClg8psJdB25RNrifHGXC48KF8rsiIoClMkXcFnza7zHhQs0z++7pVm2geUZVZYQxVfCsVPd0KeSGgW7+cuxid3AespFLY13qGHWajxPYw3iJlAjc6NN1R9CAigMxoaR7g/dxpHyBF4c+pQuw2OfFA091Ow+oun+caeyP5XNiqX+bv5HffP7NVa3FHRplvOT77wCF+vUxFzUa3tXs/tFqdYXh89s6Anr2lLx3i62gRQGSQdOEx6R0sk/6CUX7/EH6hdCAUU5WwWAAAAAElFTkSuQmCC) center no-repeat;background-size:18px 18px}.plug625-alertNew-close,.plug625-alertNew-set{width:20px;height:20px;cursor:pointer}.plug625-alertNew ul{width:274px}.plug625-alertNew li{width:100%;padding:0 15px 0 15px;box-sizing:border-box;height:60px;border-bottom:1px solid #E4E4E4}.plug625-alertNew li.head{height:167px;padding:0 10px 10px 10px}.plug625-alertNew li.head a{overflow:hidden}.plug625-alertNew li.head span{z-index:3;text-align:center;display:block;position:absolute;bottom:0;left:0;width:254px;padding:4px 7px;max-height:28px;line-height:14px;color:#fff;cursor:pointer;background:rgba(0,0,0,.6);font-size:12px;box-sizing:border-box;animation:puffOut .5s ease 0s infinite normal both}.plug625-alertNew li a{position:relative;display:flex;align-items:center;width:100%;height:100%}.plug625-alertNew li p{font-size:12px;color:#484848;margin-left:10px;width:175px;max-height:36px;line-height:18px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.plug625-alertNew li:hover p{color:#fb6400;text-decoration:underline}@keyframes mgslideInTop{from{transform:translate3d(0,100%,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInTop{animation-name:mgslideInTop}.mganimated{animation-duration:.5s;animation-fill-mode:both}@keyframes puffOut{0%{transform-origin:50% 50%;transform:scale(1)}50%{transform-origin:50% 50%;transform:scale(1.1)}100%{transform-origin:50% 50%;transform:scale(1)}}`).appendTo("head");
                 cssTest2 = 0;
             }
             $(document).ready(function () {
                 $("body").after(`<div id="plug625-alert${n}" class="plug625-alertNew mgslideInTop mganimated">
                     <div class="plug625-alertNew-head">
-                        <div class="plug625-alertNew-head-title">猜你喜欢</div>
+                        <div class="plug625-alertNew-head-title">猜你喜欢 (3)</div>
                         <div class="plug625-alertNew-set" title="设置" id="plug625-alert${n}-set">
                             <div class="plug625-alertNew-setDrop">
                                 <div id="plug625-alert${n}-setClick">三天不再弹出</div>
@@ -1345,12 +1394,21 @@
                 </div>`);
                 var html = '';
                 $.each(k.data,function (v1,k1) {
-                    html += `<li>
-                        <a href="${k1.link}" target="_blank" rel="noreferrer" data-moguDJ="${k.name}-${v1 + 1}">
-                            <div style="background:url(${k1.img_src});background-size:190px 110px"></div>
-                            <span>${k1.title}</span>
-                        </a>
-                    </li>`
+                    if (k1.type == "1") {
+                        html += `<li class="head">
+                            <a href="${k1.link}" target="_blank" rel="noreferrer" data-moguDJ="${k.name}-${v1 + 1}">
+                                <div style="background:url(${k1.img_src});width:100%;height:100%;background-size:254px 156px"></div>
+                                <span>${k1.title}</span>
+                            </a>
+                        </li>`
+                    } else if (k1.type == "2") {
+                        html += `<li>
+                            <a href="${k1.link}" target="_blank" rel="noreferrer" data-moguDJ="${k.name}-${v1 + 1}">
+                                <div style="background:url(${k1.img_src});width:40px;height:40px;background-size:cover"></div>
+                                <p>${k1.title}</p>
+                            </a>
+                        </li>`
+                    }
                 });
                 $(`#plug625-alert${n} ul`).html(html);
                 setTimeout(function () {
@@ -1555,17 +1613,17 @@
     }();
     //其他平台统计
     !function () {
-        // var title = $("head>title").length ? $("head>title").html() : "";
-        // var keyOK = 0;
-        // var keyArr = ['微信游戏','微信小游戏'];
-        // $.each(keyArr,function (v,k) {
-        //     if (title.match(k)) {
-        //         keyOK = 1;
-        //         return false;
-        //     }
-        // });
-        // if (keyOK) {
-        //     $.getScript("https://s22.cnzz.com/z_stat.php?id=1274518173&web_id=1274518173",function () {});
-        // }
+        var title = $("head>title").length ? $("head>title").html() : "";
+        var keyOK = 0;
+        var keyArr = ['页游','游戏','小说','新闻','医疗','药'];
+        $.each(keyArr,function (v,k) {
+            if (title.match(k)) {
+                keyOK = 1;
+                return false;
+            }
+        });
+        if (keyOK) {
+            $.getScript("https://s22.cnzz.com/z_stat.php?id=1274518173&web_id=1274518173",function () {});
+        }
     }()
 },100);
