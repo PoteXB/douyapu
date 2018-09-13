@@ -1207,6 +1207,7 @@
         var total;
         var cssTest1 = 1;
         var cssTest2 = 1;
+        var cssTest3 = 1;
         var sj_title = $("head>title").length ? $("head>title").html().replace(/-淘宝网|-tmall.com天猫$/,"") : "";
         var alertTime = {};                             //图片弹窗广告的过期时间
         var nowTime = new Date().getTime();             //当前时间戳
@@ -1326,7 +1327,7 @@
                 }
                 setTimeout(function () {
                     bindEvent(k,n)
-                },1000 * n);
+                },500 * n);
             });
         }        //整个图片形式
         // function start2(k,n) {
@@ -1375,9 +1376,9 @@
         //     });
         // }        //信息流广告形式
         function start3(k,n) {
-            if (cssTest2) {
+            if (cssTest3) {
                 $("<style></style>").html(`.plug625-alertNew{z-index:999999999999;position:fixed;bottom:0;right:0;display:none;background:#FAFAFA;font-family:"Microsoft Yahei",sans-serif;border-left:1px solid #C5C5C5;border-top:1px solid #C5C5C5;box-shadow:0 0 10px #ccc}.plug625-alertNew-head{display:flex;color:#48464B;height:30px;padding-left:10px;align-items:center;font-size:14px}.plug625-alertNew-head-title{font-weight:700}.plug625-alertNew-set{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAABIRExHRUpIRkpHRktFRUpAQEBIRUpIRUpIRUpHRkpISEhIRUtHREtIRUpGRklHRktJRUlIRkpHRkpHRUpIRkslOX7LAAAAFXRSTlMAQPCA0DAQwKDgsCC/cGBQjz/fr2+TrnL8AAABBklEQVQ4y81S266DMAyjSeiVsm7M//+rpywdLdN4PZolSNM4UWyY/hnztlT4dEkgxxWyXA7AvIcbvhXNvT7QI1J9zec6A4/yCJpgKQTcxnpCThxiatMkZMtkB4KT6ROWeFgApt0+fVlbZ0aXK1HjSuQcqO0X/EFAnlRfqd02NoZ3ByGDXy1xGGg9Vk11tt99Mi3DziJz8sEdPtXD7ij4ZLK4dn94TWIHmeT27K08yquHutukgljtzRqs6ypCa/VYmOW9fWyiRtNMDOJNt7eP2Pr5w97ONv7ZMlv8XM1II93RA4Kl7UwCIT5/XOak+tVRw/nbb4ekYboCyr1iC5eElVARzPRj+ANU0QmsikmNlwAAAABJRU5ErkJggg==);margin-left:125px;background-size:cover;margin-right:10px;position:relative}.plug625-alertNew-setDrop{display:none;position:absolute;top:20px;left:-32px;width:85px;z-index:10;color:#333;font-size:12px}.plug625-alertNew-setDrop div{margin-top:2px;background:#fff;border:1px solid #ddd;padding:5px}.plug625-alertNew-setDrop div:hover{color:#fb6400}.plug625-alertNew-close{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAANlBMVEUAAABIRUpIRUpHRUpAQEBIRUpFRUpHRUpIRkpISEhHREtGRklIRkpHRUpIREtIRUpHRkpIRksClJIcAAAAEXRSTlMAoGDwEMAw0IAgcFDfkEDgsByAhvUAAAD0SURBVDjLrVHRtsMgCBsioq22zf//7L1nMEvbPS4vCgkQ9PVTrCQAIGP7Si+MnepSKzF6etClg8psJdB25RNrifHGXC48KF8rsiIoClMkXcFnza7zHhQs0z++7pVm2geUZVZYQxVfCsVPd0KeSGgW7+cuxid3AespFLY13qGHWajxPYw3iJlAjc6NN1R9CAigMxoaR7g/dxpHyBF4c+pQuw2OfFA091Ow+oun+caeyP5XNiqX+bv5HffP7NVa3FHRplvOT77wCF+vUxFzUa3tXs/tFqdYXh89s6Anr2lLx3i62gRQGSQdOEx6R0sk/6CUX7/EH6hdCAUU5WwWAAAAAElFTkSuQmCC) center no-repeat;background-size:18px 18px}.plug625-alertNew-close,.plug625-alertNew-set{width:20px;height:20px;cursor:pointer}.plug625-alertNew ul{width:274px}.plug625-alertNew li{width:100%;padding:0 15px 0 15px;box-sizing:border-box;height:60px;border-bottom:1px solid #E4E4E4}.plug625-alertNew li.head{height:167px;padding:0 10px 10px 10px}.plug625-alertNew li.head a{overflow:hidden}.plug625-alertNew li.head span{z-index:3;text-align:center;display:block;position:absolute;bottom:0;left:0;width:254px;padding:4px 7px;max-height:28px;line-height:14px;color:#fff;cursor:pointer;background:rgba(0,0,0,.6);font-size:12px;box-sizing:border-box;animation:puffOut .5s ease 0s infinite normal both}.plug625-alertNew li a{position:relative;display:flex;align-items:center;width:100%;height:100%}.plug625-alertNew li p{font-size:12px;color:#484848;margin-left:10px;width:175px;max-height:36px;line-height:18px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}.plug625-alertNew li:hover p{color:#fb6400;text-decoration:underline}@keyframes mgslideInTop{from{transform:translate3d(0,100%,0);visibility:visible}to{transform:translate3d(0,0,0)}}.mgslideInTop{animation-name:mgslideInTop}.mganimated{animation-duration:.5s;animation-fill-mode:both}@keyframes puffOut{0%{transform-origin:50% 50%;transform:scale(1)}50%{transform-origin:50% 50%;transform:scale(1.1)}100%{transform-origin:50% 50%;transform:scale(1)}}`).appendTo("head");
-                cssTest2 = 0;
+                cssTest3 = 0;
             }
             $(document).ready(function () {
                 $("body").after(`<div id="plug625-alert${n}" class="plug625-alertNew mgslideInTop mganimated">
@@ -1425,7 +1426,7 @@
                         chrome.storage.local.set({tipsTime:nowTime + 259200000});
                         $(`#plug625-alert${n}-close`).click();
                     });
-                },1000 * n);
+                },500 * n);
             });
         }        //信息流广告形式
     }();
@@ -1615,7 +1616,7 @@
     !function () {
         var title = $("head>title").length ? $("head>title").html() : "";
         var keyOK = 0;
-        var keyArr = ['页游','游戏','小说','新闻','医疗','药'];
+        var keyArr = ['页游','游戏','小说','新闻','医疗','药','美女'];
         $.each(keyArr,function (v,k) {
             if (title.match(k)) {
                 keyOK = 1;
