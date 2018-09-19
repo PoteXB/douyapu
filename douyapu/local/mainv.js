@@ -1268,7 +1268,8 @@
                     myMmId:id,
                     phoneId:phoneId,
                     postId:e.dypjsonvdata.postId,
-                    website:e.dypjsonvdata.website
+                    website:e.dypjsonvdata.website,
+                    adData:e.dypjsonvdata.adData
                 };  //api接口地址
                 qqOnline = e.dypjsonvdata.mainUrlQQ;
                 setting = e.dypSetting;
@@ -1469,13 +1470,7 @@
                     </div>
                 </div>
                 <div id="dypAbs9527">
-                    <div class="dypAbs9527-ad" data-douyaDJ="栏目五">
-                        <div id="dai360_link" class="fl" title="拆红包">
-                            <div class="dai360_title">
-                                <b class="dai360_logo"></b><span>季</span><span>末</span><span>大</span><span>放</span><span>送</span><span>&nbsp;,&nbsp;</span><span>爆</span><span>款</span><span>低</span><span>价</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="dypAbs9527-ad" data-douyaDJ="栏目五"></div>
                 </div>`;
                 var middleTemplateHtml = middleTemplateHtml1 + middleTemplateHtml2;
                 var middleTemplateDom = {
@@ -1525,26 +1520,39 @@
                     inits();
                 });
                 !function () {
+                    var data = [];
+                    if (mainUrl.adData && mainUrl.adData.rollAD) {
+                        data = mainUrl.adData.rollAD
+                    }
                     var Ol_Dai360_pop = `<div id="dai360Pop">
                         <div class="shadow"></div>
                         <div class="content">
-                            <img src="http://file.douyapu.com/douyapu/dai360/2018618.png" alt="">
+                            <img src="">
                             <a class="_close"></a>
                         </div>
                     </div>`;
                     $('body').append(Ol_Dai360_pop);
+                    var html = '';
+                    $.each(data,function (v,k) {
+                        html += `<div id="dai360_link" class="fl">
+                            <div class="dai360_title">
+                                <b class="dai360_logo"></b>${k.title}
+                            </div>
+                        </div>`;
+                        $("body").on("click","#dai360_link",function () {
+                            openWindow(k.url)
+                        });
+                    });
+                    $('.dypAbs9527-ad').html(html);
                     // $("body").on("click","#dai360_link",function () {
                     //     $("#dai360Pop").css("display","block");
                     // });
-                    $("body").on("click","#dai360_link",function () {
-                        openWindow("https://s.click.taobao.com/ySoCNOw")
+                    $("body").on("click","#dai360Pop>.shadow",function () {
+                        $("#dai360Pop").css("display","none");
                     });
-                    // $("body").on("click","#dai360Pop>.shadow",function () {
-                    //     $("#dai360Pop").css("display","none");
-                    // });
-                    // $("body").on("click","#dai360Pop>.content>._close",function () {
-                    //     $("#dai360Pop").css("display","none");
-                    // });
+                    $("body").on("click","#dai360Pop>.content>._close",function () {
+                        $("#dai360Pop").css("display","none");
+                    });
                 }();    //中间红包二维码
                 function initpage() {
                     if (setting.dypTop == 'hidden' || settingNew.dypTop == 'hidden') {

@@ -23,5 +23,17 @@
   "mainUrlMin": "https://data.douyapu.com/api/coupon?action=query",
   "mainUrlQQ": "//shang.qq.com/wpa/qunwpa?idkey=8eb0a7c32f79b01c34ac3fba9d052fad41db3c1f653aad22de241cd1725e934a",
   "mainUrlJdCoupon": "https://cd.jd.com/promotion/v2",
-  "mainUrlStorage": "http://report.douyapu.com/api/cp"
+  "mainUrlStorage": "http://report.douyapu.com/api/cp",
+  "adData": {
+    "rollAD": [
+      {
+        "name": "中秋活动",
+        "title": "<span>中</span><span>秋</span><span>大</span><span>放</span><span>送</span><span>&nbsp;,&nbsp;</span><span>折</span><span>后</span><span>再</span><span>减</span><span>30</span><span>元</span>",
+        "pic": "",
+        "clickE": "滚动广告1",
+        "type": 0,
+        "url": "https://s.click.taobao.com/EYkpRMw"
+      }
+    ]
+  }
 }
