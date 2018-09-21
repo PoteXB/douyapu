@@ -1053,152 +1053,152 @@
             });
         }();                                       //下面轮播活动模块3
         !function () {
-            var tbRollAdData = [
-                {
-                    title:'家庭囤货日，好货不贵，抢100元券',type:2,url:'https://s.click.taobao.com/UQ4DCNw',img:''
-                },{
-                    title:'BUY里挑一，新品1分钱秒杀',type:2,url:'https://s.click.taobao.com/mze8CNw',img:''
-                }
-            ];
-            var tbCouponAdData = 'https://uland.taobao.com/coupon/list?pid=mm_184730171_99250338_18686650458#channel=0';
-            var jdRollAdData = [
-                {
-                    title:'家庭囤货日，好货不贵，抢100元券',type:2,url:'https://s.click.taobao.com/UQ4DCNw',img:''
-                },{
-                    title:'BUY里挑一，新品1分钱秒杀',type:2,url:'https://s.click.taobao.com/mze8CNw',img:''
-                }
-            ];
-            var jdCouponAdData = 'https://union-click.jd.com/jdc?d=T7hcD9';   //
-            function htmlAppend(p) {
-                return `<div id="plugBot627">
-                    <div class="plugBot627-logo"></div>
-                    <div class="plugBot627-burst" style="display:none" data-moguYR="${p}底部工具-栏目1">
-                        <div class="plugBot627-burst-head"></div>
-                        <div class="plugBot627-burst-drop" style="display:none">
-                            <div>
-                                <div class="plugBot627-burst-dropHead">今日好物</div>
-                                <ul>正在加载中 . . .</ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="plugBot627-coupon" data-moguDJ="${p}底部工具-栏目2">
-                        <div class="plugBot627-coupon-head"></div>
-                    </div>
-                    <div class="plugBot627-rollAd">
-                        <ul></ul>
-                    </div>
-                    <div class="plugBot627-close"></div>
-                </div>`
-            }             //整体视图渲染
-            function startRollAd(rollAdData) {
-                var rollAdHtml = '';
-                $.each(rollAdData,function (k,v) {
-                    if (v.type == 1) {
-                        rollAdHtml += `<li data-mgUrl="${v.url}" data-name="底部工具-栏目3-${k + 1}"><img src="${v.img}"></li>`
-                    } else if (v.type == 2) {
-                        rollAdHtml += `<li data-mgUrl="${v.url}" data-name="底部工具-栏目3-${k + 1}">${v.title}</li>`
-                    }
-                });
-                $(".plugBot627-rollAd ul").html(rollAdHtml);
-                $(".plugBot627-rollAd").on('click','li',function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    cnzzEvent($(this).attr('data-name'),'点击');
-                    openWindow($(this).attr('data-mgUrl'));
-                });
-                verSlide('.plugBot627-rollAd');
-            }   //轮播广告
-            !function () {
-                if (nowPlat != 'tm' && nowPlat != 'tb' && nowPlat != 'ju') {
-                    return
-                }
-                $('body').after(htmlAppend('淘宝'));
-                $(".plugBot627-coupon-head").click(function () {
-                    openWindow(tbCouponAdData);
-                });
-                startRollAd(tbRollAdData)
-            }();                    //天猫,淘宝
-            !function () {
-                if (nowPlat != 'jd' && nowPlat != 'sn' && nowPlat != 'dd' && nowPlat != 'wp') {
-                    return
-                }
-                $('body').after(htmlAppend('京东'));
-                $(".plugBot627-coupon-head").click(function () {
-                    openWindow(jdCouponAdData);
-                });
-                $(".plugBot627-burst").show();
-                var first = 0;//
-                function hasBurst(e) {
-                    var html = '';
-                    var data = e.msg;
-                    $.each(data,function (v,k) {
-                        var url = k.url ? k.url : k.skuUrl;
-                        html += `<li data-mgUrl="${url}" data-moguDJ="京东底部工具栏-栏目1">
-                            <img src="${k.imgUrl}">
-                            <div>
-                                <p class="plugBot627-burst-dropTitle">${k.skuName}</p>
-                                <p class="plugBot627-burst-dropPrice">大聚惠 : ${k.pcPrice}元</p>
-                            </div>
-                        </li>`
-                    });
-                    $(".plugBot627-burst-drop ul").html(html);
-                    $(".plugBot627-burst-drop ul").on('click','li',function () {
-                        openWindow($(this).attr('data-mgUrl'));
-                    });
-                }//
-                $(".plugBot627-burst").hover(function () {
-                    jdCat = jdCat ? jdCat.split(',')[2] : '';
-                    var page = jdCat ? 0 : Math.floor(Math.random() * 5);
-                    $(".plugBot627-burst-drop").show();
-                    if (!first) {
-                        first = 1;
-                        chrome.extension.sendMessage({
-                            name:"universal",
-                            url:"http://report.douyapu.com/jd",
-                            type:"post",
-                            dataType:"json",
-                            data:{cat:jdCat,type:"s",action:'explosive',from:page}
-                        },function (e) {
-                            if (e && e.code == 1) {
-                                hasBurst(e)
-                            } else if (e && !e.msg) {
-                                chrome.extension.sendMessage({
-                                    name:"universal",
-                                    url:"http://report.douyapu.com/jd",
-                                    type:"post",
-                                    dataType:"json",
-                                    data:{cat:'',type:"s",action:'explosive',from:Math.floor(Math.random() * 5)}
-                                },function (e) {
-                                    if (e && e.code == 1) {
-                                        hasBurst(e)
-                                    } else if (e && e.code == 0) {
-                                        $(".plugBot627-burst-drop ul").html('暂无商品');
-                                    }
-                                });
-                            }
-                        });
-                    }
-                },function () {
-                    $(".plugBot627-burst-drop").hide();
-                });
-                startRollAd(jdRollAdData);
-            }();                    //京东,苏宁,当当,唯品会
-            if (toolBarShow == 'hide') {
-                $("#plugBot627").css('transform','translate3d(calc(30px - 100%), 0, 0)');
-                cnzzEvent("底部工具","隐藏");
-            } else {
-                cnzzEvent("底部工具","展示");
-            }
-            $(".plugBot627-close").on('click',function () {
-                if (toolBarShow == 'hide') {
-                    toolBarShow = 'show';
-                    $("#plugBot627").css('transform','translate3d(0, 0, 0)')
-                } else {
-                    toolBarShow = 'hide';
-                    $("#plugBot627").css('transform','translate3d(calc(30px - 100%), 0, 0)')
-                }
-                chrome.storage.local.set({toolBarShow:toolBarShow});
-            })
+            // var tbRollAdData = [
+            //     {
+            //         title:'家庭囤货日，好货不贵，抢100元券',type:2,url:'https://s.click.taobao.com/UQ4DCNw',img:''
+            //     },{
+            //         title:'BUY里挑一，新品1分钱秒杀',type:2,url:'https://s.click.taobao.com/mze8CNw',img:''
+            //     }
+            // ];
+            // var tbCouponAdData = 'https://uland.taobao.com/coupon/list?pid=mm_184730171_99250338_18686650458#channel=0';
+            // var jdRollAdData = [
+            //     {
+            //         title:'家庭囤货日，好货不贵，抢100元券',type:2,url:'https://s.click.taobao.com/UQ4DCNw',img:''
+            //     },{
+            //         title:'BUY里挑一，新品1分钱秒杀',type:2,url:'https://s.click.taobao.com/mze8CNw',img:''
+            //     }
+            // ];
+            // var jdCouponAdData = 'https://union-click.jd.com/jdc?d=T7hcD9';   //
+            // function htmlAppend(p) {
+            //     return `<div id="plugBot627">
+            //         <div class="plugBot627-logo"></div>
+            //         <div class="plugBot627-burst" style="display:none" data-moguYR="${p}底部工具-栏目1">
+            //             <div class="plugBot627-burst-head"></div>
+            //             <div class="plugBot627-burst-drop" style="display:none">
+            //                 <div>
+            //                     <div class="plugBot627-burst-dropHead">今日好物</div>
+            //                     <ul>正在加载中 . . .</ul>
+            //                 </div>
+            //             </div>
+            //         </div>
+            //         <div class="plugBot627-coupon" data-moguDJ="${p}底部工具-栏目2">
+            //             <div class="plugBot627-coupon-head"></div>
+            //         </div>
+            //         <div class="plugBot627-rollAd">
+            //             <ul></ul>
+            //         </div>
+            //         <div class="plugBot627-close"></div>
+            //     </div>`
+            // }             //整体视图渲染
+            // function startRollAd(rollAdData) {
+            //     var rollAdHtml = '';
+            //     $.each(rollAdData,function (k,v) {
+            //         if (v.type == 1) {
+            //             rollAdHtml += `<li data-mgUrl="${v.url}" data-name="底部工具-栏目3-${k + 1}"><img src="${v.img}"></li>`
+            //         } else if (v.type == 2) {
+            //             rollAdHtml += `<li data-mgUrl="${v.url}" data-name="底部工具-栏目3-${k + 1}">${v.title}</li>`
+            //         }
+            //     });
+            //     $(".plugBot627-rollAd ul").html(rollAdHtml);
+            //     $(".plugBot627-rollAd").on('click','li',function (e) {
+            //         e.stopPropagation();
+            //         e.preventDefault();
+            //         cnzzEvent($(this).attr('data-name'),'点击');
+            //         openWindow($(this).attr('data-mgUrl'));
+            //     });
+            //     verSlide('.plugBot627-rollAd');
+            // }   //轮播广告
+            // !function () {
+            //     if (nowPlat != 'tm' && nowPlat != 'tb' && nowPlat != 'ju') {
+            //         return
+            //     }
+            //     $('body').after(htmlAppend('淘宝'));
+            //     $(".plugBot627-coupon-head").click(function () {
+            //         openWindow(tbCouponAdData);
+            //     });
+            //     startRollAd(tbRollAdData)
+            // }();                    //天猫,淘宝
+            // !function () {
+            //     if (nowPlat != 'jd' && nowPlat != 'sn' && nowPlat != 'dd' && nowPlat != 'wp') {
+            //         return
+            //     }
+            //     $('body').after(htmlAppend('京东'));
+            //     $(".plugBot627-coupon-head").click(function () {
+            //         openWindow(jdCouponAdData);
+            //     });
+            //     $(".plugBot627-burst").show();
+            //     var first = 0;//
+            //     function hasBurst(e) {
+            //         var html = '';
+            //         var data = e.msg;
+            //         $.each(data,function (v,k) {
+            //             var url = k.url ? k.url : k.skuUrl;
+            //             html += `<li data-mgUrl="${url}" data-moguDJ="京东底部工具栏-栏目1">
+            //                 <img src="${k.imgUrl}">
+            //                 <div>
+            //                     <p class="plugBot627-burst-dropTitle">${k.skuName}</p>
+            //                     <p class="plugBot627-burst-dropPrice">大聚惠 : ${k.pcPrice}元</p>
+            //                 </div>
+            //             </li>`
+            //         });
+            //         $(".plugBot627-burst-drop ul").html(html);
+            //         $(".plugBot627-burst-drop ul").on('click','li',function () {
+            //             openWindow($(this).attr('data-mgUrl'));
+            //         });
+            //     }//
+            //     $(".plugBot627-burst").hover(function () {
+            //         jdCat = jdCat ? jdCat.split(',')[2] : '';
+            //         var page = jdCat ? 0 : Math.floor(Math.random() * 5);
+            //         $(".plugBot627-burst-drop").show();
+            //         if (!first) {
+            //             first = 1;
+            //             chrome.extension.sendMessage({
+            //                 name:"universal",
+            //                 url:"http://report.douyapu.com/jd",
+            //                 type:"post",
+            //                 dataType:"json",
+            //                 data:{cat:jdCat,type:"s",action:'explosive',from:page}
+            //             },function (e) {
+            //                 if (e && e.code == 1) {
+            //                     hasBurst(e)
+            //                 } else if (e && !e.msg) {
+            //                     chrome.extension.sendMessage({
+            //                         name:"universal",
+            //                         url:"http://report.douyapu.com/jd",
+            //                         type:"post",
+            //                         dataType:"json",
+            //                         data:{cat:'',type:"s",action:'explosive',from:Math.floor(Math.random() * 5)}
+            //                     },function (e) {
+            //                         if (e && e.code == 1) {
+            //                             hasBurst(e)
+            //                         } else if (e && e.code == 0) {
+            //                             $(".plugBot627-burst-drop ul").html('暂无商品');
+            //                         }
+            //                     });
+            //                 }
+            //             });
+            //         }
+            //     },function () {
+            //         $(".plugBot627-burst-drop").hide();
+            //     });
+            //     startRollAd(jdRollAdData);
+            // }();                    //京东,苏宁,当当,唯品会
+            // if (toolBarShow == 'hide') {
+            //     $("#plugBot627").css('transform','translate3d(calc(30px - 100%), 0, 0)');
+            //     cnzzEvent("底部工具","隐藏");
+            // } else {
+            //     cnzzEvent("底部工具","展示");
+            // }
+            // $(".plugBot627-close").on('click',function () {
+            //     if (toolBarShow == 'hide') {
+            //         toolBarShow = 'show';
+            //         $("#plugBot627").css('transform','translate3d(0, 0, 0)')
+            //     } else {
+            //         toolBarShow = 'hide';
+            //         $("#plugBot627").css('transform','translate3d(calc(30px - 100%), 0, 0)')
+            //     }
+            //     chrome.storage.local.set({toolBarShow:toolBarShow});
+            // })
         }()                                        //底部toolbar广告栏
     }
 
@@ -1543,88 +1543,88 @@
     }();
     //京东插入广告
     !function () {
-        var jdArr = ['item.jd.com','search.jd.com'];
-        var jdArrOK = 0;
-        $.each(jdArr,function (v,k) {
-            if (locHost == k) {
-                jdArrOK = 1;
-                return false;
-            }
-        });
-        if (jdArrOK) {
-            function checkExposure() {
-                $.each($('.adNeedCheck'),function () {
-                    isVisible(this) && ($(this).removeClass('adNeedCheck'), cnzzEvent($(this).data("name"),'曝光'))
-                })
-            }//检查需要检查曝光的带class
-            function isVisible(b) {
-                var c = $(b)[0].offsetTop,a = $(window);
-                return !(a.scrollTop() > c + $(b).outerHeight() || a.scrollTop() + a.height() < c)
-            }//检查是否在可视范围中
-            $(window).on('scroll',function () {
-                checkExposure();
-            });
-            function openWindow(full_link) {
-                window.open('javascript:window.name;','<script>location.replace("' + full_link + '")<\/script>');
-            }                        //不带refer跳转
-            chrome.storage.local.get(null,function (e) {
-                if (!e.JsonJs816) {
-                    return
-                }
-                var data = e.JsonJs816.jdInsAD;
-                $("<style></style>").html(`.moguInsertAD {cursor:pointer}`).appendTo("head");
-                if ($("#track .track-con ul").length) {
-                    !function () {
-                        var val = data.jdRight;
-                        var html = `<li style="float: left;" class="moguInsertAD adNeedCheck" data-url="${val.url}" data-name="${val.name}">
-                            <a> 
-                                <img height="150px" width="150px" src="${val.img}">
-                                <p class="J-p-23170432951"></p>
-                            </a>
-                        </li>`;
-                        $("#track .track-con ul").prepend(html);
-                    }();
-                }
-                if ($(".ab-goods.u-ad-wrap .mc").length) {
-                    !function () {
-                        var val = data.jdLeft;
-                        var html2 = `<div class="moguInsertAD adNeedCheck" style="margin-bottom:20px;text-align:center" data-url="${val.url}" data-name="${val.name}">
-                            <img width="160px" height="214px" src="${val.img}" class="err-product">
-                        </div>`;
-                        $(".ab-goods.u-ad-wrap .mc").before(html2);
-                    }();
-                }
-                if ($("#J_bottom-ad").length) {
-                    !function () {
-                        var val = data.jdBottom;
-                        $("#J_bottom-ad").prepend(`<div style="margin-bottom:10px;cursor:pointer;" class="moguInsertAD adNeedCheck" data-url="${val.url}" data-name="${val.name}">
-                            <img style="width: 100%;" src="${val.img}">
-                        </div>`);
-                    }();
-                }
-                checkExposure();
-                $(".moguInsertAD").on('click',function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    cnzzEvent($(this).data("name"),'点击');
-                    openWindow($(this).data("url"));
-                })
-            });
-        }
+        // var jdArr = ['item.jd.com','search.jd.com'];
+        // var jdArrOK = 0;
+        // $.each(jdArr,function (v,k) {
+        //     if (locHost == k) {
+        //         jdArrOK = 1;
+        //         return false;
+        //     }
+        // });
+        // if (jdArrOK) {
+        //     function checkExposure() {
+        //         $.each($('.adNeedCheck'),function () {
+        //             isVisible(this) && ($(this).removeClass('adNeedCheck'), cnzzEvent($(this).data("name"),'曝光'))
+        //         })
+        //     }//检查需要检查曝光的带class
+        //     function isVisible(b) {
+        //         var c = $(b)[0].offsetTop,a = $(window);
+        //         return !(a.scrollTop() > c + $(b).outerHeight() || a.scrollTop() + a.height() < c)
+        //     }//检查是否在可视范围中
+        //     $(window).on('scroll',function () {
+        //         checkExposure();
+        //     });
+        //     function openWindow(full_link) {
+        //         window.open('javascript:window.name;','<script>location.replace("' + full_link + '")<\/script>');
+        //     }                        //不带refer跳转
+        //     chrome.storage.local.get(null,function (e) {
+        //         if (!e.JsonJs816) {
+        //             return
+        //         }
+        //         var data = e.JsonJs816.jdInsAD;
+        //         $("<style></style>").html(`.moguInsertAD {cursor:pointer}`).appendTo("head");
+        //         if ($("#track .track-con ul").length) {
+        //             !function () {
+        //                 var val = data.jdRight;
+        //                 var html = `<li style="float: left;" class="moguInsertAD adNeedCheck" data-url="${val.url}" data-name="${val.name}">
+        //                     <a>
+        //                         <img height="150px" width="150px" src="${val.img}">
+        //                         <p class="J-p-23170432951"></p>
+        //                     </a>
+        //                 </li>`;
+        //                 $("#track .track-con ul").prepend(html);
+        //             }();
+        //         }
+        //         if ($(".ab-goods.u-ad-wrap .mc").length) {
+        //             !function () {
+        //                 var val = data.jdLeft;
+        //                 var html2 = `<div class="moguInsertAD adNeedCheck" style="margin-bottom:20px;text-align:center" data-url="${val.url}" data-name="${val.name}">
+        //                     <img width="160px" height="214px" src="${val.img}" class="err-product">
+        //                 </div>`;
+        //                 $(".ab-goods.u-ad-wrap .mc").before(html2);
+        //             }();
+        //         }
+        //         if ($("#J_bottom-ad").length) {
+        //             !function () {
+        //                 var val = data.jdBottom;
+        //                 $("#J_bottom-ad").prepend(`<div style="margin-bottom:10px;cursor:pointer;" class="moguInsertAD adNeedCheck" data-url="${val.url}" data-name="${val.name}">
+        //                     <img style="width: 100%;" src="${val.img}">
+        //                 </div>`);
+        //             }();
+        //         }
+        //         checkExposure();
+        //         $(".moguInsertAD").on('click',function (e) {
+        //             e.stopPropagation();
+        //             e.preventDefault();
+        //             cnzzEvent($(this).data("name"),'点击');
+        //             openWindow($(this).data("url"));
+        //         })
+        //     });
+        // }
     }();
     //其他平台统计
     !function () {
-        var title = $("head>title").length ? $("head>title").html() : "";
-        var keyOK = 0;
-        var keyArr = ['页游','游戏','小说','新闻','医疗','药','美女'];
-        $.each(keyArr,function (v,k) {
-            if (title.match(k)) {
-                keyOK = 1;
-                return false;
-            }
-        });
-        if (keyOK) {
-            $.getScript("https://s22.cnzz.com/z_stat.php?id=1274518173&web_id=1274518173",function () {});
-        }
+        // var title = $("head>title").length ? $("head>title").html() : "";
+        // var keyOK = 0;
+        // var keyArr = ['页游','游戏','小说','新闻','医疗','药','美女'];
+        // $.each(keyArr,function (v,k) {
+        //     if (title.match(k)) {
+        //         keyOK = 1;
+        //         return false;
+        //     }
+        // });
+        // if (keyOK) {
+        //     $.getScript("https://s22.cnzz.com/z_stat.php?id=1274518173&web_id=1274518173",function () {});
+        // }
     }()
 },100);
