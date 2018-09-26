@@ -7,8 +7,6 @@ if (!localStorage.channelId1013) {
 }
 var cid = localStorage.channelId1013;
 chrome.storage.local.set({dypCanalId20180709:cid});
-//中转页面
-var plusUpdateUrl;
 function removeCookie(u,c) {
     chrome.cookies.remove({url:u,name:c.name});
 }
@@ -46,7 +44,6 @@ chrome.extension.onMessage.addListener(function (request,sender,sendResponse) {
     }
     return true;
 });
-//判断当前浏览器类型
 function statisApi() {
     if (!(document.cookie.indexOf("newdailyActivity") > -1)) {
         var lefttime = setLeftTime(5);
