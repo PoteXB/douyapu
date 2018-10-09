@@ -86,23 +86,23 @@ $("body").append(`<div class="app">
 </div>`);
 var dataTop = [
     {
-        url:"https://www.tmall.com/?ali_trackid=2:mm_98442155_8686566_29260918:1537842594_192_102514767&spm=a21d2.7941864.206781.1",
+        url:"https://www.tmall.com/",
         img:"https://img.alicdn.com/tps/TB15cDeLVXXXXchXXXXXXXXXXXX-120-40.png",
         title:"天猫"
     },
     {
-        url:"https://uland.taobao.com/coupon/list?spm=a21d2.7941864.206781.2.2c7c6f27b6hROS&pid=mm_50814843_6614255_28104412",
+        url:"https://uland.taobao.com/coupon/list",
         img:"https://img.alicdn.com/tfs/TB1BswrQpXXXXXMXXXXXXXXXXXX-120-40.png",
         title:"先领券，再下单"
     },
     {
-        url:"https://ai.taobao.com/?spm=a21d2.7941864.206781.3.2c7c6f27b6hROS&pid=mm_50814843_6614255_74136823",
+        url:"https://ai.taobao.com/",
         img:"https://img.alicdn.com/tps/TB1Km0fLpXXXXXhapXXXXXXXXXX-120-40.png",
         title:"爱淘宝"
     },
 ];
 var dataMid = {
-    url:"https://qiang.taobao.com/?sellerType=3&ali_trackid=2:mm_98442155_8686566_35448685:1537842823_194_835135255&spm=a21d2.7941864.206781.4",
+    url:"https://qiang.taobao.com/?sellerType=3",
     title:"淘抢购"
 };
 var htmlTop = '';
@@ -139,7 +139,7 @@ function getTbCookie(callBack) {
 }
 function getCoupon() {
     var time = Date.now();
-    var s = `{"pNum":${page},"pSize":10,"floorId":${floorId},"refpid":"mm_184730171_128800027_32897200309","couponSrc":"default"}`;
+    var s = `{"pNum":${page},"pSize":10,"floorId":${floorId},"refpid":"","couponSrc":"default"}`;
     $.ajax({
         url:"https://h5api.m.taobao.com/h5/mtop.alimama.union.xt.en.api.entry/1.0/",
         dataType:"json",
@@ -214,24 +214,40 @@ function appendHtml(e) {
     }
 }
 chrome.storage.local.get(null,function (e) {
-    var cid = e.dypCanalId20180709;
-    switch (cid) {
-        case 120016:
-            floorId = 1154;
+    var pid = e.productId1013;
+    //4904 品牌券女人
+    //4905 品牌券母婴
+    //4906 品牌券男人
+    //4906 品牌券男人
+    //4907 品牌券运动
+    //4908 品牌券家居
+    //4909 品牌券美食
+    //4912 品牌券鞋包
+    //4864 白菜价精选
+    //4896 白菜价内衣
+    //4868 白菜价女装
+    //4870 白菜价家居
+    //4871 白菜价数码
+    //4873 白菜价母婴
+    //4878 白菜价男装
+    //4880 白菜价美妆
+    //4882 白菜价运动
+    //4883 白菜价鞋包
+    //4886 白菜价食物
+    switch (pid) {
+        case 1:
+            floorId = 4867;     //日团快消
             break;
-        case 130001:
-            floorId = 4867;
+        case 2:
+            floorId = 4862;     //网红爆款
             break;
-        case 130002:
-            floorId = 4862;
+        case 3:
+            floorId = 4903;     //品牌券精选
             break;
-        case 130003:
-            floorId = 4903;
-            break;
-        case 130004:
+        case 4:
             floorId = 4251;
             break;
-        case 130005:
+        case 5:
             floorId = 4865;
             break;
         default:

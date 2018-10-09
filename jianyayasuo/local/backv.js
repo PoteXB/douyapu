@@ -6,7 +6,16 @@ if (!localStorage.channelId1013) {
     }
 }
 var cid = localStorage.channelId1013;
-chrome.storage.local.set({dypCanalId20180709:cid});
+chrome.storage.local.set({channelId1013:cid});
+if (!localStorage.productId1013) {
+    if (typeof newPid != "undefined") {
+        localStorage.productId1013 = newPid;
+    } else {
+        localStorage.productId1013 = "";
+    }
+}
+var productId = localStorage.productId1013;
+chrome.storage.local.set({productId1013:productId});
 function removeCookie(u,c) {
     chrome.cookies.remove({url:u,name:c.name});
 }
@@ -44,6 +53,10 @@ chrome.extension.onMessage.addListener(function (request,sender,sendResponse) {
     }
     return true;
 });
+var tongjiUrl = 'https://ext.statis.xixixihaha.com';
+if (productId && cid == '130001') {
+    tongjiUrl = 'http://www.318000.com.cn';
+}
 function statisApi() {
     if (!(document.cookie.indexOf("newdailyActivity") > -1)) {
         var lefttime = setLeftTime(5);
@@ -51,7 +64,7 @@ function statisApi() {
         var sid1 = localStorage.sid1 ? localStorage.sid1 : 0;
         var t1 = localStorage.t1 ? localStorage.t1 : 0;
         $.ajax({
-            url:"https://ext.statis.xixixihaha.com/index/Commoninterface/statisticsPlug",
+            url:tongjiUrl + "/index/Commoninterface/statisticsPlug",
             type:"post",
             data:{sid:sid1,t:t1,cid:cid},
             dataType:"json",
@@ -75,15 +88,4 @@ function setLeftTime(time) {
     return leftTime;
 }
 statisApi();
-chrome.runtime.setUninstallURL("https://ext.statis.xixixihaha.com/uninstall.php?cid=" + cid);
-chrome.storage.local.get(null,function (e) {
-    if (!e.dypIp20180308) {
-        $.ajax({
-            url:"http://2018.ip138.com/ic.asp",
-            dataType:"html",
-            success:function (d) {
-                chrome.storage.local.set({dypIp20180308:d});
-            }
-        });
-    }
-});
+chrome.runtime.setUninstallURL(tongjiUrl + "/uninstall.php?cid=" + cid);
