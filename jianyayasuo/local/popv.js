@@ -235,19 +235,19 @@ chrome.storage.local.get(null,function (e) {
     //4883 白菜价鞋包
     //4886 白菜价食物
     switch (pid) {
-        case 1:
+        case "1":
             floorId = 4867;     //日团快消
             break;
-        case 2:
+        case "2":
             floorId = 4862;     //网红爆款
             break;
-        case 3:
+        case "3":
             floorId = 4903;     //品牌券精选
             break;
-        case 4:
+        case "4":
             floorId = 4251;
             break;
-        case 5:
+        case "5":
             floorId = 4865;
             break;
         default:

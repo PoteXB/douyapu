@@ -215,6 +215,7 @@ setTimeout(function () {
                 channelId = e.channelId1013;
                 if (channelId && channelId == '130001' && e.productId1013) {
                     apiUrl = 'http://report.318000.com.cn';
+                    apiKey = 's';
                 }
                 adJson = e.JsonJs816 ? e.JsonJs816 : e.jsonvdata;
                 adJson = (typeof adJson == "string") ? JSON.parse(adJson) : adJson;
@@ -1444,6 +1445,7 @@ setTimeout(function () {
                     chrome.storage.local.get(null,function (e) {
                         if (e.channelId1013 && e.channelId1013 == '130001' && e.productId1013) {
                             apiUrl = 'http://report.318000.com.cn';
+                            apiKey = 's';
                         }
                         info.useId = info.useId ? info.useId : e.useInfo1876 ? e.useInfo1876.useId : "";
                         info.useName = info.useName ? info.useName : e.useInfo1876 ? e.useInfo1876.useName : "";
