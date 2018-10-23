@@ -2412,7 +2412,8 @@
                                 dataType:"json",
                                 data:{
                                     itemId:itemId,
-                                    type:typeName
+                                    type:typeName,
+                                    ver:"1.0"
                                 }
                             },function (e) {
                                 //判断是否需要切换旧接口
@@ -2421,22 +2422,27 @@
                                     return
                                 }
                                 var data = (typeof e.msg == 'string') ? JSON.parse(e.msg) : e.msg;
-                                if (!data.success) {
+                                if (data.code != "SUCCESS") {
                                     getDan();
                                     return
                                 }
-                                if (data.success && data.list && data.list.item && data.list.item.couponInfo && data.list.item.endTime && data.list.item.totalCount) {
-                                    data = data.list.item;
-                                    var amount = parseFloat(data.couponInfo.split("减")[1] ? data.couponInfo.split("减")[1] : data.couponInfo.split("减")[0]);
-                                    var amountReq = data.couponInfo;
-                                    var urls = data.tbLink;
-                                    dyClickUrl = {clickUrl:data.tbLink};
-                                    $('#dypAbs9527').prepend(htmlPublic.hasCouHtml(data.finalPrice,amount,amountReq,'手淘'));
+                                var couponData = data.data ? (data.data.coupon ? data.data.coupon : "") : "";
+                                if (!couponData) {
+                                    getDan();
+                                    return
+                                }
+                                var info = data.data.item;
+                                if (couponData.have_coupon) {
+                                    var amount = couponData.coupon_value;
+                                    var amountReq = couponData.coupon_info;
+                                    var urls = couponData.coupon_click_url;
+                                    dyClickUrl = {clickUrl:couponData.coupon_click_url};
+                                    $('#dypAbs9527').prepend(htmlPublic.hasCouHtml(info.zk_final_price,amount,amountReq,'手淘'));
                                     $(".dypAbs9527-coupon-back").click(function () {
                                         openWindow(urls);
                                     });
                                     try {
-                                        $("#dypAbs9527-coupon-time").fnTimeCountDown(data.endTime + ' 23:59:59');
+                                        $("#dypAbs9527-coupon-time").fnTimeCountDown(couponData.coupon_end_time + ' 23:59:59');
                                         $(".dypAbs9527-coupon-time").css("visibility","visible");
                                     } catch (e) {
                                     }

@@ -616,7 +616,8 @@ setTimeout(function () {
                             dataType:"json",
                             data:{
                                 itemId:sj_id,
-                                type:apiKey
+                                type:apiKey,
+                                ver:"1.0"
                             }
                         },function (e) {
                             if (!e || e.code != 1) {
@@ -624,22 +625,27 @@ setTimeout(function () {
                                 return
                             }
                             var data = (typeof e.msg == 'string') ? JSON.parse(e.msg) : e.msg;
-                            if (!data.success) {
+                            if (data.code != "SUCCESS") {
                                 getTbCookie(getDan,myMmId,page,getH5CouNum,setCoupon);  //读取cook获取点击
                                 return
                             }
-                            if (data.success && data.list && data.list.item && data.list.item.couponInfo && data.list.item.endTime && data.list.item.totalCount) {
-                                data = data.list.item;
-                                var amount = parseFloat(data.couponInfo.split("减")[1] ? data.couponInfo.split("减")[1] : data.couponInfo.split("减")[0]);
-                                var amountReq = data.couponInfo;
-                                var urls = data.tbLink;
-                                var html = hasCouHtml(data.finalPrice,amount,amountReq,'手淘','淘宝');   //淘宝平台新接口渲染
+                            var couponData = data.data ? (data.data.coupon ? data.data.coupon : "") : "";
+                            if (!couponData) {
+                                getTbCookie(getDan,myMmId,page,getH5CouNum,setCoupon);  //读取cook获取点击
+                                return
+                            }
+                            var info = data.data.item;
+                            if (couponData.have_coupon) {
+                                var amount = couponData.coupon_value;
+                                var amountReq = couponData.coupon_info;
+                                var urls = couponData.coupon_click_url;
+                                var html = hasCouHtml(info.zk_final_price,amount,amountReq,'手淘','淘宝');   //淘宝平台新接口渲染
                                 $(".plugMid627-hasCoupon").html(html);
                                 $(".plugMid627-hasCoupon").show();
                                 $(".plugMid627-couBack").click(function () {
                                     openWindow(urls);
                                 });
-                                var ntime = new Date(data.endTime + ' 23:59:59');
+                                var ntime = new Date(couponData.coupon_end_time + ' 23:59:59');
                                 ntime = Math.floor(ntime.getTime() / 1000);
                                 $(".plugMid627-couTime").attr("data-endtime",ntime);
                                 opTimer(".plugMid627-couTime");

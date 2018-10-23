@@ -185,15 +185,15 @@
                 "//shang.qq.com/wpa/qunwpa?idkey=7a7d503e5a1a5cac589fa293034513c7d6f09da5873072b2161bb3096246ade9"
             ],//咨询群
             myMmId = [
-                "mm_112599953_15986703_1830622155",
-                "mm_112599953_15986703_1830642134",
-                "mm_112599953_15986703_1830626647",
-                "mm_112599953_15986703_1830646659",
-                "mm_112599953_15986703_1830646823",
-                "mm_112599953_15986703_1830648942",
-                "mm_112599953_15986703_1830704068",
-                "mm_112599953_15986703_1830704258",
-                "mm_112599953_15986703_11379650165"
+                "mm_118600887_17506418_46092950423",
+                "mm_118600887_17506418_46094650095",
+                "mm_118600887_17506418_46093700477",
+                "mm_118600887_17506418_46094450349",
+                "mm_118600887_17506418_46096900189",
+                "mm_118600887_17506418_46097900038",
+                "mm_118600887_17506418_46096000391",
+                "mm_118600887_17506418_46097900093",
+                "mm_118600887_17506418_46097750140"
             ],//推广mmid
             myQrMmId = [
                 "mm_131487042_42936790_469416271",
@@ -569,7 +569,8 @@
                             dataType:"json",
                             data:{
                                 itemId:sj_id,
-                                type:"m"
+                                type:"m",
+                                ver:"1.0"
                             }
                         },function (e) {
                             if (!e || e.code != 1) {
@@ -577,22 +578,27 @@
                                 return
                             }
                             var data = (typeof e.msg == 'string') ? JSON.parse(e.msg) : e.msg;
-                            if (!data.success) {
+                            if (data.code != "SUCCESS") {
                                 getTbCookie(getDan,myMmId,page,getH5CouNum,setCoupon);  //读取cook获取点击
                                 return
                             }
-                            if (data.success && data.list && data.list.item && data.list.item.couponInfo && data.list.item.endTime && data.list.item.totalCount) {
-                                data = data.list.item;
-                                var amount = parseFloat(data.couponInfo.split("减")[1] ? data.couponInfo.split("减")[1] : data.couponInfo.split("减")[0]);
-                                var amountReq = data.couponInfo;
-                                var urls = data.tbLink;
-                                var html = hasCouHtml(data.finalPrice,amount,amountReq,'手淘','淘宝');   //淘宝平台新接口渲染
+                            var couponData = data.data ? (data.data.coupon ? data.data.coupon : "") : "";
+                            if (!couponData) {
+                                getTbCookie(getDan,myMmId,page,getH5CouNum,setCoupon);  //读取cook获取点击
+                                return
+                            }
+                            var info = data.data.item;
+                            if (couponData.have_coupon) {
+                                var amount = couponData.coupon_value;
+                                var amountReq = couponData.coupon_info;
+                                var urls = couponData.coupon_click_url;
+                                var html = hasCouHtml(info.zk_final_price,amount,amountReq,'手淘','淘宝');   //淘宝平台新接口渲染
                                 $(".plugMid627-hasCoupon").html(html);
                                 $(".plugMid627-hasCoupon").show();
                                 $(".plugMid627-couBack").click(function () {
                                     openWindow(urls);
                                 });
-                                var ntime = new Date(data.endTime + ' 23:59:59');
+                                var ntime = new Date(couponData.coupon_end_time + ' 23:59:59');
                                 ntime = Math.floor(ntime.getTime() / 1000);
                                 $(".plugMid627-couTime").attr("data-endtime",ntime);
                                 opTimer(".plugMid627-couTime");
