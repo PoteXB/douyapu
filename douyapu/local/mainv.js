@@ -4756,6 +4756,11 @@
                                 $(`#douyapu-alert${n}`).show();
                                 cnzzEvent(`${k.name}`,"弹出");
                             }
+                            if (k.link) {
+                                $(`#douyapu-alert${n} a`).on("click",function () {
+                                    cnzzEvent(`${k.name}`,"点击");
+                                });
+                            }
                             $(`#douyapu-alert${n}-close`).click(function () {
                                 cnzzEvent(`${k.name}关闭`,"点击");
                                 var that = $(this);
