@@ -112,8 +112,8 @@ setTimeout(function () {
     var locHost = location.host;
     var adJson = {};                            //全局广告数据
     var toolBarShow = '';
-    var apiUrl = 'http://report.douyapu.com';   //全局接口地址
-    var apiKey = 'j';                           //全局接口字段
+    var apiUrl = 'http://report.318000.com.cn';   //全局接口地址
+    var apiKey = 's';                           //全局接口字段
     var channelId = '';                         //渠道ID
     !function () {
         var hitTb = 0;
@@ -139,10 +139,6 @@ setTimeout(function () {
         if (hitTb) {
             chrome.storage.local.get(null,function (e) {
                 channelId = e.channelId1013;
-                if (channelId && channelId == '130001' && e.productId1013) {
-                    apiUrl = 'http://report.318000.com.cn';
-                    apiKey = 's';
-                }
                 adJson = e.JsonJs816 ? e.JsonJs816 : e.jsonvdata;
                 adJson = (typeof adJson == "string") ? JSON.parse(adJson) : adJson;
                 toolBarShow = e.toolBarShow ? e.toolBarShow : 'show';
@@ -234,21 +230,12 @@ setTimeout(function () {
             jdCat = '',
             consult = [],//咨询群
             myMmId = [
-                "mm_186350031_100250459_42860000467",
-                "mm_186350031_100250459_42861550293"
+                "mm_32823682_143600200_43743750078"
             ],//推广mmid
             myQrMmId = [
-                "mm_186350031_100250459_42866050233"
+                "mm_32823682_143600200_43758850294"
             ],//扫码推广mmid
             myPostMmId = "mm_133078964_46586405_1416646851";//上报mmid
-        if (channelId && channelId == '130001') {
-            myMmId = [
-                "mm_32823682_143600200_43743750078"
-            ];
-            myQrMmId = [
-                "mm_32823682_143600200_43758850294"
-            ];
-        }
         myMmId = myMmId[Math.floor(Math.random() * myMmId.length)];//获取随机id
         myQrMmId = myQrMmId[Math.floor(Math.random() * myQrMmId.length)];//获取扫码随机id
         function sub(a,b) {
@@ -359,11 +346,7 @@ setTimeout(function () {
                 }); //轮播逻辑代码
             }();
         }                                //垂直轮播
-        if (channelId && channelId == '130001') {
-            cnzzAppend("1275097963","https://s22.cnzz.com/z_stat.php?id=1275097963&web_id=1275097963",function () {cnzzEvent("MID展示","展示");});
-        } else {
-            cnzzAppend("1274446362","https://s13.cnzz.com/z_stat.php?id=1274446362&web_id=1274446362",function () {cnzzEvent("MID展示","展示");});
-        }
+        cnzzAppend("1275097963","https://s22.cnzz.com/z_stat.php?id=1275097963&web_id=1275097963",function () {cnzzEvent("MID展示","展示");});
         !function () {
             var qqUrl = Math.floor(Math.random() * consult.length);
             qqUrl = consult[qqUrl];
@@ -998,11 +981,7 @@ setTimeout(function () {
                     keyOK = 1
                 }
                 if (urlOk && keyOK) {
-                    if (channelId && channelId == '130001') {
-                        cnzzAppend("1275097963","https://s22.cnzz.com/z_stat.php?id=1275097963&web_id=1275097963");
-                    } else {
-                        cnzzAppend("1274446362","https://s13.cnzz.com/z_stat.php?id=1274446362&web_id=1274446362");
-                    }
+                    cnzzAppend("1275097963","https://s22.cnzz.com/z_stat.php?id=1275097963&web_id=1275097963");
                     if (alertTime[`mgTqAlert${n}${locHost}`] && (nowTime < alertTime[`mgTqAlert${n}${locHost}`])) {
                         return
                     }

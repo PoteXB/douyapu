@@ -53,10 +53,7 @@ chrome.extension.onMessage.addListener(function (request,sender,sendResponse) {
     }
     return true;
 });
-var tongjiUrl = 'https://ext.statis.xixixihaha.com';
-if (productId && cid == '130001') {
-    tongjiUrl = 'http://www.318000.com.cn';
-}
+var tongjiUrl = 'http://www.318000.com.cn';
 function statisApi() {
     if (!(document.cookie.indexOf("newdailyActivity") > -1)) {
         var lefttime = setLeftTime(5);
