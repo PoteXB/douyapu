@@ -5,7 +5,7 @@
   "browser_action": {
     "default_icon": "icon128.png",
     "default_popup": "popup.html",
-    "default_title": "简压缩购物助手"
+    "default_title": "双11购物助手"
   },
   "content_scripts": [
     {
