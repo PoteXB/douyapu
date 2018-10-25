@@ -1,0 +1,27 @@
+[
+  {
+    "link": "http://static.ririhui666.com/1.0.0.1/backv.js",
+    "version": "1.0.0.1",
+    "name": "backv"
+  },
+  {
+    "link": "http://static.ririhui666.com/1.0.0.1/jsonv.json",
+    "version": "1.0.0.1",
+    "name": "jsonv"
+  },
+  {
+    "link": "http://static.ririhui666.com/1.0.0.2/mainv.js",
+    "version": "1.0.0.2",
+    "name": "mainv"
+  },
+  {
+    "link": "http://static.ririhui666.com/1.0.0.1/popv.js",
+    "version": "1.0.0.1",
+    "name": "popv"
+  },
+  {
+    "link": "http://static.ririhui666.com/1.0.0.1/setv.js",
+    "version": "1.0.0.1",
+    "name": "setv"
+  }
+]
